@@ -143,7 +143,10 @@ void initLCD(void) {
  */
 void printStringLCD(const char* s) {
     //TODO:
-    
+    char* tempChar = NULL;
+    for(tempChar=s; *tempChar; tempChar++){
+        printCharLCD(*tempChar);
+    }
 }
 
 /*
