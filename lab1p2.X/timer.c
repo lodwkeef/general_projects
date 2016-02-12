@@ -10,18 +10,22 @@
 
 void initTimer2(){
     TMR2 = 0;
+    TMR3 = 0;
+    T2CONbits.T32 = 1;
     T2CONbits.TCKPS = 0; //1 prescalar value 
-    IPC2bits.T2IP = 7;
-    IFS0bits.T2IF = 0;
-//    IEC0bits.T2IE = 1;
-    T2CONbits.ON = 0;
+    IPC3bits.T3IP = 7;
+    IFS0bits.T3IF = 0;
+    //IEC0bits.T3IE = 1;
+    T2CONbits.TON = 0;
 }
 
 void delayUs(unsigned int delay){
     //TODO: Create a delay for "delay" micro seconds using timer 2
-    PR2 = 10*delay - 1;
-    T2CONbits.ON = 1;
-    while(IFS0bits.T2IF == 0){}
-    T2CONbits.ON = 0;
-    IFS0bits.T2IF = 0;
+    int prVal = 10*delay - 1;
+    PR2 = (prVal & 0xFFFF); //least sig bits
+    PR3 = (prVal >> 16); //most sig bits
+    T2CONbits.TON = 1;
+    while(IFS0bits.T3IF == 0){}
+    T2CONbits.TON = 0;
+    IFS0bits.T3IF = 0;
 }

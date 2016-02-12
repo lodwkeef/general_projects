@@ -30,7 +30,6 @@ int main(void)
     return 0;
 }
 
-//void __ISR(_TIMER_2_VECTOR, IPL7SRS) _T2Interrupt(){
-//    IFS0bits.T2IF = 0;
-//
+//void __ISR(_TIMER_3_VECTOR, IPL7SRS) _T2Interrupt(){
+//    IFS0bits.T3IF = 0;
 //}

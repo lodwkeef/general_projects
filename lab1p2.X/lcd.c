@@ -37,8 +37,8 @@
 #define LOWER 1
 #define UPPER 0
 
-#define LCD_DELAY 44
-#define LCD_DELAY_CLEAR 1804
+#define LCD_DELAY 50
+#define LCD_DELAY_CLEAR 1800
 
 /* This function should take in a 8-bit word and writes either the lower or upper
  * 4 bits to the last(appropriate) four bits of LATE. Additionally, according to the LCD data sheet
@@ -56,7 +56,6 @@ void writeFourBits(unsigned char word, unsigned int commandType, unsigned int de
 //    * LCD_D7      RE1
     //TODO:
     LCD_E = 0;
-    delayUs(delayAfter);
     LCD_RS = commandType;   //set the commandType (RS value)
     
     LATE = 0; //Reset LATE bits to 0 in order for bit masking functionality to work correctly
@@ -93,7 +92,7 @@ void writeLCD(unsigned char word, unsigned int commandType, unsigned int delayAf
  */
 void printCharLCD(char c) {
     //TODO:
-    writeLCD(c, 1, 46); //word = c, RS = 1, delay = 46us
+    writeLCD(c, 1, LCD_DELAY);
 }
 /*Initialize the LCD
  */
@@ -116,7 +115,7 @@ void initLCD(void) {
     //wait 15+ ms after VDD reaches 4.5V
     delayUs(15000);
     writeFourBits(0b00000011, 0, LCD_DELAY, LOWER);
-    delayUs(4100);
+    delayUs(4500);
     writeFourBits(0b00000011, 0, LCD_DELAY, LOWER);
     delayUs(100);
     
