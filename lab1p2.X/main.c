@@ -20,6 +20,8 @@
 int main(void)
 {
     SYSTEMConfigPerformance(10000000);
+    //enableInterrupts();
+    initTimer2();
     while(1)
     {
         testLCD();
@@ -27,3 +29,8 @@ int main(void)
     
     return 0;
 }
+
+//void __ISR(_TIMER_2_VECTOR, IPL7SRS) _T2Interrupt(){
+//    IFS0bits.T2IF = 0;
+//
+//}
