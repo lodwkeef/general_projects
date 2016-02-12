@@ -133,7 +133,7 @@ void initLCD(void) {
     // TODO: Entry Mode Set
     writeLCD(0b00000110, 0, LCD_DELAY);    // Set Increment Display, No Shift (i.e. cursor move)
     // TODO: Display On/Off Control
-    writeLCD(0b00000110, 0, LCD_DELAY);    // Turn Display (D) On, Cursor (C) Off, and Blink(B) Off
+    writeLCD(0b00001110, 0, LCD_DELAY);    // Turn Display (D) On, Cursor (C) Off, and Blink(B) Off
 }
 
 /*
@@ -143,7 +143,7 @@ void initLCD(void) {
  */
 void printStringLCD(const char* s) {
     //TODO:
-    char* tempChar = NULL;
+    const char* tempChar = NULL;
     for(tempChar=s; *tempChar; tempChar++){
         printCharLCD(*tempChar);
     }
@@ -159,14 +159,14 @@ void clearLCD(){
 /*
  Use the command for changing the DD RAM address to put the cursor somewhere.
  */
-void moveCursorLCD(unsigned char x, unsigned char y){
+void moveCursorLCD(unsigned char row, unsigned char column){ //row and column start at 0
     unsigned char cAddress = '\0';
-    switch(x){
+    switch(row){
         case 0:
-            cAddress = (0b1 << 7) | (0b000 << 4) | (y&0x0F);
+            cAddress = (0b1 << 7) | (0b000 << 4) | (column&0x0F);
             break;
         case 1:
-            cAddress = (0b1 << 7) | (0b100 << 4) | (y&0x0F);
+            cAddress = (0b1 << 7) | (0b100 << 4) | (column&0x0F);
             break;
     }
     writeLCD(cAddress, 0, LCD_DELAY);
