@@ -21,7 +21,7 @@ void initTimer2(){
 
 void delayUs(unsigned int delay){
     //TODO: Create a delay for "delay" micro seconds using timer 2
-    int prVal = 10*delay - 1;
+    int prVal = (8*delay - 1); //delay was 120-125% longer per clock than it should have been
     PR2 = prVal; //least sig bits
     PR3 = (prVal >> 16); //most sig bits
     T2CONbits.TON = 1;
@@ -31,10 +31,8 @@ void delayUs(unsigned int delay){
 }
 
 void testTimer2(){
-//    LATGbits.LATG15 = 1;
     LATGSET = 0x8000;
-    delayUs(30000);
+    delayUs(300);
     LATGINV = 0x8000;
-//    LATGbits.LATG15 = 0;
-    delayUs(30000);
+    delayUs(300);
 }

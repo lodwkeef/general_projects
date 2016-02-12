@@ -189,3 +189,10 @@ void testLCD(){
     printStringLCD("Hello!");
     for(i = 0; i < 1000; i++) delayUs(1000);
 }
+
+void testKevin(){
+    initLCD();
+    printStringLCD("Kevin's so old:");
+    moveCursorLCD(1,0);
+    printStringLCD("He farts fossils");
+}
