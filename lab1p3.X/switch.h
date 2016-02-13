@@ -11,6 +11,7 @@
 #define	SWITCH_H
 
 void initSWext();
+void initSW1();
 
 
 #endif	/* SWITCH_H */

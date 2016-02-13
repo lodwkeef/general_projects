@@ -1,8 +1,11 @@
 // ******************************************************************************************* //
 //
-// File:         lab1p3.c
-// Date:         12-30-2014
-// Authors:      Garrett Vanhoy
+// File:        main.c
+// Date:        2/12/2016
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis              
 //
 // Description: 
 // ******************************************************************************************* //
@@ -23,67 +26,62 @@
 #define STOP 14
 #define ON 1
 #define OFF 0
+#define RS 1
+#define RESET 0
 
 /* Please note that the configuration file has changed from lab 0.
- * the oscillator is now of a different frequency.
+ * the oscillator is now of a different frequency. FALSE
  */
 typedef enum stateTypeEnum {
-    debounce, press,
-    STOP_LED, RUN_LED
+    running, stopped, reset, debounce, press
 } stateType;
 
-volatile int currLED = RUN;//CHECK TO SEE IF STOP (defined in leds) IS AN INT
-volatile int next = PRESS;
-volatile stateType state = RUN_LED;
+volatile int currLED = STOP;
+volatile int prevAct = STOP;
+volatile int pressRelease = -1;
+volatile int switchP = -1;
+volatile stateType state = reset;
 
 // ******************************************************************************************* //
 
 
-int main(void)
-{
+int main(void){
     SYSTEMConfigPerformance(10000000);
     enableInterrupts();
+    
     initLEDs(); //Initializes the LEDs
-    initTimer2();
-    initLCD();
     initTimer1(); //Initialize Timer1
+    initTimer2();
     initSWext(); //Initialize external Switch
+    initSW1();
+    initLCD();
     
     while(1)
-    {
-        
-        switch (state) {
-            
-            case RUN_LED:
+    {    
+        switch(state){
+            case reset:
+                clearLCD();
+                //need to make Stopwatch Timer
+                break;
+            case stopped:
+                turnOnLED(STOP);
+                prevAct = STOP;
+                pressRelease = PRESS; //next change will be a press
+                //LCD Paused
+                break;
+            case running:
                 turnOnLED(RUN);
-                currLED = RUN;
-                T1CONbits.TON = 0;//Timer is disabled
-                TMR1 = 0;
-                next = PRESS;
+                prevAct = RUN;
+                pressRelease = PRESS;
+                //LCD Updating
                 break;
-                
-            case STOP_LED:
-                turnOnLED(STOP); //CHECK TO SEE IF I AM REUSING VARIABLES IMPROPERLY
-                currLED = STOP;
-                T1CONbits.TON = OFF;//Timer is disabled
-                TMR1 = 0; 
-                next = PRESS;
-                break;
-                
             case debounce:
-                T1CONbits.TON = ON;//Timer is enabled              
                 break;
-                
             case press:
-                T1CONbits.TON = OFF;//Timer is disabled
-                TMR1 = 0;
-                next = RELEASE;
+                pressRelease = RELEASE;
                 break;
         }
-        //testTimer2();
-        //testLCD();
     }
-    
     return 0;
 }
 
@@ -91,20 +89,20 @@ int main(void)
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     int dummy;
     dummy = PORTA; // Read the Port A
-    IFS1bits.CNAIF = 0; //Set flag to lowered
-
-    TMR1 = 0; //reset timer 1
-
-
-    if (state == STOP_LED || state == RUN_LED || state == press) state = debounce;
-    
+    dummy = PORTD;
+    T1CONbits.TON = ON;
+    if(IFS1bits.CNAIF == 1) switchP = RS;
+    else if(IFS1bits.CNDIF == 1) switchP = RESET;
+    IFS1bits.CNAIF = 0; //lower flags
+    IFS1bits.CNDIF = 0;
 }
 
-void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() {
-    IFS0bits.T1IF = 0; //lower the flag 
-    TMR1 = 0;
-    if(next == PRESS) state = press;
-    else if(next != PRESS && currLED == STOP) state = RUN_LED;
-    else if(next != PRESS && currLED == RUN) state = STOP_LED;
+void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncing
+    IFS0bits.T1IF = 0; //lower the flag
+    T1CONbits.TON = OFF;
+    if(pressRelease == PRESS) state = press;
+    else if(pressRelease == RELEASE && switchP == RESET) state = reset;
+    else if(pressRelease == RELEASE && switchP == RS && prevAct == RUN) state = stopped;
+    else if(pressRelease == RELEASE && switchP == RS && prevAct == STOP) state = running;
 }
 

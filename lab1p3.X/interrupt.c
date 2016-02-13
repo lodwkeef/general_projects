@@ -1,6 +1,9 @@
 /* 
  * File:   interrupt.c
- * Author: gvanhoy
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis
  *
  * Created on August 27, 2015, 3:32 PM
  */

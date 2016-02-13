@@ -1,7 +1,9 @@
 /*
  * File:   timer.c
- * Authors:
- *
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis
  * Created on December 30, 2014, 8:07 PM
  */
 

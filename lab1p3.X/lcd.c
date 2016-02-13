@@ -1,7 +1,9 @@
 /*
  * File:   lcd.c
- * Authors:
- *
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis
  * Created on December 31, 2014, 1:39 PM
  */
 

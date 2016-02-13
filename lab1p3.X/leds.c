@@ -1,7 +1,9 @@
 /*
  * File:   leds.c
- * Author: 
- *
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis
  * Created on December 27, 2014, 1:31 PM
  */
 
@@ -20,17 +22,17 @@ void initLEDs() {
     ODCGbits.ODCG14 = ON; //Turn on ODC for STOP
 
     //initialize RUN to OFF & STOP to ON
-    LATGbits.LATG14 = 0; //STOP LED
-    LATGbits.LATG12 = 1; //RUN LED
+    LATGbits.LATG14 = 1; //STOP LED
+    LATGbits.LATG12 = 0; //RUN LED
 }
 
 void turnOnLED(int led) {
     if (led == RUN) {//Only RUN will turn on
-        LATGbits.LATG14 = 0; //STOP LED
-        LATGbits.LATG12 = 1; //RUN LED
-    }
-    else if (led == STOP) {//Only STOP will turn on
         LATGbits.LATG14 = 1; //STOP LED
         LATGbits.LATG12 = 0; //RUN LED
+    }
+    else if (led == STOP) {//Only STOP will turn on
+        LATGbits.LATG14 = 0; //STOP LED
+        LATGbits.LATG12 = 1; //RUN LED
     }
 }

@@ -1,7 +1,10 @@
 
 /* 
 * File:   leds.h
-* Author: 
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis
 *
 * Created on December 27, 2014, 1:31 PM
 */

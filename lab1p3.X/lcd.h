@@ -1,6 +1,9 @@
 /*
  * File:   lcd.h
- * Authors:
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis
  *
  * Created on December 31, 2014, 1:39 PM
  */
@@ -14,3 +17,6 @@ void printCharLCD(char c);
 void printStringLCD(const char* s);
 void testLCD();
 void testKevin();
+
+#define LCD_DELAY 50
+#define LCD_DELAY_CLEAR 1800
