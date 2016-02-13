@@ -178,7 +178,6 @@ void moveCursorLCD(unsigned char row, unsigned char column){ //row and column st
  * However, it is suggested that you test more than just this one function.
  */
 void testLCD(){
-    initLCD();
     int i = 0;
     printCharLCD('c');
     for(i = 0; i < 1000; i++) delayUs(1000);
