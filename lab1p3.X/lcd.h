@@ -17,6 +17,7 @@ void printCharLCD(char c);
 void printStringLCD(const char* s);
 void testLCD();
 void testKevin();
+void updateTime();
 
 #define LCD_DELAY 50
 #define LCD_DELAY_CLEAR 1800

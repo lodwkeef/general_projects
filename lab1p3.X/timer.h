@@ -12,6 +12,7 @@ void initTimer2();
 void delayUs(unsigned int delay);
 void testTimer2();
 void initTimer1();
+void initTimerWatch();
 
 #endif	/* INITTIMER_H */
 

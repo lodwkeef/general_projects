@@ -62,14 +62,19 @@ int main(void){
             case reset:
                 clearLCD();
                 //need to make Stopwatch Timer
+                state = stopped;
                 break;
             case stopped:
+                moveCursorLCD(0, 4);
+                printStringLCD("Stopped:");
                 turnOnLED(STOP);
                 prevAct = STOP;
                 pressRelease = PRESS; //next change will be a press
                 //LCD Paused
                 break;
             case running:
+                moveCursorLCD(0, 4);
+                printStringLCD("Running:");
                 turnOnLED(RUN);
                 prevAct = RUN;
                 pressRelease = PRESS;
@@ -78,7 +83,12 @@ int main(void){
             case debounce:
                 break;
             case press:
+                if(prevAct == RUN)
+                {
+                    //LCD Updating as well if it previously came from running
+                }               
                 pressRelease = RELEASE;
+                
                 break;
         }
     }
@@ -91,8 +101,8 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     dummy = PORTA; // Read the Port A
     dummy = PORTD;
     T1CONbits.TON = ON;
-    if(IFS1bits.CNAIF == 1) switchP = RS;
-    else if(IFS1bits.CNDIF == 1) switchP = RESET;
+    if(IFS1bits.CNAIF == 1) switchP = RS; //External Switch was Pressed
+    else if(IFS1bits.CNDIF == 1) switchP = RESET; //Internal Switch was Pressed
     IFS1bits.CNAIF = 0; //lower flags
     IFS1bits.CNDIF = 0;
 }
