@@ -59,7 +59,7 @@ int main(void){
     initLCD();
     int currTime = 0;
     float currSeconds = 0;
-    //char currChar;
+    char currChar;
     
     while(1)
     {    
@@ -90,7 +90,8 @@ int main(void){
                 currSeconds = floor(currTime/8000)/1000;
                 //convert the time to a string
                 moveCursorLCD(1, 4);  //set cursor to the bottom row
-                printStringLCD(sprintf("%2.3f", currSeconds)); //prints the current time
+                sprintf(currChar, "%2.3f", currSeconds)
+                printStringLCD(currChar); //prints the current time
                 prevAct = RUN;
                 pressRelease = PRESS;
                 //LCD Updating
