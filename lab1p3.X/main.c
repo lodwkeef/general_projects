@@ -18,6 +18,8 @@
 #include "interrupt.h"
 #include "switch.h"
 #include "leds.h"
+#include <math.h>
+#include <string.h>
 
 
 #define PRESS 1
@@ -55,16 +57,22 @@ int main(void){
     initSWext(); //Initialize external Switch
     initSW1();
     initLCD();
+    int currTime = 0;
+    float currSeconds = 0;
+    char currChar;
     
     while(1)
     {    
         switch(state){
             case reset:
                 clearLCD();
+                TMR4 = 0;   //reset timer values to 0
+                TMR5 = 0;
                 //need to make Stopwatch Timer
                 state = stopped;
                 break;
             case stopped:
+                T4CONbits.TON = 0; //turn off timer
                 moveCursorLCD(0, 4);
                 printStringLCD("Stopped:");
                 turnOnLED(STOP);
@@ -73,9 +81,15 @@ int main(void){
                 //LCD Paused
                 break;
             case running:
-                moveCursorLCD(0, 4);
-                printStringLCD("Running:");
                 turnOnLED(RUN);
+                if(T4CONbits.TON == 0) T4CONbits.TON = 1; //if timer is off, turn it on
+                moveCursorLCD(0, 4);  //set cursor to the top row
+                printStringLCD("Running:");
+                currTime = (float)((PR5 << 16)+ PR4); //combines timer values
+                currSeconds = floor(currTime/8000)/1000;
+                //convert the time to a string
+                moveCursorLCD(1, 4);  //set cursor to the bottom row
+                printStringLCD(sprintf("%2.3f", currSeconds)); //prints the current time
                 prevAct = RUN;
                 pressRelease = PRESS;
                 //LCD Updating
@@ -103,7 +117,7 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     T1CONbits.TON = ON;
     if(IFS1bits.CNAIF == 1) switchP = RS; //External Switch was Pressed
     else if(IFS1bits.CNDIF == 1) switchP = RESET; //Internal Switch was Pressed
-    IFS1bits.CNAIF = 0; //lower flags
+    IFS1bits.CNAIF = 0; //lower flags4
     IFS1bits.CNDIF = 0;
 }
 
