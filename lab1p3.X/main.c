@@ -59,7 +59,7 @@ int main(void){
     initLCD();
     int currTime = 0;
     float currSeconds = 0;
-    char currChar;
+    //char currChar;
     
     while(1)
     {    
@@ -85,7 +85,8 @@ int main(void){
                 if(T4CONbits.TON == 0) T4CONbits.TON = 1; //if timer is off, turn it on
                 moveCursorLCD(0, 4);  //set cursor to the top row
                 printStringLCD("Running:");
-                currTime = (float)((PR5 << 16)+ PR4); //combines timer values
+                currTime = 0;
+                currTime = (float)((PR5 << 16)| PR4); //combines timer values
                 currSeconds = floor(currTime/8000)/1000;
                 //convert the time to a string
                 moveCursorLCD(1, 4);  //set cursor to the bottom row
