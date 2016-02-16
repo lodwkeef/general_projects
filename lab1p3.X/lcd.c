@@ -12,6 +12,7 @@
 #include <xc.h>
 #include "lcd.h"
 #include "timer.h"
+#include <math.h>
 
 /* The pins that you will use for the lcd control will be
  * LCD_RS      RC4
@@ -193,10 +194,16 @@ void testLCD() {
 }
 
 void updateTime() {
-    long ticks = (TMR5<<16) + TMR4;
-    int min = ticks/60;
-    int sec = ticks - (min*60);
-    int smallsec = (ticks - (min*60) - sec)*100;
+    float sec = 0;
+    char currChar;
+    long ticks = (long)((TMR5<<16) + TMR4);
+    float currTime = (float)ticks/8000000;
+    int min = (int)floor(currTime/60);
+    float sec = currTime - (min*60);
+    moveCursorLCD(1, 4);  //set cursor to the bottom row
+    sprintf(currChar, "%d:%2.3f", min, sec) //convert the time to a string
+    printStringLCD(currChar); //prints the current time
+   // int smallsec = (ticks - (min*60) - sec)*100;
 }
 
 void testKevin() {
