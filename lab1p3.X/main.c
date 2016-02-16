@@ -66,6 +66,7 @@ int main(void){
         switch(state){
             case reset:
                 clearLCD();
+                T4CONbits.TON = 0; //turn off timer
                 TMR4 = 0;   //reset timer values to 0
                 TMR5 = 0;
                 //need to make Stopwatch Timer
@@ -87,10 +88,9 @@ int main(void){
                 printStringLCD("Running:");
                 currTime = 0;
                 currTime = (float)((PR5 << 16)| PR4); //combines timer values
-                currSeconds = floor(currTime/8000)/1000;
-                //convert the time to a string
+                currSeconds = floor(currTime/8000)/1000; //probably unnecessary to cutoff the micro seconds, but w/e
                 moveCursorLCD(1, 4);  //set cursor to the bottom row
-                sprintf(currChar, "%2.3f", currSeconds)
+                sprintf(currChar, "%2.3f", currSeconds) //convert the time to a string
                 printStringLCD(currChar); //prints the current time
                 prevAct = RUN;
                 pressRelease = PRESS;
@@ -101,6 +101,14 @@ int main(void){
             case press:
                 if(prevAct == RUN)
                 {
+                    moveCursorLCD(0, 4);  //set cursor to the top row
+                    printStringLCD("Running:");
+                    currTime = 0;
+                    currTime = (float)((PR5 << 16)| PR4); //combines timer values
+                    currSeconds = floor(currTime/8000)/1000; //probably unnecessary to cutoff the micro seconds, but w/e
+                    moveCursorLCD(1, 4);  //set cursor to the bottom row
+                    sprintf(currChar, "%2.3f", currSeconds) //convert the time to a string
+                    printStringLCD(currChar); //prints the current time
                     //LCD Updating as well if it previously came from running
                 }               
                 pressRelease = RELEASE;
