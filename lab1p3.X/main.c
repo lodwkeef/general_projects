@@ -55,9 +55,6 @@ int main(void){
     initSWext(); //Initialize external Switch
     initSW1();
     initLCD();
-    int currTime = 0;
-    float currSeconds = 0;
-    char currChar;
     
     while(1)
     {    
@@ -69,7 +66,7 @@ int main(void){
                 TMR5 = 0;
                 //need to make Stopwatch Timer
                 
-                updateTime();//display time to 00:00.00
+                //updateTime();//display time to 00:00:00
                 state = stopped;
                 break;
             case stopped:
@@ -83,10 +80,11 @@ int main(void){
                 break;
             case running:
                 turnOnLED(RUN);
+                //T4CONbits.TON = 1;
                 if(T4CONbits.TON == 0) T4CONbits.TON = 1; //if timer is off, turn it on
                 moveCursorLCD(0, 4);  //set cursor to the top row
                 printStringLCD("Running:");
-                updateTime();
+                //updateTime();
                 prevAct = RUN;
                 pressRelease = PRESS;
                 //LCD Updating
@@ -98,7 +96,7 @@ int main(void){
                 {
                     moveCursorLCD(0, 4);  //set cursor to the top row
                     printStringLCD("Running:");
-                    updateTime();
+                    //updateTime();
                     //LCD Updating as well if it previously came from running
                 }               
                 pressRelease = RELEASE;
