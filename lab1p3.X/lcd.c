@@ -167,10 +167,10 @@ void moveCursorLCD(unsigned char row, unsigned char column) { //row and column s
     unsigned char cAddress = '\0';
     switch (row) {
         case 0:
-            cAddress = (0b1 << 7) | (0b000 << 4) | (column & 0x0F);
+            cAddress = (0x80) | (column & 0x0F);
             break;
         case 1:
-            cAddress = (0b1 << 7) | (0b100 << 4) | (column & 0x0F);
+            cAddress = (0xC0) | (column & 0x0F);
             break;
     }
     writeLCD(cAddress, 0, LCD_DELAY);
