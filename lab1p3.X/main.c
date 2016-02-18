@@ -18,8 +18,6 @@
 #include "interrupt.h"
 #include "switch.h"
 #include "leds.h"
-#include <math.h>
-#include <string.h>
 
 
 #define PRESS 1
@@ -70,6 +68,8 @@ int main(void){
                 TMR4 = 0;   //reset timer values to 0
                 TMR5 = 0;
                 //need to make Stopwatch Timer
+                
+                updateTime();//display time to 00:00.00
                 state = stopped;
                 break;
             case stopped:

@@ -13,8 +13,9 @@
 #include "lcd.h"
 #include "timer.h"
 #include <math.h>
+#include <string.h>
 
-/* The pins that you will use for the lcd control will be
+/* pins that you will be used for the lcd control
  * LCD_RS      RC4
  * LCD_E       RC2
  * LCD_D4      RE7
@@ -58,7 +59,6 @@ void writeFourBits(unsigned char word, unsigned int commandType, unsigned int de
     //    * LCD_D5      RE5
     //    * LCD_D6      RE3
     //    * LCD_D7      RE1
-    //TODO:
     LCD_E = 0;
     LCD_RS = commandType; //set the commandType (RS value)
 
@@ -94,7 +94,6 @@ void writeLCD(unsigned char word, unsigned int commandType, unsigned int delayAf
 /* Given a character, write it to the LCD. RS should be set to the appropriate value.
  */
 void printCharLCD(char c) {
-    //TODO:
     writeLCD(c, 1, LCD_DELAY);
 }
 
@@ -194,14 +193,14 @@ void testLCD() {
 }
 
 void updateTime() {
-    float sec = 0;
     char currChar;
     long ticks = (long)((TMR5<<16) + TMR4);
     float currTime = (float)ticks/8000000;
     int min = (int)floor(currTime/60);
     float sec = currTime - (min*60);
+    float ffsec = 100*(sec -floor(sec));
     moveCursorLCD(1, 4);  //set cursor to the bottom row
-    sprintf(currChar, "%d:%2.3f", min, sec) //convert the time to a string
+    sprintf(currChar, "%d:%2.f:%2.f", min, sec, ffsec) //convert the time to a string
     printStringLCD(currChar); //prints the current time
    // int smallsec = (ticks - (min*60) - sec)*100;
 }
