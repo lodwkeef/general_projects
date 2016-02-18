@@ -73,7 +73,7 @@ void writeFourBits(unsigned char word, unsigned int commandType, unsigned int de
     }
     
     LCD_E = 1;//enable
-    delayUs(delayAfter);//delay
+    delayUs(2);//delay
     LCD_E = 0;//disable
     
     delayUs(delayAfter);
@@ -189,9 +189,9 @@ void testLCD(){
     for(i = 0; i < 1000; i++) delayUs(1000);
 }
 
-void testKevin(){
-    initLCD();
-    printStringLCD("Kevin's so old:");
-    moveCursorLCD(1,0);
-    printStringLCD("He farts fossils");
+void test_writeLCD(){
+    writeLCD(0b10000000,0,LCD_DELAY);
+    writeLCD(0b01000000,0,LCD_DELAY);
+    writeLCD(0b00100000,0,LCD_DELAY);
+    writeLCD(0b00010000,0,LCD_DELAY);
 }

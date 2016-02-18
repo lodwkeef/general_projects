@@ -30,7 +30,7 @@ void delayUs(unsigned int delay){
     IFS0bits.T3IF = 0;
 }
 
-void testTimer2(){
+void testTimer2(){ //code for testing delayUs
     LATGSET = 0x8000;
     delayUs(300);
     LATGINV = 0x8000;

@@ -26,10 +26,9 @@ int main(void)
     initLCD();
     while(1)
     {
-        
-        
         //testTimer2();
-        testLCD();
+        test_writeLCD();
+        //testLCD();
     }
     
     return 0;
