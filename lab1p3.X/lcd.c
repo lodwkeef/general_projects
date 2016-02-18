@@ -193,7 +193,7 @@ void testLCD() {
 }
 
 void updateTime() {
-    char currChar;
+    const char currChar=NULL;
     long ticks = (long)((TMR5<<16) + TMR4);
     float currTime = (float)ticks/8000000;
     int min = (int)floor(currTime/60);
@@ -201,7 +201,7 @@ void updateTime() {
     float ffsec = 100*(sec -floor(sec));
     moveCursorLCD(1, 4);  //set cursor to the bottom row
     sprintf(currChar, "%d:%2.f:%2.f", min, sec, ffsec) //convert the time to a string
-    printStringLCD(currChar); //prints the current time
+    printStringLCD(currChar*); //prints the current time
    // int smallsec = (ticks - (min*60) - sec)*100;
 }
 
