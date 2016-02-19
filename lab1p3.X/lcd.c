@@ -77,7 +77,7 @@ void writeFourBits(unsigned char word, unsigned int commandType, unsigned int de
     }
 
     LCD_E = 1; //enable
-    delayUs(2); //delay
+    delayUs(delayAfter); //delay
     LCD_E = 0; //disable
 
     delayUs(delayAfter);
@@ -146,7 +146,6 @@ void initLCD(void) {
  * Since a string is just a character array, try to be clever with your use of pointers.
  */
 void printStringLCD(const char* s) {
-    //TODO:
     const char* tempChar = NULL;
     for (tempChar = s; *tempChar; tempChar++) {
         printCharLCD(*tempChar);
@@ -193,23 +192,18 @@ void testLCD() {
     for (i = 0; i < 1000; i++) delayUs(1000);
 }
 
-void updateTime() {
-    char currChar[64];
-    char * charpoint = currChar;
-    int ticks = 0;
-    ticks = ((TMR5<<16) & TMR4);
-    int min = 8;//(ticks/8000000)/60;
-    int sec = 13;//(ticks/8000000) - (min*60);
-    int ffsec = 14;//((ticks/80000 - (min*6000)) -sec*100);
-    moveCursorLCD(1, 4);  //set cursor to the bottom row
-   // sprintf(charpoint, "%.2d:%.2d:%.2d", min, sec, ffsec); //convert the time to a string
-    printStringLCD(charpoint); //prints the current time
-   // int smallsec = (ticks - (min*60) - sec)*100;
+char* getTimeString(){
+    char* s = NULL;
+    float time = .0000256*((TMR5<<16) + TMR4);
+    int min = time/60;
+    int sec = time - (min*60);
+    int ffsec = ((time - (min*60)) - sec)*100;
+    //sprintf(*s,"%d:%d:%d", min, sec, ffsec);
+    return s;
 }
 
-void testKevin() {
-    initLCD();
-    printStringLCD("Kevin's so old:");
-    moveCursorLCD(1, 0);
-    printStringLCD("He farts fossils");
+void updateTime() {
+    moveCursorLCD(1, 4);  //set cursor to the bottom row
+    char* s = getTimeString();
+    printStringLCD(s);
 }

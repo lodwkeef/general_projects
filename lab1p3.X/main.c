@@ -65,8 +65,7 @@ int main(void){
                 TMR4 = 0;   //reset timer values to 0
                 TMR5 = 0;
                 //need to make Stopwatch Timer
-                
-                //updateTime();//display time to 00:00:00
+                updateTime();//display time to 00:00:00
                 state = stopped;
                 break;
             case stopped:
@@ -84,7 +83,7 @@ int main(void){
                 if(T4CONbits.TON == 0) T4CONbits.TON = 1; //if timer is off, turn it on
                 moveCursorLCD(0, 4);  //set cursor to the top row
                 printStringLCD("Running:");
-                //updateTime();
+                updateTime();
                 prevAct = RUN;
                 pressRelease = PRESS;
                 //LCD Updating
@@ -96,11 +95,10 @@ int main(void){
                 {
                     moveCursorLCD(0, 4);  //set cursor to the top row
                     printStringLCD("Running:");
-                    //updateTime();
+                    updateTime();
                     //LCD Updating as well if it previously came from running
                 }               
                 pressRelease = RELEASE;
-                
                 break;
         }
     }
