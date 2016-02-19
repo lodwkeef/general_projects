@@ -194,7 +194,7 @@ void testLCD() {
 
 char* getTimeString(){
     char s[9] = {};
-    long double time = .0000256*((TMR5<<16) + TMR4);
+    long double time = .0000320*((TMR5<<16) + TMR4);
     int min = time/60;
     int sec = time - (min*60);
     int ffsec = ((time - (min*60)) - sec)*100;
