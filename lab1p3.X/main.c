@@ -36,6 +36,7 @@ typedef enum stateTypeEnum {
     running, stopped, reset, debounce, press
 } stateType;
 
+int rsString = 1;
 volatile int currLED = STOP;
 volatile int prevAct = STOP;
 volatile int pressRelease = -1;
@@ -62,6 +63,8 @@ int main(void){
         switch(state){
             case reset:
                 clearLCD();
+                moveCursorLCD(0, 4);
+                printStringLCD("Stopped:");
                 T4CONbits.TON = 0; //turn off timer
                 TMR4 = 0;   //reset timer values to 0
                 TMR5 = 0;
@@ -72,7 +75,7 @@ int main(void){
             case stopped:
                 T4CONbits.TON = 0; //turn off timer
                 moveCursorLCD(0, 4);
-                printStringLCD("Stopped:");
+                if(rsString == 1) printStringLCD("Stopped:"); rsString = 0;
                 turnOnLED(STOP);
                 prevAct = STOP;
                 pressRelease = PRESS; //next change will be a press
@@ -83,7 +86,7 @@ int main(void){
                 //T4CONbits.TON = 1;
                 if(T4CONbits.TON == 0) T4CONbits.TON = 1; //if timer is off, turn it on
                 moveCursorLCD(0, 4);  //set cursor to the top row
-                printStringLCD("Running:");
+                if(rsString == 0) printStringLCD("Running:"); rsString = 1;
                 updateTime();
                 prevAct = RUN;
                 pressRelease = PRESS;
