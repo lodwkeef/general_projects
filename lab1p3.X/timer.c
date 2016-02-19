@@ -44,13 +44,12 @@ void delayUs(unsigned int delay){
     IFS0bits.T3IF = 0;
 }
 
-void initTimerWatch()
-{
+void initTimerWatch(){
+    T4CONbits.T32 = 1;
     TMR4 = 0;
     TMR5 = 0;
     PR4 = 0xFFFF; //least sig bits
     PR5 = 0xFFFF; //most sig bits
-    T4CONbits.T32 = 1;
     T4CONbits.TON = 0;
     T4CONbits.TCKPS = 7; //256 prescaler
     IFS0bits.T5IF = 0;

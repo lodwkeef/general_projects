@@ -52,6 +52,7 @@ int main(void){
     initLEDs(); //Initializes the LEDs
     initTimer1(); //Initialize Timer1
     initTimer2();
+    initTimerWatch();
     initSWext(); //Initialize external Switch
     initSW1();
     initLCD();
@@ -112,7 +113,8 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     dummy = PORTD;
     T1CONbits.TON = ON;
     if(IFS1bits.CNAIF == 1) switchP = RS; //External Switch was Pressed
-    else if(IFS1bits.CNDIF == 1) switchP = RESET; //Internal Switch was Pressed
+    else if(IFS1bits.CNDIF == 1 && prevAct == STOP) switchP = RESET; //Internal Switch was Pressed
+    else if(IFS1bits.CNDIF == 1 && prevAct == RUN) T1CONbits.TON = OFF;
     IFS1bits.CNAIF = 0; //lower flags4
     IFS1bits.CNDIF = 0;
 }
