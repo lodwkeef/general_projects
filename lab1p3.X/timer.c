@@ -13,7 +13,7 @@
 void initTimer1()
 {
     TMR1 = 0;
-    PR1 = 49999;//1 second timer
+    PR1 = 49999;
     T1CONbits.TCKPS = 0;//prescaler 1
     T1CONbits.TCS = 0;//internal PClck
     IEC0bits.T1IE = 1;//enable interrupts
@@ -33,6 +33,17 @@ void initTimer2(){
     TRISGbits.TRISG15 = 0; //for testing
 }
 
+void initTimerWatch(){
+    T4CONbits.T32 = 0;
+    TMR4 = 0;
+    PR4 = 39999; //10ms timer
+    T4CONbits.TON = 0;
+    T4CONbits.TCKPS = 1; //2 prescaler
+    IFS0bits.T4IF = 0;
+    IPC4bits.T4IP = 7;
+    IEC0bits.T4IE = 1;
+}
+
 void delayUs(unsigned int delay){
     //TODO: Create a delay for "delay" micro seconds using timer 2
     int prVal = (8*delay - 1); //delay was 120-125% longer per clock than it should have been
@@ -42,18 +53,6 @@ void delayUs(unsigned int delay){
     while(IFS0bits.T3IF == 0){}
     T2CONbits.TON = 0;
     IFS0bits.T3IF = 0;
-}
-
-void initTimerWatch(){
-    T4CONbits.T32 = 1;
-    TMR4 = 0;
-    TMR5 = 0;
-    PR4 = 0xFFFF; //least sig bits
-    PR5 = 0xFFFF; //most sig bits
-    T4CONbits.TON = 0;
-    T4CONbits.TCKPS = 7; //256 prescaler
-    IFS0bits.T5IF = 0;
-    IPC5bits.T5IP = 7;
 }
 
 

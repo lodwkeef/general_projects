@@ -16,8 +16,8 @@ void moveCursorLCD(unsigned char row, unsigned char column);
 void printCharLCD(char c);
 void printStringLCD(const char* s);
 void testLCD();
-char* getTimeString();
-void updateTime();
+char* getTimeString(float time);
+void updateTime(float time);
 
 #define LCD_DELAY 50
 #define LCD_DELAY_CLEAR 1800

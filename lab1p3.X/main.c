@@ -42,6 +42,7 @@ volatile int prevAct = STOP;
 volatile int pressRelease = -1;
 volatile int switchP = -1;
 volatile stateType state = reset;
+volatile float time = 0;
 
 // ******************************************************************************************* //
 
@@ -67,9 +68,8 @@ int main(void){
                 printStringLCD("Stopped:");
                 T4CONbits.TON = 0; //turn off timer
                 TMR4 = 0;   //reset timer values to 0
-                TMR5 = 0;
-                //need to make Stopwatch Timer
-                updateTime();//display time to 00:00:00
+                time = 0;
+                updateTime(time);
                 state = stopped;
                 break;
             case stopped:
@@ -79,15 +79,13 @@ int main(void){
                 turnOnLED(STOP);
                 prevAct = STOP;
                 pressRelease = PRESS; //next change will be a press
-                //LCD Paused
                 break;
             case running:
                 turnOnLED(RUN);
-                //T4CONbits.TON = 1;
                 if(T4CONbits.TON == 0) T4CONbits.TON = 1; //if timer is off, turn it on
                 moveCursorLCD(0, 4);  //set cursor to the top row
                 if(rsString == 0) printStringLCD("Running:"); rsString = 1;
-                updateTime();
+                updateTime(time);
                 prevAct = RUN;
                 pressRelease = PRESS;
                 //LCD Updating
@@ -98,8 +96,8 @@ int main(void){
                 if(prevAct == RUN)
                 {
                     moveCursorLCD(0, 4);  //set cursor to the top row
-                    printStringLCD("Running:");
-                    updateTime();
+                    if(rsString == 0) printStringLCD("Running:"); rsString = 1;
+                    updateTime(time);
                     //LCD Updating as well if it previously came from running
                 }               
                 pressRelease = RELEASE;
@@ -129,5 +127,10 @@ void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncin
     else if(pressRelease == RELEASE && switchP == RESET) state = reset;
     else if(pressRelease == RELEASE && switchP == RS && prevAct == RUN) state = stopped;
     else if(pressRelease == RELEASE && switchP == RS && prevAct == STOP) state = running;
+}
+
+void __ISR(_TIMER_4_VECTOR, IPL7SRS) _T4Interrupt(){
+    IFS0bits.T4IF = 0;
+    time = time + .01;
 }
 

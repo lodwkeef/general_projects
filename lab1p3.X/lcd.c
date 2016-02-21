@@ -192,9 +192,8 @@ void testLCD() {
     for (i = 0; i < 1000; i++) delayUs(1000);
 }
 
-char* getTimeString(){
+char* getTimeString(float time){
     char s[9] = {};
-    long double time = .0000320*((TMR5<<16) + TMR4);
     int min = time/60;
     int sec = time - (min*60);
     int ffsec = ((time - (min*60)) - sec)*100;
@@ -202,8 +201,8 @@ char* getTimeString(){
     return s;
 }
 
-void updateTime() {
+void updateTime(float time) {
     moveCursorLCD(1, 4);  //set cursor to the bottom row
-    char* s = getTimeString();
+    char* s = getTimeString(time);
     printStringLCD(s);
 }
