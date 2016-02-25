@@ -4,13 +4,13 @@
 //              Ben Schifman
 //              Justin Siekmann
 //              Kevin Curtis
- * Created on December 30, 2014, 8:07 PM
+ * Created on February 25, 2016
  */
 
 #include <xc.h>
 #include "timer.h"
 
-void initTimer1()
+void initTimerDebounce()
 {
     TMR1 = 0;
     PR1 = 49999;
@@ -22,7 +22,7 @@ void initTimer1()
     T1CONbits.TON = 0;//Timer is disabled
 }
 
-void initTimer2(){
+void initTimerDelay(){
     TMR2 = 0;
     TMR3 = 0;
     T2CONbits.T32 = 1;
@@ -33,19 +33,8 @@ void initTimer2(){
     TRISGbits.TRISG15 = 0; //for testing
 }
 
-void initTimerWatch(){
-    T4CONbits.T32 = 0;
-    TMR4 = 0;
-    PR4 = 39999; //10ms timer
-    T4CONbits.TON = 0;
-    T4CONbits.TCKPS = 1; //2 prescaler
-    IFS0bits.T4IF = 0;
-    IPC4bits.T4IP = 7;
-    IEC0bits.T4IE = 1;
-}
-
 void delayUs(unsigned int delay){
-    //TODO: Create a delay for "delay" micro seconds using timer 2
+    //delay for "delay" micro seconds using timer 2
     int prVal = (8*delay - 1); //delay was 120-125% longer per clock than it should have been
     PR2 = prVal; //least sig bits
     PR3 = (prVal >> 16); //most sig bits
@@ -55,8 +44,7 @@ void delayUs(unsigned int delay){
     IFS0bits.T3IF = 0;
 }
 
-
-void testTimer2(){
+void testTimerDelay(){
     LATGSET = 0x8000;
     delayUs(300);
     LATGINV = 0x8000;

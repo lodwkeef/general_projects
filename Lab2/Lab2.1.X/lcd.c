@@ -4,10 +4,10 @@
 //              Ben Schifman
 //              Justin Siekmann
 //              Kevin Curtis
- * Created on December 31, 2014, 1:39 PM
+ * Created on February 25, 2016
  */
 
-/* TODO: Make define statements for each pin used in the LCD
+/* define statements for each pin used in the LCD
  */
 #include <xc.h>
 #include "lcd.h"
@@ -192,17 +192,6 @@ void testLCD() {
     for (i = 0; i < 1000; i++) delayUs(1000);
 }
 
-char* getTimeString(float time){
-    char s[9] = {};
-    int min = time/60;
-    int sec = time - (min*60);
-    int ffsec = ((time - (min*60)) - sec)*100;
-    sprintf(s,"%02d:%02d:%02d", min, sec, ffsec);
-    return s;
-}
-
-void updateTime(float time) {
-    moveCursorLCD(1, 4);  //set cursor to the bottom row
-    char* s = getTimeString(time);
-    printStringLCD(s);
+void updateLCD(){
+    
 }

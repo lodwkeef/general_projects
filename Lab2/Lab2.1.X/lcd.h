@@ -5,7 +5,7 @@
 //              Justin Siekmann
 //              Kevin Curtis
  *
- * Created on December 31, 2014, 1:39 PM
+ * Created on February 25, 2016
  */
 
 void writeLCD(unsigned char word, unsigned int commandType, unsigned int delay);
@@ -16,8 +16,8 @@ void moveCursorLCD(unsigned char row, unsigned char column);
 void printCharLCD(char c);
 void printStringLCD(const char* s);
 void testLCD();
-char* getTimeString(float time);
-void updateTime(float time);
+
+void updateLCD();
 
 #define LCD_DELAY 50
 #define LCD_DELAY_CLEAR 1800

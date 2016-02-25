@@ -1,8 +1,11 @@
 /* 
  * File:   keypad.h
- * Author: user
+// Authors:     Alex Thompson
+//              Ben Schifman
+//              Justin Siekmann
+//              Kevin Curtis
  *
- * Created on February 5, 2015, 11:42 AM
+ * Created on February 25, 2016
  */
 
 #ifndef KEYPAD_H
@@ -10,7 +13,7 @@
 
 
 void initKeypad(void);
-char scanKeypad(void);
+char scanKeypad(int row);
 
 #endif	/* KEYPAD_H */
 
