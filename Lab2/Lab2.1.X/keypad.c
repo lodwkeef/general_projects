@@ -81,7 +81,7 @@ void initKeypad(void){
  * the key that is pressed. The ascii character c programmatically is just 'c'
  */
 char scanKeypad(int row){
-    char key = -1;
+    char key = 'c';
     char keypad[4][3] = 
     {'1','2','3',
     '4','5','6',
@@ -92,9 +92,7 @@ char scanKeypad(int row){
     int c2 = 1;
     int col = -1;
     
-    switch(row){//CHECK THIS OVER WITH THE PULL UP RESISTORS!!!!!!!!!!!!
-        //
-        //
+    switch(row){
         case 0:
             LAT_C0 = LAT_ON;
             c0 = PORT_R0;
@@ -142,13 +140,11 @@ char scanKeypad(int row){
         default:
             break;
     }
-    //FIX THIS HOUSTON WE GOT A PROBLEM
-    //
-    //
-    if((c0+c1+c2)==1){
-        if(c0 == 1) col = 0;
-        else if(c1 == 1) col = 1;
-        else if(c2 == 1) col = 2;
+    
+    if((c0+c1+c2)==2){ //check if output values are good
+        if(c0 == 0) col = 0;
+        else if(c1 == 0) col = 1;
+        else if(c2 == 0) col = 2;
         key = keypad[row][col];
     }
         

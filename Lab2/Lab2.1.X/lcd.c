@@ -138,6 +138,8 @@ void initLCD(void) {
     writeLCD(0b00000110, 0, LCD_DELAY); // Set Increment Display, No Shift (i.e. cursor move)
     // TODO: Display On/Off Control
     writeLCD(0b00001110, 0, LCD_DELAY); // Turn Display (D) On, Cursor (C) Off, and Blink(B) Off
+    
+    moveCursorLCD(0,0);
 }
 
 /*
