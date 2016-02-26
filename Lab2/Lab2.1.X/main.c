@@ -52,7 +52,8 @@ int main(void){
     initLCD();
     initKeypad();
     
-    char key = '/0';
+    char key = NULL;
+    moveCursorLCD(0,0);
     
     while(1){
         switch(state){
@@ -61,8 +62,13 @@ int main(void){
             case debounce:
                 break;
             case update:
-                key = scanKeypad(row);
-                updateLCD(key);
+                if(row == -1){
+                    state = wait;
+                }
+                else{
+                    key = scanKeypad(row);
+                    printCharLCD(key);
+                }
                 break;
         }
     }

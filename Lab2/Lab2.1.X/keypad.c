@@ -45,9 +45,10 @@
 #define LAT_C1      LATEbits.LATE2
 #define LAT_C2      LATEbits.LATE4
 
-#define PORT_C0     PORTEbits.RE0
-#define PORT_C1     PORTEbits.RE2
-#define PORT_C2     PORTEbits.RE4
+#define PORT_R0     PORTGbits.RG14
+#define PORT_R1     PORTCbits.RC1
+#define PORT_R2     PORTDbits.RD10
+#define PORT_R3     PORTEbits.RE6
 
 #define CNEN_R0     CNENGbits.CNIEG14
 #define CNEN_R1     CNENCbits.CNIEC1
@@ -81,6 +82,71 @@ void initKeypad(void){
  */
 char scanKeypad(int row){
     char key = -1;
+    char keypad[4][3] = 
+    {'1','2','3',
+    '4','5','6',
+    '7','8','9',
+    '*','0','#'};
+    int c0 = 1;
+    int c1 = 1;
+    int c2 = 1;
+    int col = -1;
     
+    switch(row){
+        case 0:
+            LAT_C0 = 1;
+            c0 = PORT_R0;
+            LAT_C0 = 0;
+            LAT_C1 = 1;
+            c1 = PORT_R0;
+            LAT_C1 = 0;
+            LAT_C2 = 1;
+            c2 = PORT_R0;
+            LAT_C2 = 0;
+            break;
+        case 1:
+            LAT_C0 = 1;
+            c0 = PORT_R1;
+            LAT_C0 = 0;
+            LAT_C1 = 1;
+            c1 = PORT_R1;
+            LAT_C1 = 0;
+            LAT_C2 = 1;
+            c2 = PORT_R1;
+            LAT_C2 = 0;
+            break;
+        case 2:
+            LAT_C0 = 1;
+            c0 = PORT_R2;
+            LAT_C0 = 0;
+            LAT_C1 = 1;
+            c1 = PORT_R2;
+            LAT_C1 = 0;
+            LAT_C2 = 1;
+            c2 = PORT_R2;
+            LAT_C2 = 0;
+            break;
+        case 3:
+            LAT_C0 = 1;
+            c0 = PORT_R3;
+            LAT_C0 = 0;
+            LAT_C1 = 1;
+            c1 = PORT_R3;
+            LAT_C1 = 0;
+            LAT_C2 = 1;
+            c2 = PORT_R3;
+            LAT_C2 = 0;
+            break;
+        default:
+            break;
+    }
+    
+    if((c0+c1+c2)==2){
+        if(c0 == 0) col = 0;
+        if(c1 == 1) col = 1;
+        if(c2 == 2) col = 2;
+        key = keypad[row][col];
+    }
+        
     return key;
 }
