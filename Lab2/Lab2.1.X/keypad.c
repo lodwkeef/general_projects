@@ -16,7 +16,7 @@
 #define OUTPUT 0
 #define ODC_ON 1
 #define LAT_OFF 1
-#define LAT_ON 0
+#define LAT_ON 0// BECAUSE IT IS PULLED UP
 #define DIGITAL 0
 #define ENABLE 1
 
@@ -92,59 +92,63 @@ char scanKeypad(int row){
     int c2 = 1;
     int col = -1;
     
-    switch(row){
+    switch(row){//CHECK THIS OVER WITH THE PULL UP RESISTORS!!!!!!!!!!!!
+        //
+        //
         case 0:
-            LAT_C0 = 1;
+            LAT_C0 = LAT_ON;
             c0 = PORT_R0;
-            LAT_C0 = 0;
-            LAT_C1 = 1;
+            LAT_C0 = LAT_OFF;
+            LAT_C1 = LAT_ON;
             c1 = PORT_R0;
-            LAT_C1 = 0;
-            LAT_C2 = 1;
+            LAT_C1 = LAT_OFF;
+            LAT_C2 = LAT_ON;
             c2 = PORT_R0;
-            LAT_C2 = 0;
+            LAT_C2 = LAT_OFF;
             break;
         case 1:
-            LAT_C0 = 1;
+            LAT_C0 = LAT_ON;
             c0 = PORT_R1;
-            LAT_C0 = 0;
-            LAT_C1 = 1;
+            LAT_C0 = LAT_OFF;
+            LAT_C1 = LAT_ON;
             c1 = PORT_R1;
-            LAT_C1 = 0;
-            LAT_C2 = 1;
+            LAT_C1 = LAT_OFF;
+            LAT_C2 = LAT_ON;
             c2 = PORT_R1;
-            LAT_C2 = 0;
+            LAT_C2 = LAT_OFF;
             break;
         case 2:
-            LAT_C0 = 1;
+            LAT_C0 = LAT_ON;
             c0 = PORT_R2;
-            LAT_C0 = 0;
-            LAT_C1 = 1;
+            LAT_C0 = LAT_OFF;
+            LAT_C1 = LAT_ON;
             c1 = PORT_R2;
-            LAT_C1 = 0;
-            LAT_C2 = 1;
+            LAT_C1 = LAT_OFF;
+            LAT_C2 = LAT_ON;
             c2 = PORT_R2;
-            LAT_C2 = 0;
+            LAT_C2 = LAT_OFF;
             break;
         case 3:
-            LAT_C0 = 1;
+            LAT_C0 = LAT_ON;
             c0 = PORT_R3;
-            LAT_C0 = 0;
-            LAT_C1 = 1;
+            LAT_C0 = LAT_OFF;
+            LAT_C1 = LAT_ON;
             c1 = PORT_R3;
-            LAT_C1 = 0;
-            LAT_C2 = 1;
+            LAT_C1 = LAT_OFF;
+            LAT_C2 = LAT_ON;
             c2 = PORT_R3;
-            LAT_C2 = 0;
+            LAT_C2 = LAT_OFF;
             break;
         default:
             break;
     }
-    
-    if((c0+c1+c2)==2){
-        if(c0 == 0) col = 0;
-        if(c1 == 1) col = 1;
-        if(c2 == 2) col = 2;
+    //FIX THIS HOUSTON WE GOT A PROBLEM
+    //
+    //
+    if((c0+c1+c2)==1){
+        if(c0 == 1) col = 0;
+        else if(c1 == 1) col = 1;
+        else if(c2 == 1) col = 2;
         key = keypad[row][col];
     }
         
