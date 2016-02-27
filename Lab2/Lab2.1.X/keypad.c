@@ -15,8 +15,8 @@
 #define INPUT 1
 #define OUTPUT 0
 #define ODC_ON 1
-#define LAT_OFF 1
-#define LAT_ON 0// BECAUSE IT IS PULLED UP
+#define LAT_OFF 0
+#define LAT_ON 1//Writing a 1 will ground the ODC
 #define DIGITAL 0
 #define ENABLE 1
 
@@ -81,7 +81,7 @@ void initKeypad(void){
  * the key that is pressed. The ascii character c programmatically is just 'c'
  */
 char scanKeypad(int row){
-    char key = 'c';
+    //char key = 'c';
     char keypad[4][3] = 
     {'1','2','3',
     '4','5','6',
@@ -92,7 +92,7 @@ char scanKeypad(int row){
     int c2 = 1;
     int col = -1;
     
-    switch(row){
+    switch(row){//IF THE SWITCH IS PRESSED THE COLUMN WILL BE ZERO(0)
         case 0:
             LAT_C0 = LAT_ON;
             c0 = PORT_R0;
@@ -145,7 +145,7 @@ char scanKeypad(int row){
         if(c0 == 0) col = 0;
         else if(c1 == 0) col = 1;
         else if(c2 == 0) col = 2;
-        key = keypad[row][col];
+        key = keypad[row][col];//WHAT IF WE GET A -1 IN THE COLUMN??????????
     }
         
     return key;
