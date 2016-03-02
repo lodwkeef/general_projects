@@ -43,7 +43,7 @@
 #define UPPER 0
 
 #define LCD_DELAY 50
-#define LCD_DELAY_CLEAR 1800
+#define LCD_DELAY_CLEAR 2000
 
 
 /* This function should take in a 8-bit word and writes either the lower or upper
@@ -102,6 +102,9 @@ void printCharLCD(char c) {
  */
 void initLCD(void) {
     // Setup D, RS, and E to be outputs (0).
+    ANSELEbits.ANSE7 = 0;
+    ANSELEbits.ANSE5 = 0; //Digital
+    
     TRIS_D7 = OUTPUT;
     TRIS_D6 = OUTPUT;
     TRIS_D5 = OUTPUT;
@@ -139,6 +142,9 @@ void initLCD(void) {
     // TODO: Display On/Off Control
     writeLCD(0b00001110, 0, LCD_DELAY); // Turn Display (D) On, Cursor (C) Off, and Blink(B) Off
     
+    delayUs(10);
+    
+    clearLCD();
     moveCursorLCD(0,0);
 }
 

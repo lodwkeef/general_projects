@@ -16,7 +16,7 @@
 #define OUTPUT 0
 #define ODC_ON 1
 #define LAT_OFF 1
-#define LAT_ON 0// BECAUSE IT IS PULLED UP
+#define LAT_ON 0
 #define DIGITAL 0
 #define ENABLE 1
 
@@ -74,6 +74,31 @@ void initKeypad(void){
     IPC8bits.CNIP = 7;    
 }
 
+void setODCLatch(int col){
+    switch(col){
+        case 0:
+            LAT_C0 = LAT_ON;
+            LAT_C1 = LAT_OFF;
+            LAT_C2 = LAT_OFF;
+            break;
+        case 1:
+            LAT_C0 = LAT_OFF;
+            LAT_C1 = LAT_ON;
+            LAT_C2 = LAT_OFF;
+            break;
+        case 2:
+            LAT_C0 = LAT_OFF;
+            LAT_C1 = LAT_OFF;
+            LAT_C2 = LAT_ON;
+            break;
+        case -1: //reset all
+            LAT_C2 = LAT_OFF;
+            LAT_C0 = LAT_OFF;
+            LAT_C1 = LAT_OFF;
+            break;
+    }
+}
+
 /* This function will be called AFTER we have determined the row from CN. 
  * This function is to figure out WHICH column has been pressed.
  * This function should return -1 if more than one column is pressed or if
@@ -81,72 +106,75 @@ void initKeypad(void){
  * the key that is pressed. The ascii character c programmatically is just 'c'
  */
 char scanKeypad(int row){
-    char key = 'c';
+    char key = -1;
     char keypad[4][3] = 
     {'1','2','3',
     '4','5','6',
     '7','8','9',
     '*','0','#'};
-    int c0 = 1;
-    int c1 = 1;
-    int c2 = 1;
+    int c0 = -1;
+    int c1 = -1;
+    int c2 = -1;
     int col = -1;
     
     switch(row){
         case 0:
-            LAT_C0 = LAT_ON;
+            setODCLatch(0);
+            delayUs(10);
             c0 = PORT_R0;
-            LAT_C0 = LAT_OFF;
-            LAT_C1 = LAT_ON;
+            setODCLatch(1);
+            delayUs(10);
             c1 = PORT_R0;
-            LAT_C1 = LAT_OFF;
-            LAT_C2 = LAT_ON;
+            setODCLatch(2);
+            delayUs(10);
             c2 = PORT_R0;
-            LAT_C2 = LAT_OFF;
+            setODCLatch(-1);
             break;
         case 1:
-            LAT_C0 = LAT_ON;
+            setODCLatch(0);
+            delayUs(10);
             c0 = PORT_R1;
-            LAT_C0 = LAT_OFF;
-            LAT_C1 = LAT_ON;
+            setODCLatch(1);
+            delayUs(10);
             c1 = PORT_R1;
-            LAT_C1 = LAT_OFF;
-            LAT_C2 = LAT_ON;
+            setODCLatch(2);
+            delayUs(10);
             c2 = PORT_R1;
-            LAT_C2 = LAT_OFF;
+            setODCLatch(-1);
             break;
         case 2:
-            LAT_C0 = LAT_ON;
+            setODCLatch(0);
+            delayUs(10);
             c0 = PORT_R2;
-            LAT_C0 = LAT_OFF;
-            LAT_C1 = LAT_ON;
+            setODCLatch(1);
+            delayUs(10);
             c1 = PORT_R2;
-            LAT_C1 = LAT_OFF;
-            LAT_C2 = LAT_ON;
+            setODCLatch(2);
+            delayUs(10);
             c2 = PORT_R2;
-            LAT_C2 = LAT_OFF;
+            setODCLatch(-1);
             break;
         case 3:
-            LAT_C0 = LAT_ON;
+            setODCLatch(0);
+            delayUs(10);
             c0 = PORT_R3;
-            LAT_C0 = LAT_OFF;
-            LAT_C1 = LAT_ON;
+            setODCLatch(1);
+            delayUs(10);
             c1 = PORT_R3;
-            LAT_C1 = LAT_OFF;
-            LAT_C2 = LAT_ON;
+            setODCLatch(2);
+            delayUs(10);
             c2 = PORT_R3;
-            LAT_C2 = LAT_OFF;
+            setODCLatch(-1);
             break;
         default:
             break;
     }
     
-    if((c0+c1+c2)==2){ //check if output values are good
+    if((c0+c1+c2)==2){ //check if output values are good (one grounded, 2 high)
         if(c0 == 0) col = 0;
         else if(c1 == 0) col = 1;
         else if(c2 == 0) col = 2;
         key = keypad[row][col];
     }
-        
     return key;
 }

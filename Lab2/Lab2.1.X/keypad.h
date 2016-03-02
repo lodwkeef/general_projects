@@ -13,6 +13,7 @@
 
 
 void initKeypad(void);
+void setODCLatch(int col);
 char scanKeypad(int row);
 
 #endif	/* KEYPAD_H */

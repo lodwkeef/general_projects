@@ -18,6 +18,3 @@ void printStringLCD(const char* s);
 void testLCD();
 
 void updateLCD();
-
-#define LCD_DELAY 50
-#define LCD_DELAY_CLEAR 1800

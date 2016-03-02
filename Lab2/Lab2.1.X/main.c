@@ -20,6 +20,8 @@
 #include "lcd.h"
 #include "timer.h"
 
+#define _XTAL_FREQ 10000000
+
 //Define statements
 #define OFF 0
 #define ON 1
@@ -41,7 +43,6 @@ volatile stateType state = wait;
 volatile int nextChange = PRESS;
 volatile int row = -1;
 
-
 //*************************************************************************8****************** //
 
 int main(void){
@@ -53,7 +54,10 @@ int main(void){
     initKeypad();
     
     char key = NULL;
+    int cursorRow = 0;
+    int cursorCol = 0;
     moveCursorLCD(0,0);
+    
     
     while(1){
         switch(state){
@@ -62,13 +66,35 @@ int main(void){
             case debounce:
                 break;
             case update:
-                if(row == -1){
-                    state = wait;
+                if(row != -1){
+                    key = scanKeypad(row);
                 }
                 else{
-                    key = scanKeypad(row);
-                    printCharLCD(key);
+                    break;
                 }
+                if(key != -1){
+                    printCharLCD(key);
+                    if(cursorCol == 15){
+                        if(cursorRow == 0){
+                            moveCursorLCD(1,0);
+                            cursorRow = 1;
+                        }
+                        else if(cursorRow == 1){
+                            moveCursorLCD(0,0);
+                            cursorRow = 0;
+                        }
+                        cursorCol = 0;
+                    }
+                    else{
+                        cursorCol = cursorCol + 1;
+                    }
+                }
+                else{
+                    printCharLCD(' ');
+                    moveCursorLCD(cursorRow, cursorCol);
+                }
+                state = wait;
+                key = NULL;
                 break;
         }
     }
@@ -76,8 +102,8 @@ int main(void){
 }
 
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
-    int dummy; dummy = PORTG; dummy = PORTC; dummy = PORTD; dummy = PORTE; //dummy reads   
-    if(nextChange == PRESS && state == wait){
+    int dummy; dummy = PORTG; dummy = PORTC; dummy = PORTD; dummy = PORTE; //dummy reads
+    if(state == wait){
         switch(IFS1){
             case CN_G:
                 row = 0;
@@ -96,14 +122,20 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
                 break;
         }
         state = debounce;
-        nextChange = RELEASE;
         T1CONbits.TON = ON;
-    }    
+    }
     IFS1bits.CNGIF = 0; IFS1bits.CNCIF = 0; IFS1bits.CNDIF = 0; IFS1bits.CNEIF = 0; //lower flags
 }
 
 void __ISR(_TIMER_1_VECTOR, IPL7SRS) _debounceInterrupt() { //Timer 1 is for debouncing
     IFS0bits.T1IF = 0; //lower the flag
     T1CONbits.TON = OFF;
-    state = update;
+    if(nextChange == PRESS){
+        state = update;
+        nextChange = RELEASE;
+    }
+    else if(nextChange == RELEASE){
+        state = wait;
+        nextChange = PRESS;
+    }
 }
