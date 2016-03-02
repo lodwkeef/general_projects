@@ -94,8 +94,7 @@ int main(void){
                         state = set_mode;
                     }
                     keyPresses = keyPresses + 1;
-                    if(keyPresses < 4 && mode == ENTER && key != '#') state = enter;
-                    else if(keyPresses == 4 && (strcmp(guessString, passString)!=0) && (mode == ENTER)){
+                    if(keyPresses == 4 && (strcmp(guessString, passString)!=0) && (mode == ENTER)){
                         state = bad;
                     }
                     else if((key == '#') && (mode == ENTER)){
@@ -110,6 +109,19 @@ int main(void){
                     else if((keyPresses==4)&&(strcmp(guessString,passString)==0)&&(mode==ENTER)){
                         state = good;
                     }
+                    else if((mode==ENTER)&&(keyPresses==2)&&(strcmp(guessString,"**")==0)){
+                        state = set_mode;
+                    }
+                    else if((keyPresses<4)&&(mode==SET)&&(key!='#')&&(key!='*')){
+                        state = set_mode;
+                    }
+                    else if(((key=='#')||(key=='*'))&&(mode==SET)){
+                        state = invalid;
+                    }
+                    else if((mode==SET)&&(keyPresses==4)&&(key!='#')&&(key!='*')){
+                        state = valid;
+                    }
+                    else if(keyPresses < 4 && mode == ENTER && key != '#') state = enter;
                 }
                 else{
                     printCharLCD(' ');
@@ -120,17 +132,21 @@ int main(void){
                 key = NULL;
                 break;
             case set_mode:
-                if(mode != SET){
-                printStringLCD("Set Mode");
-                moveCursorLCD(1,0);
-                keyPresses = 0;
+                if(mode != SET || prevState != set_mode){
+                    clearLCD();
+                    printStringLCD("Set Mode");
+                    moveCursorLCD(1,0);
+                    keyPresses = 0;
+                    guessString[0]='\0';guessString[1]='\0';guessString[2]='\0';guessString[3]='\0';
+                    mode = SET;
                 }
+                prevState = set_mode;
                 break;
             case good:
                 clearLCD();
                 printStringLCD("Good");
                 keyPresses = 0;
-                guessString[0]='\0';guessString[1]='\0';guessString[3]='\0';guessString[3]='\0';
+                guessString[0]='\0';guessString[1]='\0';guessString[2]='\0';guessString[3]='\0';
                 state = enter;
                 prevState = good;
                 delayUs(2000000);
@@ -139,7 +155,7 @@ int main(void){
                 clearLCD();
                 printStringLCD("Bad");
                 keyPresses = 0;
-                guessString[0]='\0';guessString[1]='\0';guessString[3]='\0';guessString[3]='\0';
+                guessString[0]='\0';guessString[1]='\0';guessString[2]='\0';guessString[3]='\0';
                 state = enter;
                 prevState = bad;
                 delayUs(2000000);
@@ -148,6 +164,9 @@ int main(void){
                 clearLCD();
                 printStringLCD("Valid");
                 keyPresses = 0;
+                strcpy(passString,tempPass);
+                tempPass[0]='\0';tempPass[1]='\0';tempPass[2]='\0';tempPass[3]='\0';
+                mode = ENTER;
                 state = enter;
                 prevState = valid;
                 delayUs(2000000);
@@ -156,6 +175,8 @@ int main(void){
                 clearLCD();
                 printStringLCD("Invalid");
                 keyPresses = 0;
+                tempPass[0]='\0';tempPass[1]='\0';tempPass[2]='\0';tempPass[3]='\0';
+                mode = ENTER;
                 state = enter;
                 prevState = invalid;
                 delayUs(2000000);
@@ -167,7 +188,7 @@ int main(void){
 
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     int dummy; dummy = PORTG; dummy = PORTC; dummy = PORTD; dummy = PORTE; //dummy reads
-    if(state == enter){
+    if(state == enter || state == set_mode){
         switch(IFS1){
             case CN_G:
                 row = 0;
@@ -198,8 +219,12 @@ void __ISR(_TIMER_1_VECTOR, IPL7SRS) _debounceInterrupt() { //Timer 1 is for deb
         state = update;
         nextChange = RELEASE;
     }
-    else if(nextChange == RELEASE){
+    else if(nextChange == RELEASE && mode==ENTER){
         state = enter;
+        nextChange = PRESS;
+    }
+    else if(nextChange == RELEASE && mode==SET){
+        state = set_mode;
         nextChange = PRESS;
     }
 }
