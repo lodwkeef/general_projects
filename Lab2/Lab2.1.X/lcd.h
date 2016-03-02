@@ -16,5 +16,3 @@ void moveCursorLCD(unsigned char row, unsigned char column);
 void printCharLCD(char c);
 void printStringLCD(const char* s);
 void testLCD();
-
-void updateLCD();

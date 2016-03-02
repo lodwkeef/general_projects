@@ -174,7 +174,7 @@ char scanKeypad(int row){
         if(c0 == 0) col = 0;
         else if(c1 == 0) col = 1;
         else if(c2 == 0) col = 2;
-        key = keypad[row][col];
+        key = keypad[row][col];//WHAT IF WE GET A -1 IN THE COLUMN??????????
     }
     return key;
 }

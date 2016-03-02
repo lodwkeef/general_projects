@@ -20,8 +20,6 @@
 #include "lcd.h"
 #include "timer.h"
 
-#define _XTAL_FREQ 10000000
-
 //Define statements
 #define OFF 0
 #define ON 1
@@ -57,8 +55,7 @@ int main(void){
     int cursorRow = 0;
     int cursorCol = 0;
     moveCursorLCD(0,0);
-    
-    
+       
     while(1){
         switch(state){
             case wait:

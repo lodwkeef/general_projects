@@ -199,7 +199,3 @@ void testLCD() {
     printStringLCD("Hello!");
     for (i = 0; i < 1000; i++) delayUs(1000);
 }
-
-void updateLCD(){
-    
-}
