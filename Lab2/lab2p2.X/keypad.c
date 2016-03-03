@@ -178,3 +178,40 @@ char scanKeypad(int row){
     }
     return key;
 }
+    
+void clearString(char string[])
+    {
+        string[0] = '\0'; string[1] = '\0'; string[2] = '\0'; string[3] = '\0'; 
+    }
+
+int checkPass(char guessString[], char passStringa[], char passStringb[], char passStringc[], char passStringd[])
+{
+    int a = 0;
+    int b = 0;
+    int c = 0;
+    int d = 0;
+    a = strcmp(guessString, passStringa);
+    b = strcmp(guessString, passStringb);
+    c = strcmp(guessString, passStringc);
+    d = strcmp(guessString, passStringd);
+    if ((a == 0) || (b == 0) || (c == 0) || (d == 0)) return 0;
+    return -1;
+}
+
+void updatePass(char tempPass[], char passStringa[], char passStringb[], char passStringc[], char passStringd[], int i)
+{
+    switch(i){
+        case 0:
+            strcpy(passStringa, tempPass);
+            break;
+        case 1:
+            strcpy(passStringb, tempPass);
+            break;
+        case 2:
+            strcpy(passStringc, tempPass);
+            break;
+        case 3:
+            strcpy(passStringd, tempPass);
+            break;
+    }
+}

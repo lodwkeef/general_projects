@@ -58,16 +58,21 @@ int main(void){
     initKeypad();
     
     char key = NULL;
-    char passString[4] = "1234";
+    char passStringa[4] = "1234";
+    char passStringb[4] = "";
+    char passStringc[4] = "";
+    char passStringd[4] = "";
+    int PassCount = 0;
+    int correct = 1;
     char tempPass[4] = "";
-    char guessString[4] = "";    
+    char guessString[4] = ""; 
     moveCursorLCD(0,0);
        
     while(1){
         switch(state){
             case enter:
                 if(mode != ENTER || prevState != enter){
-                    moveCursorLCD(0,0);
+                    clearLCD();
                     printStringLCD("Enter");
                     moveCursorLCD(1,0);
                     mode = ENTER;
@@ -94,23 +99,26 @@ int main(void){
                         state = set_mode;
                     }
                     keyPresses = keyPresses + 1;
-                    if(keyPresses == 4 && (strcmp(guessString, passString)!=0) && (mode == ENTER)){
-                        state = bad;
-                    }
-                    else if((key == '#') && (mode == ENTER)){
-                        state = bad;
-                    }
-                    else if((keyPresses > 1) && (keyPresses < 4) && (key == '*') && (strcmp(guessString, "**")!=0)){
-                        state = bad;
-                    }
-                    else if((keyPresses==2)&&(key!='*')&&(guessString[0]=='*')){
-                        state = bad;
-                    }
-                    else if((keyPresses==4)&&(strcmp(guessString,passString)==0)&&(mode==ENTER)){
-                        state = good;
-                    }
-                    else if((mode==ENTER)&&(keyPresses==2)&&(strcmp(guessString,"**")==0)){
-                        state = set_mode;
+                    if(mode == ENTER){
+                        correct = checkPass(guessString, passStringa, passStringb, passStringc, passStringd);
+                        if(keyPresses == 4 && (correct == -1)){
+                            state = bad;
+                        }
+                        else if(key == '#'){
+                            state = bad;
+                        }
+                        else if((keyPresses > 1) && (keyPresses < 4) && (key == '*') && (strcmp(guessString, "**")!=0)){
+                            state = bad;
+                        }
+                        else if((keyPresses==2)&&(strcmp(guessString,"**")==0)){
+                            state = set_mode;
+                        }
+                        else if((keyPresses==2) && (key!='*')&&(guessString[0]=='*')){
+                            state = bad;
+                        }
+                        else if((keyPresses==4)&&(correct == 0)){
+                            state = good;
+                        }                       
                     }
                     else if((keyPresses<4)&&(mode==SET)&&(key!='#')&&(key!='*')){
                         state = set_mode;
@@ -137,7 +145,8 @@ int main(void){
                     printStringLCD("Set Mode");
                     moveCursorLCD(1,0);
                     keyPresses = 0;
-                    guessString[0]='\0';guessString[1]='\0';guessString[2]='\0';guessString[3]='\0';
+                    strcpy(guessString, "");
+                    clearString(guessString);
                     mode = SET;
                 }
                 prevState = set_mode;
@@ -146,7 +155,7 @@ int main(void){
                 clearLCD();
                 printStringLCD("Good");
                 keyPresses = 0;
-                guessString[0]='\0';guessString[1]='\0';guessString[2]='\0';guessString[3]='\0';
+                clearString(guessString);
                 state = enter;
                 prevState = good;
                 delayUs(2000000);
@@ -155,31 +164,35 @@ int main(void){
                 clearLCD();
                 printStringLCD("Bad");
                 keyPresses = 0;
-                guessString[0]='\0';guessString[1]='\0';guessString[2]='\0';guessString[3]='\0';
+                clearString(guessString);
                 state = enter;
                 prevState = bad;
                 delayUs(2000000);
                 break;
             case valid:
                 clearLCD();
+                if(PassCount == 3){
+                    PassCount = 0;
+                }
+                else PassCount = PassCount + 1;
+                updatePass(tempPass, passStringa, passStringb, passStringc, passStringd, PassCount);
                 printStringLCD("Valid");
                 keyPresses = 0;
-                strcpy(passString,tempPass);
-                tempPass[0]='\0';tempPass[1]='\0';tempPass[2]='\0';tempPass[3]='\0';
-                mode = ENTER;
+                clearString(tempPass);
+                mode = ENTER; 
                 state = enter;
                 prevState = valid;
-                delayUs(2000000);
+                delayUs(2000000);                
                 break;
-            case invalid:
+            case invalid://If we go here then it will then print Enterid
                 clearLCD();
                 printStringLCD("Invalid");
                 keyPresses = 0;
-                tempPass[0]='\0';tempPass[1]='\0';tempPass[2]='\0';tempPass[3]='\0';
+                clearString(tempPass);
                 mode = ENTER;
-                state = enter;
                 prevState = invalid;
                 delayUs(2000000);
+                state = enter;
                 break;
         }
     }
