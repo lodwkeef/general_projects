@@ -28,6 +28,8 @@
 #define PRESSED 1
 #define ENTER 0
 #define SET 1
+#define MATCH 0
+#define NOTMATCH -1
 
 #define CN_G 0x00040000
 #define CN_C 0x00004000
@@ -58,14 +60,18 @@ int main(void){
     initKeypad();
     
     char key = NULL;
-    char passStringa[4] = "1234";
-    char passStringb[4] = "";
-    char passStringc[4] = "";
-    char passStringd[4] = "";
+    char passStringa[5] = "";
+    char passStringb[5] = "";
+    char passStringc[5] = "";
+    char passStringd[5] = "";
+    int matcha = 1;
+    int matchb = 1;
+    int matchc = 1;
+    int matchd = 1;
     int PassCount = 0;
-    int correct = 1;
-    char tempPass[4] = "";
-    char guessString[4] = ""; 
+    int correct = NOTMATCH;
+    char tempPass[5] = "";
+    char guessString[5] = ""; 
     moveCursorLCD(0,0);
        
     while(1){
@@ -100,8 +106,13 @@ int main(void){
                     }
                     keyPresses = keyPresses + 1;
                     if(mode == ENTER){
-                        correct = checkPass(guessString, passStringa, passStringb, passStringc, passStringd);
-                        if(keyPresses == 4 && (correct == -1)){
+                        correct = NOTMATCH;
+                        matcha = strcmp(guessString, passStringa);
+                        matchb = strcmp(guessString, passStringb);
+                        matchc = strcmp(guessString, passStringc);
+                        matchd = strcmp(guessString, passStringd);
+                        if ((matcha == MATCH) || (matchb == MATCH) || (matchc == MATCH) || (matchd == MATCH)) correct = MATCH;
+                        if(keyPresses == 4 && (correct == NOTMATCH)){
                             state = bad;
                         }
                         else if(key == '#'){
@@ -180,19 +191,19 @@ int main(void){
                 keyPresses = 0;
                 clearString(tempPass);
                 mode = ENTER; 
-                state = enter;
+                state = enter; 
                 prevState = valid;
-                delayUs(2000000);                
+                delayUs(2000000);  
                 break;
-            case invalid://If we go here then it will then print Enterid
+            case invalid:
                 clearLCD();
                 printStringLCD("Invalid");
                 keyPresses = 0;
                 clearString(tempPass);
                 mode = ENTER;
+                state = enter;
                 prevState = invalid;
                 delayUs(2000000);
-                state = enter;
                 break;
         }
     }

@@ -19,6 +19,7 @@
 #define LAT_ON 0
 #define DIGITAL 0
 #define ENABLE 1
+#define ALLOFF -1
 
 #define ANSEL_E2    ANSELEbits.ANSE2
 #define ANSEL_E4    ANSELEbits.ANSE4
@@ -128,7 +129,7 @@ char scanKeypad(int row){
             setODCLatch(2);
             delayUs(10);
             c2 = PORT_R0;
-            setODCLatch(-1);
+            setODCLatch(ALLOFF);
             break;
         case 1:
             setODCLatch(0);
@@ -140,7 +141,7 @@ char scanKeypad(int row){
             setODCLatch(2);
             delayUs(10);
             c2 = PORT_R1;
-            setODCLatch(-1);
+            setODCLatch(ALLOFF);
             break;
         case 2:
             setODCLatch(0);
@@ -152,7 +153,7 @@ char scanKeypad(int row){
             setODCLatch(2);
             delayUs(10);
             c2 = PORT_R2;
-            setODCLatch(-1);
+            setODCLatch(ALLOFF);
             break;
         case 3:
             setODCLatch(0);
@@ -164,7 +165,7 @@ char scanKeypad(int row){
             setODCLatch(2);
             delayUs(10);
             c2 = PORT_R3;
-            setODCLatch(-1);
+            setODCLatch(ALLOFF);
             break;
         default:
             break;
@@ -179,27 +180,11 @@ char scanKeypad(int row){
     return key;
 }
     
-void clearString(char string[])
-    {
+void clearString(char string[]){
         string[0] = '\0'; string[1] = '\0'; string[2] = '\0'; string[3] = '\0'; 
-    }
-
-int checkPass(char guessString[], char passStringa[], char passStringb[], char passStringc[], char passStringd[])
-{
-    int a = 0;
-    int b = 0;
-    int c = 0;
-    int d = 0;
-    a = strcmp(guessString, passStringa);
-    b = strcmp(guessString, passStringb);
-    c = strcmp(guessString, passStringc);
-    d = strcmp(guessString, passStringd);
-    if ((a == 0) || (b == 0) || (c == 0) || (d == 0)) return 0;
-    return -1;
 }
 
-void updatePass(char tempPass[], char passStringa[], char passStringb[], char passStringc[], char passStringd[], int i)
-{
+void updatePass(char tempPass[], char passStringa[], char passStringb[], char passStringc[], char passStringd[], int i){
     switch(i){
         case 0:
             strcpy(passStringa, tempPass);

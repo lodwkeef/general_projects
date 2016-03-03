@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/lab2p2.X.production.elf">                 
+  <executable name="dist/default/debug/lab2p2.X.debug.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>531968</length>                 
@@ -9,9 +9,9 @@
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
-      <length>131072</length>                 
-      <used>24</used>                     
-      <free>131048</free>                     
+      <length>131584</length>                 
+      <used>1048</used>                     
+      <free>130536</free>                     
     </memory>                              
   </executable>                            
 </project>                                 
