@@ -36,6 +36,9 @@
 #define CN_D 0x00008000
 #define CN_E 0x00010000
 
+#define TEST 1
+#define NTEST 0
+
 
 typedef enum stateTypeEnum {
     enter, debounce, update, set_mode, 
@@ -59,15 +62,23 @@ int main(void){
     initLCD();
     initKeypad();
     
+    int runQATests = NTEST; //test keypad software functions if TEST, don't if NTEST
+    if(runQATests == TEST){
+        test_clearString();
+        delayUs(2000000);
+        clearLCD();
+        test_checkPass();
+        delayUs(2000000);
+        clearLCD();
+        test_updatePass();
+        return -1;
+    }
+    
     char key = NULL;
     char passStringa[5] = "";
     char passStringb[5] = "";
     char passStringc[5] = "";
     char passStringd[5] = "";
-    int matcha = 1;
-    int matchb = 1;
-    int matchc = 1;
-    int matchd = 1;
     int PassCount = 0;
     int correct = NOTMATCH;
     char tempPass[5] = "";
@@ -107,11 +118,7 @@ int main(void){
                     keyPresses = keyPresses + 1;
                     if(mode == ENTER){
                         correct = NOTMATCH;
-                        matcha = strcmp(guessString, passStringa);
-                        matchb = strcmp(guessString, passStringb);
-                        matchc = strcmp(guessString, passStringc);
-                        matchd = strcmp(guessString, passStringd);
-                        if ((matcha == MATCH) || (matchb == MATCH) || (matchc == MATCH) || (matchd == MATCH)) correct = MATCH;
+                        correct = checkPass(guessString, passStringa, passStringb, passStringc, passStringd);
                         if(keyPresses == 4 && (correct == NOTMATCH)){
                             state = bad;
                         }
@@ -210,7 +217,7 @@ int main(void){
     return 0;
 }
 
-void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
+void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     int dummy; dummy = PORTG; dummy = PORTC; dummy = PORTD; dummy = PORTE; //dummy reads
     if(state == enter || state == set_mode){
         switch(IFS1){
@@ -236,7 +243,7 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     IFS1bits.CNGIF = 0; IFS1bits.CNCIF = 0; IFS1bits.CNDIF = 0; IFS1bits.CNEIF = 0; //lower flags
 }
 
-void __ISR(_TIMER_1_VECTOR, IPL7SRS) _debounceInterrupt() { //Timer 1 is for debouncing
+void __ISR(_TIMER_1_VECTOR, IPL7SRS) _debounceInterrupt(){
     IFS0bits.T1IF = 0; //lower the flag
     T1CONbits.TON = OFF;
     if(nextChange == PRESS){

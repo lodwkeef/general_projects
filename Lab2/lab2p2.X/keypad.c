@@ -11,6 +11,7 @@
 #include <xc.h>
 #include "keypad.h"
 #include "timer.h"
+#include "lcd.h"
 
 #define INPUT 1
 #define OUTPUT 0
@@ -184,6 +185,19 @@ void clearString(char string[]){
         string[0] = '\0'; string[1] = '\0'; string[2] = '\0'; string[3] = '\0'; 
 }
 
+int checkPass(char guessString[], char passStringa[], char passStringb[], char passStringc[], char passStringd[]){
+    int a = 0;
+    int b = 0;
+    int c = 0;
+    int d = 0;
+    a = strcmp(guessString, passStringa);
+    b = strcmp(guessString, passStringb);
+    c = strcmp(guessString, passStringc);
+    d = strcmp(guessString, passStringd);
+    if ((a == 0) || (b == 0) || (c == 0) || (d == 0)) return 0;
+    return -1;
+}
+
 void updatePass(char tempPass[], char passStringa[], char passStringb[], char passStringc[], char passStringd[], int i){
     switch(i){
         case 0:
@@ -198,5 +212,54 @@ void updatePass(char tempPass[], char passStringa[], char passStringb[], char pa
         case 3:
             strcpy(passStringd, tempPass);
             break;
+    }
+}
+
+/******QA SOFTWARE TESTS*******************************************************************************************/
+void test_clearString(){
+    char testString[5] = "1234";
+    clearString(testString);
+    if(testString[0]=='\0' && testString[1]=='\0' && testString[2]=='\0' && testString[3]=='\0'){
+        printStringLCD("clearString:PASS");
+    }
+    else{
+        printStringLCD("clearString:FAIL");
+    }
+}
+void test_checkPass(){
+    int pass = 1;
+    char testPassa[5] = "1234";
+    char testPassb[5] = "1111";
+    char testPassc[5] = "0000";
+    char testPassd[5] = "0159";
+    
+    if(checkPass("1112", testPassa, testPassb, testPassc, testPassd)==0){
+        pass = 0;
+        printStringLCD("checkPass:FAIL");
+    }
+    if(checkPass("0000", testPassa, testPassb, testPassc, testPassd)!=0){
+        pass = 0;
+        printStringLCD("checkPass:FAIL");
+    }
+    if(pass == 1){
+        printStringLCD("checkPass:PASS");
+    }
+}
+void test_updatePass(){
+    char testPassa[5] = "1234";
+    char testPassb[5] = "1111";
+    char testPassc[5] = "0000";
+    char testPassd[5] = "0159";
+    
+    updatePass("9999", testPassa, testPassb, testPassc, testPassd, 0);
+    updatePass("8888", testPassa, testPassb, testPassc, testPassd, 1);
+    updatePass("7777", testPassa, testPassb, testPassc, testPassd, 2);
+    updatePass("6666", testPassa, testPassb, testPassc, testPassd, 3);
+    
+    if((strcmp("9999", testPassa)!=0) || (strcmp("8888", testPassb)!=0) || (strcmp("7777", testPassc)!=0) || (strcmp("6666", testPassd)!=0)){
+        printStringLCD("updatePass:FAIL");
+    }
+    else{
+        printStringLCD("updatePass:PASS");
     }
 }
