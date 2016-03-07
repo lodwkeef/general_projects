@@ -9,6 +9,7 @@
  */
 
 
+
 #ifndef PWM_H
 #define	PWM_H
 
@@ -16,7 +17,7 @@
 extern "C" {
 #endif
 
-
+void initPWM();
 
 
 #ifdef	__cplusplus
