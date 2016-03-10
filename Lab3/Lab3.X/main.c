@@ -32,11 +32,6 @@
 #define MATCH 0
 #define NOTMATCH -1
 
-#define CN_G 0x00040000
-#define CN_C 0x00004000
-#define CN_D 0x00008000
-#define CN_E 0x00010000
-
 #define TEST 1
 #define NTEST 0
 
@@ -63,14 +58,13 @@ int main(void){
     initLCD();
     initPWM();
     initADC();
+    
+    while(1){
+        testM1();
+    }
+    
+    
+    
     return 0;
 }
 
-//void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
-//    int dummy; dummy = PORTG; dummy = PORTC; dummy = PORTD; dummy = PORTE; //dummy reads
-//}
-//
-//void __ISR(_TIMER_1_VECTOR, IPL7SRS) _debounceInterrupt(){
-//    IFS0bits.T1IF = 0; //lower the flag
-//    T1CONbits.TON = OFF;
-//}

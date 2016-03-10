@@ -5,6 +5,7 @@
         <group>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/config.h</file>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/adc.h</file>
+            <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/motor.c</file>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/timer.h</file>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/lcd.c</file>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/interrupt.h</file>
@@ -13,6 +14,7 @@
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/pwm.c</file>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/adc.c</file>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/main.c</file>
+            <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/motor.h</file>
             <file>file:/C:/Users/Schifman%20Ben/Documents/UofA/Junior%202015-2016/Spring%202016/372%20ECE/Projects/general_projects/Lab3/Lab3.X/timer.c</file>
         </group>
     </open-files>
