@@ -12,6 +12,8 @@
 #include <xc.h>
 #define OUTPUT 0
 #define INPUT 1
+#define LOW 0
+#define HIGH 1
 #define TRISD_0      TRISDbits.TRISD0 
 #define TRSID_1      TRISDbits.TRISD1 
 #define TRISD_2      TRISDbits.TRISD2 
@@ -82,3 +84,38 @@ void setPWM3(int duty){
 void setPWM4(int duty){
     OC4RS = duty;
 }
+
+void setMotor1Direction(int directionBit){    //directionBit 1 is forward, 0 is reverse
+    if((directionBit==1)&&(RPD0Rbits.RPD0R != 0b1100)){
+        OC1CON = 0x0000;            // Turn off OC1 while doing setup
+        RPD2Rbits.RPD2R = 0b0000;   // map No connect to RD2
+        RPD0Rbits.RPD0R = 0b1100;   // map OC1 to RD0
+        LATDbits.LATD2 = LOW;       //set D2 to common
+        OC1CONSET = 0x8000;         // Enable OC1
+    }
+    else if((directionBit==0)&&(RPD2Rbits.RPD2R != 0b1100)){
+        OC1CON = 0x0000;            // Turn off OC2 while doing setup.
+        RPD0Rbits.RPD0R = 0b0000;   // map No connect to RD0
+        RPD2Rbits.RPD2R = 0b1100;   // map OC1 to RD2
+        LATDbits.LATD0 = LOW;       //set D0 to common
+        OC1CONSET = 0x8000;         // Enable OC1
+    }
+}
+
+void setMotor2Direction(int directionBit){    //directionBit 1 is forward, 0 is reverse
+    if((directionBit==1)&&(RPD1Rbits.RPD1R != 0b1011)){
+        OC2CON = 0x0000;            // Turn off OC1 while doing setup.
+        RPD3Rbits.RPD3R = 0b0000;   // map No connect to RD3
+        RPD1Rbits.RPD1R = 0b1011;   // map OC2 to RD1        
+        LATDbits.LATD3 = LOW;       //set D3 to common
+        OC2CONSET = 0x8000;         // Enable OC2
+    }
+    else if((directionBit==0)&&(RPD3Rbits.RPD3R != 0b1011)){
+        OC2CON = 0x0000;            // Turn off OC2 while doing setup.
+        RPD1Rbits.RPD1R = 0b0000;   // map No connect to RD1
+        RPD3Rbits.RPD3R = 0b1011;   // map OC2 to RD3
+        LATDbits.LATD1 = LOW;       //set D1 to common        
+        OC2CONSET = 0x8000;         // Enable OC2
+    }
+}
+
