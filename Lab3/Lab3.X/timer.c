@@ -6,7 +6,7 @@
 //              Kevin Curtis
  * Created on March 7, 2016
  */
-
+#include <xc.h>
 #include <xc.h>
 #include "timer.h"
 

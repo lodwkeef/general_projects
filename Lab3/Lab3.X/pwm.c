@@ -10,6 +10,8 @@
 
 
 #include <xc.h>
+#include "pwm.h"
+
 #define OUTPUT 0
 #define INPUT 1
 #define LOW 0

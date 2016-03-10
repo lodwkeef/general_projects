@@ -60,7 +60,7 @@ int main(void){
     initADC();
     
     while(1){
-        testM1();
+        //testM1();
     }
     
     
