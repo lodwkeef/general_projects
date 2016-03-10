@@ -46,6 +46,7 @@ volatile stateType prevState = enter;
 volatile int nextChange = PRESS;
 volatile int row = -1;
 volatile int mode = -1;
+volatile unsigned int ADCNum = 0;
 
 
 //*************************************************************************8****************** //
@@ -53,14 +54,21 @@ volatile int mode = -1;
 int main(void){
     SYSTEMConfigPerformance(10000000);
     enableInterrupts();
-    initTimerDebounce();
-    initTimerDelay();
+    initTimer1();
+    initTimer2();
     initLCD();
     initPWM();
     initADC();
     
+    T2CONbits.TON = 1;
+    
     while(1){
         //testM1();
+        
+        OC1RS=998; //trying to just force a value to make motor move, not going
+        
+         //OC1RS=(1000*ADCNum)/1023;//this little while loop will just run both motors together in the same direction for testing
+         OC2RS=(1000*ADCNum)/1023;
     }
     
     
@@ -68,3 +76,7 @@ int main(void){
     return 0;
 }
 
+void __ISR(_ADC_VECTOR, IPL7AUTO) _ADCInterrupt(void){
+    IFS0bits.AD1IF = 0;
+    ADCNum = ADC1BUF0;
+}

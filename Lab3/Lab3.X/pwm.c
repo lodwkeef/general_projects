@@ -21,9 +21,9 @@
 #define TRISD_2      TRISDbits.TRISD2 
 #define TRISD_3      TRISDbits.TRISD3
 #define LATD_0       RPD0Rbits.RPD0R
-#define LATD_1       RPD0Rbits.RPD1R
-#define LATD_2       RPD0Rbits.RPD2R
-#define LATD_3       RPD0Rbits.RPD3R
+#define LATD_1       RPD1Rbits.RPD1R
+#define LATD_2       RPD2Rbits.RPD2R
+#define LATD_3       RPD3Rbits.RPD3R
 //Need to check that turning on the ODCs for the pins will map properly to the OC
 //#define ODC_D0      ODCDbits.ODCD0 
 //#define ODC_D1      ODCDbits.ODCD1
@@ -46,16 +46,17 @@ void initPWM(){//We only use two output compare modules.
     OC1CON = 0x0000; // Turn off OC1 while doing setup.
     OC1R = 0x0000; // Initialize primary Compare Register
     OC1RS = 0x0000; // Initialize secondary Compare Register
-    OC1CON = 0x0006; // Configure for PWM mode
+    OC1CON = 0x0006; // Configure for PWM mode, set to timer 2
     OC1CONSET = 0x8000; // Enable OC1
     
     LATD_1 = 0b1011; // map OC2 to RD1
     OC2CON = 0x0000; // Turn off OC2 while doing setup.
     OC2R = 0x0000; // Initialize primary Compare Register
     OC2RS = 0x0000; // Initialize secondary Compare Register
-    OC2CON = 0x0006; // Configure for PWM mode
+    OC2CON = 0x0006; // Configure for PWM mode, set to timer 2 
     OC2CONSET = 0x8000; // Enable OC2
-    
+
+/*   
     LATD_2 = 0b1011; // map OC3 to RD2
     OC3CON = 0x0000; // Turn off OC3 while doing setup.
     OC3R = 0x0000; // Initialize primary Compare Register
@@ -69,7 +70,9 @@ void initPWM(){//We only use two output compare modules.
     OC4RS = 0x0000; // Initialize secondary Compare Register
     OC4CON = 0x0006; // Configure for PWM mode
     OC4CONSET = 0x8000; // Enable OC4
+*/
 }
+
 
 void setPWM1(int duty){
     OC1RS = duty;
@@ -79,6 +82,7 @@ void setPWM2(int duty){
     OC2RS = duty;
 }
 
+/*
 void setPWM3(int duty){
     OC3RS = duty;
 }
@@ -86,6 +90,7 @@ void setPWM3(int duty){
 void setPWM4(int duty){
     OC4RS = duty;
 }
+*/
 
 void setMotor1Direction(int directionBit){    //directionBit 1 is forward, 0 is reverse
     if((directionBit==1)&&(RPD0Rbits.RPD0R != 0b1100)){
