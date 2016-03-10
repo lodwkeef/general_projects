@@ -12,7 +12,7 @@
 
 void initADC(){
     
-    ANSELBbits.ANSB0 = 0; 
+    ANSELBbits.ANSB0 = 0; // RB0
     AD1CON1bits.FORM = 0; // 16 unsigned integer
     AD1CON1bits.SSRC = 7; // Auto-convert mode
     AD1CON1bits.ASAM = 1; // Auto-sampling

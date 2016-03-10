@@ -13,16 +13,13 @@
 #ifndef PWM_H
 #define	PWM_H
 
-#ifdef	__cplusplus
-extern "C" {
-#endif
 
 void initPWM();
+void setPWM1(int duty);
+void setPWM2(int duty);
+void setPWM3(int duty);
+void setPWM4(int duty);
 
-
-#ifdef	__cplusplus
-}
-#endif
 
 #endif	/* PWM_H */
 
