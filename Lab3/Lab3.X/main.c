@@ -20,6 +20,7 @@
 #include "pwm.h"
 #include "lcd.h"
 #include "timer.h"
+#include "motor.h"
 
 //Define statements
 #define OFF 0
@@ -59,18 +60,25 @@ int main(void){
     initLCD();
     initPWM();
     initADC();
+    char s[9] = {};
+    float currVolt =0;
     
-    T2CONbits.TON = 1;
+    T2CONbits.TON = ON;
     
     while(1){
         //testM1();
-        
-        OC1RS=998; //trying to just force a value to make motor move, not going
-        
+        OC1RS=750; //trying to just force a value to make motor move
          //OC1RS=(1000*ADCNum)/1023;//this little while loop will just run both motors together in the same direction for testing
          OC2RS=(1000*ADCNum)/1023;
     }
     
+    while(1){      //Lab3 Part1
+        clearLCD();
+        printStringLCD("Voltage");
+        currVolt = (5*ADCNum)/1023;
+        sprintf(s,"Voltage:%04f", currVolt);
+        printStringLCD(s);
+    }
     
     
     return 0;
@@ -78,5 +86,5 @@ int main(void){
 
 void __ISR(_ADC_VECTOR, IPL7AUTO) _ADCInterrupt(void){
     IFS0bits.AD1IF = 0;
-    ADCNum = ADC1BUF0;
+    ADCNum = ADC1BUF0;  //output the current ADC value to a volatile variable
 }
