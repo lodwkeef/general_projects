@@ -65,7 +65,7 @@ int main(void){
     
     T2CONbits.TON = ON;
     
-    while(1){
+    while(1){       //testing to see if anything actually works
         //testM1();
         OC1RS=750; //trying to just force a value to make motor move
          //OC1RS=(1000*ADCNum)/1023;//this little while loop will just run both motors together in the same direction for testing
@@ -74,10 +74,12 @@ int main(void){
     
     while(1){      //Lab3 Part1
         clearLCD();
+        moveCursorLCD(0, 0);
         printStringLCD("Voltage");
         currVolt = (5*ADCNum)/1023;
         sprintf(s,"Voltage:%04f", currVolt);
         printStringLCD(s);
+        delayUs(1000);
     }
     
     
