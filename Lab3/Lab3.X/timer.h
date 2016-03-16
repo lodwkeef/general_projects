@@ -10,7 +10,7 @@
 
 void initTimer1();
 void initTimer2();
-//void initTimer3();
+void initTimer45();
 void delayUs(unsigned int delay);
 void testTimerDelay();
 
