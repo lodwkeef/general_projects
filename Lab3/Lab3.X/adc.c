@@ -12,7 +12,7 @@
 #include "adc.h"
 
 void initADC(){
-    
+    //the tristate for the analog pin. What is up with that doc
     ANSELBbits.ANSB0 = 0; // RB0
     AD1CON1bits.FORM = 0; // 16 unsigned integer
     AD1CON1bits.SSRC = 7; // Auto-convert mode

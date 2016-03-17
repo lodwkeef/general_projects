@@ -11,8 +11,11 @@
 #ifndef MOTOR_H
 #define	MOTOR_H
 
-void testM1();
-void testM2();
+void testM1forward();
+void testM1reverse();
+void setMotorDirection(int motor, int direction);
+void testM2forward();
+void testM2reverse();
 
 #endif	/* MOTOR_H */
 

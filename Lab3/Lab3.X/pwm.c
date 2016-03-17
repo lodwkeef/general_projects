@@ -36,6 +36,11 @@ void initPWM(){//We only use two output compare modules.
     TRSID_1 = OUTPUT;
     TRISD_2 = OUTPUT;
     TRISD_3 = OUTPUT; //At this line the second motor turn on, we don't want that -BAS  
+    LATD_0 = LOW;
+    LATD_1 = LOW;
+    LATD_2 = LOW;
+    LATD_3 = LOW; //this motor was running, set it off -BAS
+    
             
     Pin_0 = 0b1100; // map OC1 to RD0    
     OC1CON = 0x0000; // Turn off OC1 while doing setup.  Also clears all states
@@ -54,22 +59,22 @@ void initPWM(){//We only use two output compare modules.
     OC2CONbits.OCTSEL = 0;  //choose the timer, '0' is timer2, '1' is timer3
     OC2CONbits.ON = 1;
     //OC2CONSET = 0x8000; // Enable OC2 //dont think this works -KDC
-
-/*   
+   
     Pin_2 = 0b1011; // map OC3 to RD2
-    OC3CON = 0x0000; // Turn off OC3 while doing setup.
+    OC3CON = 0x0000; // Turn off OC3 while doing setup.  Also clears all states
     OC3R = 0x0000; // Initialize primary Compare Register
     OC3RS = 0x0000; // Initialize secondary Compare Register
-    OC3CON = 0x0006; // Configure for PWM mode
-    OC3CONSET = 0x8000; // Enable OC3
+    OC3CONbits.OCM = 0b110; //Configure for PWM mode
+    OC3CONbits.OCTSEL = 0;  //choose the timer, '0' is timer2, '1' is timer3
+    OC3CONbits.ON = 1;
     
     Pin_3 = 0b1011; // map OC4 to RD3
-    OC4CON = 0x0000; // Turn off OC4 while doing setup.
+    OC4CON = 0x0000; // Turn off OC4 while doing setup.  Also clears all states
     OC4R = 0x0000; // Initialize primary Compare Register
     OC4RS = 0x0000; // Initialize secondary Compare Register
-    OC4CON = 0x0006; // Configure for PWM mode
-    OC4CONSET = 0x8000; // Enable OC4
-*/
+    OC4CONbits.OCM = 0b110; //Configure for PWM mode
+    OC4CONbits.OCTSEL = 0;  //choose the timer, '0' is timer2, '1' is timer3
+    OC4CONbits.ON = 1;
 }
 
 
@@ -81,7 +86,7 @@ void setPWM2(int duty){
     OC2RS = duty;
 }
 
-/*
+
 void setPWM3(int duty){
     OC3RS = duty;
 }
@@ -89,7 +94,7 @@ void setPWM3(int duty){
 void setPWM4(int duty){
     OC4RS = duty;
 }
-*/
+
 
 void setMotor1Direction(int directionBit){    //directionBit 1 is forward, 0 is reverse
     if((directionBit==1)&&(RPD0Rbits.RPD0R != 0b1100)){

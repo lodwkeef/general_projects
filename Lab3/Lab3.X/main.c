@@ -42,6 +42,7 @@ int main(void){
     //enableInterrupts();
     initTimer1();
     initTimer2();
+    initTimer45();
     initLCD();
     initPWM();
     initADC();
@@ -54,7 +55,12 @@ int main(void){
 //         //OC1RS=(1000*ADCNum)/1023;//this little while loop will just run both motors together in the same direction for testing
 //         OC2RS=(1000*ADCNum)/1023;
 
-          testM1();
+          testM1forward();
+          delayUs(100);
+          testM1reverse();
+          testM2forward();
+          delayUs(100);
+          testM2reverse();          
     }
     
 //    while(1){      //Lab3 Part1
