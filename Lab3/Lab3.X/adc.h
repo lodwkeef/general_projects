@@ -12,6 +12,8 @@
 #define	ADC_H
 
 void initADC();
+float getADCbuffer();
+void printVoltage(float ADCbuffer);
 
 #endif	/* ADC_H */
 
