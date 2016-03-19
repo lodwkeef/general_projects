@@ -38,9 +38,9 @@ float getADCbuffer(){
     float ADCbuffer = 0;
     AD1CON1bits.ADON = 1;
     IFS0bits.AD1IF = 0;
-    while(AD1CON1bits.DONE == 0); 
-    AD1CON1bits.SAMP = 0;
+    while(AD1CON1bits.DONE == 0);
     AD1CON1bits.ADON = 0;
+    AD1CON1bits.SAMP = 0;    
     ADCbuffer = (float) ADC1BUF0;
     return ADCbuffer;
 }

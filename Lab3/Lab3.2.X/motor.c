@@ -78,25 +78,34 @@ void setMotorDirection(int motor, int direction){
 void setMotorSpeed(float ADCbuffer, int direction){
     switch (direction){
         case forward:
-            if((ADCbuffer < 510) || (ADCbuffer > 513)){
-                setPWM1(1022 - ADCbuffer);
-                setPWM4(ADCbuffer);
+            if(ADCbuffer <= 510){//Left TURN
+                setPWM4(1023);
+                setPWM1(ADCbuffer*2);
             }
-            else{
-                setPWM1(1022);
-                setPWM4(1022);
-            }                   
+            else if(ADCbuffer >= 513){//Right turn clyde https://www.youtube.com/watch?v=i98QrSSHxo4
+                setPWM1(1023);
+                //OC1RS = 1023;
+                setPWM4((1023 - ADCbuffer)*2);
+            }
+            else{//full speed ahead
+                setPWM1(1023);
+                setPWM4(1023);
+            }                  
             break;
 
         case reverse:
-            if((ADCbuffer < 510) || (ADCbuffer > 513)){
-                setPWM2(1022 - ADCbuffer);
-                setPWM3(ADCbuffer);
+            if(ADCbuffer <= 510){
+                setPWM2(1023);
+                setPWM3(ADCbuffer*2);
             }
-            else{
-                setPWM2(1022);
-                setPWM3(1022);
+            else if(ADCbuffer >= 513){
+                setPWM3(1023);
+                setPWM2((1023 - ADCbuffer)*2);
             }                  
+            else{
+                setPWM3(1023);
+                setPWM2(1023);
+            }
             break;    
     }
 }

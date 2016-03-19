@@ -54,37 +54,28 @@ int main(void){
     unmapPins();
     setMotorDirection(M1, 1); 
     setMotorDirection(M2, 1);
-        while(1){      //Lab3 Part1
-            //dispVolt = UpdateLCDVoltage(dispVolt);
-           switch(state){
-                case forward:
-                    prevstate = forward; 
-                    ADCbuffer = getADCbuffer();
-                    setMotorSpeed(ADCbuffer, direction);
-                    break;
+    while(1){      //Lab3 Part1
+        //dispVolt = UpdateLCDVoltage(dispVolt);
+       //setPWM1(1023);
+       switch(state){
+            case forward:
+                prevstate = forward; 
+                ADCbuffer = getADCbuffer();
+                //UpdateLCDVoltage(ADCbuffer);
+                setMotorSpeed(ADCbuffer, direction);
+                break;
 
-                case backward:
-                    prevstate = backward;
-                    ADCbuffer = getADCbuffer();
-                    setMotorSpeed(ADCbuffer, direction);
-                    break;           
-               
-                case idle:
-                    unmapPins();
-                    break;
-        }
-        
-          testM1forward();
-          delayUs(100);
-          testM1reverse();
-          testM2forward();
-          delayUs(100);
-          testM2reverse();          
-    }
-    
+            case backward:
+                prevstate = backward;
+                ADCbuffer = getADCbuffer();
+                setMotorSpeed(ADCbuffer, direction);
+                break;           
 
-    
-    
+            case idle:
+                unmapPins();
+                break;
+        }     
+    }  
     return 0;
 }
 

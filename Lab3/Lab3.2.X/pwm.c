@@ -80,19 +80,23 @@ void initPWM(){//We only use two output compare modules.
 
 void setPWM1(int duty){
     OC1RS = duty;
+    delayUs(3000);
 }
 
 void setPWM2(int duty){
     OC2RS = duty;
+    delayUs(3000);
 }
 
 
 void setPWM3(int duty){
     OC3RS = duty;
+    delayUs(3000);
 }
 
 void setPWM4(int duty){
     OC4RS = duty;
+    delayUs(3000);
 }
 
 
