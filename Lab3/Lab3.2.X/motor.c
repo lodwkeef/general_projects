@@ -77,36 +77,27 @@ void setMotorDirection(int motor, int direction){
 
 void setMotorSpeed(float ADCbuffer, int direction){
     switch (direction){
-            case forward:
-                if(ADCbuffer < 510){
-                    setPWM1(1023 - ADCbuffer);
-                    setPWM4(ADCbuffer);
-                }
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                break;
-            case reverse:
-                
-                
-                
-                
-                
-                
-                
-                
-                
-                
+        case forward:
+            if((ADCbuffer < 510) || (ADCbuffer > 513)){
+                setPWM1(1022 - ADCbuffer);
+                setPWM4(ADCbuffer);
+            }
+            else{
+                setPWM1(1022);
+                setPWM4(1022);
+            }                   
             break;
+
+        case reverse:
+            if((ADCbuffer < 510) || (ADCbuffer > 513)){
+                setPWM2(1022 - ADCbuffer);
+                setPWM3(ADCbuffer);
+            }
+            else{
+                setPWM2(1022);
+                setPWM3(1022);
+            }                  
+            break;    
     }
 }
 

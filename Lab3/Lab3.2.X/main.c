@@ -35,6 +35,7 @@ typedef enum stateTypeEnum {
 float dispVolt = 0;
 int direction = 1;//forward
 volatile stateType state = forward;
+volatile stateType prevstate = forward;
 volatile int change = 0;
 float ADCbuffer = 0;
 //*************************************************************************8****************** //
@@ -50,37 +51,27 @@ int main(void){
     initADC();
         
     //initialize motors to forward position
+    unmapPins();
     setMotorDirection(M1, 1); 
     setMotorDirection(M2, 1);
         while(1){      //Lab3 Part1
             //dispVolt = UpdateLCDVoltage(dispVolt);
            switch(state){
-            case forward:
-                ADCbuffer = getADCbuffer();
-                setMotorSpeed(ADCbuffer, direction);
-                break;
-                
-            case backward:
-                clearLCD();
-                moveCursorLCD(0, 4);
-                printStringLCD("Stopped:");
-                T4CONbits.TON = 0; //turn off timer
-                TMR4 = 0;   //reset timer values to 0
-                time = 0;
-                updateTime(time);
-                state = stopped;
-                break;
-                
-            case idle:
-                clearLCD();
-                moveCursorLCD(0, 4);
-                printStringLCD("Stopped:");
-                T4CONbits.TON = 0; //turn off timer
-                TMR4 = 0;   //reset timer values to 0
-                time = 0;
-                updateTime(time);
-                state = stopped;
-                break;
+                case forward:
+                    prevstate = forward; 
+                    ADCbuffer = getADCbuffer();
+                    setMotorSpeed(ADCbuffer, direction);
+                    break;
+
+                case backward:
+                    prevstate = backward;
+                    ADCbuffer = getADCbuffer();
+                    setMotorSpeed(ADCbuffer, direction);
+                    break;           
+               
+                case idle:
+                    unmapPins();
+                    break;
         }
         
           testM1forward();
@@ -101,8 +92,13 @@ int main(void){
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     int dummy;
     dummy = PORTA; // Read the Port A
-    T1CONbits.TON = ON;
-    IFS1bits.CNAIF = 0; //lower flags4
+    if(change){
+        if((state == forward) || (state == backward)) state = idle; 
+        else if((state == idle) && (prevstate == forward)){ state = backward; direction = 1;}
+        else if((state == idle) && (prevstate == backward)){ state = forward; direction = 0;}
+    }
+    change ^= 1;
+    IFS1bits.CNAIF = 0; //lower flag
 }
 
 //void __ISR(_ADC_VECTOR, IPL7SRS) _ADCInterrupt(void){
