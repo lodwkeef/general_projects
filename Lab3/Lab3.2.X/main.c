@@ -50,17 +50,21 @@ int main(void){
     initPWM();
     initADC();
         
-    //initialize motors to forward position
-    unmapPins();
     setMotorDirection(M1, 1); 
     setMotorDirection(M2, 1);
     while(1){      //Lab3 Part1
-        //dispVolt = UpdateLCDVoltage(dispVolt);
-       //setPWM1(1023);
        switch(state){
             case forward:
                 prevstate = forward; 
                 ADCbuffer = getADCbuffer();
+                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
+                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
                 //UpdateLCDVoltage(ADCbuffer);
                 setMotorSpeed(ADCbuffer, direction);
                 break;
@@ -85,8 +89,8 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     dummy = PORTA; // Read the Port A
     if(change){
         if((state == forward) || (state == backward)) state = idle; 
-        else if((state == idle) && (prevstate == forward)){ state = backward; direction = 1;}
-        else if((state == idle) && (prevstate == backward)){ state = forward; direction = 0;}
+        else if((state == idle) && (prevstate == forward)){ state = backward; direction = 0;}
+        else if((state == idle) && (prevstate == backward)){ state = forward; direction = 1;}
     }
     change ^= 1;
     IFS1bits.CNAIF = 0; //lower flag

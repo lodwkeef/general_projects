@@ -10,6 +10,8 @@
 #include <xc.h>
 #include "motor.h"
 #include "timer.h"
+#include"pwm.h"
+
 #define forward     1
 #define reverse     0
 #define M1          1
@@ -32,21 +34,30 @@ void setMotorDirection(int motor, int direction){
     if(motor == M1){
         switch (direction) {
             case forward:
-                //OC1CONbits.ON = OFF;     //Turn off OC1 while doing setup.
-                Pin_2 = 0b0000;            // map 'No connect' to RD2
-                Pin_0 = 0b1100;            // map OC1 to RD0
-                LATD_2 = LOW;              //set D2 to common
-                OC1CONbits.ON = 1;         //Turn on OC1 while doing setup.
+                //OC1RS = 0;
+                //OC3RS = 0;
+                setPWM1(0);
+                setPWM3(0);
+                OC1CONbits.ON = OFF;     //Turn off OC1 while doing setup.
+                OC3CONbits.ON = OFF;     //Turn off OC3
+                Pin_0 = 0b0000;            // map 'No connect' to RD0
+                LATD_0 = LOW;              //set D2 to common
+                Pin_2 = 0b1011;            // map OC3 to RD2                
+                OC3CONbits.ON = 1;         //Turn on OC3 while doing setup.
                 delayUs(1000);
                 break;
 
             case reverse:
-                //OC1CONbits.ON = OFF;     //Turn off OC1 while doing setup.
-                //OC3CONbits.ON = OFF;     //Turn off OC3 while doing setup
-                Pin_0 = 0b0000;            // map 'No connect' to RD0
-                Pin_2 = 0b1011;            // map OC3 to RD2
-                LATD_0 = LOW;              //set D0 to common
-                OC3CONbits.ON = 1;         //Turn on OC1 while doing setup.
+                //OC1RS = 0;
+                //OC3RS = 0;
+                setPWM1(0);
+                setPWM3(0);
+                OC1CONbits.ON = OFF;     //Turn off OC1 while doing setup.
+                OC3CONbits.ON = OFF;     //Turn off OC3
+                Pin_2 = 0b0000;            // map 'No connect' to RD2
+                LATD_2 = LOW;              //set D2 to common
+                Pin_0 = 0b1100;            // map OC1 to RD0                
+                OC1CONbits.ON = 1;         //Turn on OC1 while doing setup.
                 delayUs(1000);
                 break;
         }
@@ -54,21 +65,30 @@ void setMotorDirection(int motor, int direction){
     else if(motor == M2){
         switch (direction) {
             case forward:
-                //OC1CONbits.ON = OFF;     //Turn off OC1 while doing setup.
-                Pin_1 = 0b0000;            // map 'No connect' to RD1
-                Pin_3 = 0b1011;            // map OC4 to RD3
-                LATD_1 = LOW;              //set D1 to common
-                OC4CONbits.ON = 1;         //Turn on OC4 while doing setup.
+                //OC2RS = 0;
+                //OC4RS = 0;
+                setPWM2(0);
+                setPWM4(0);
+                OC2CONbits.ON = OFF;     //Turn off OC2 while doing setup.
+                OC4CONbits.ON = OFF;     //Turn off OC4
+                Pin_3 = 0b0000;            // map 'No connect' to RD3
+                LATD_3 = LOW;              //set D3 to common
+                Pin_1 = 0b1011;            // map OC2 to RD1                
+                OC2CONbits.ON = 1;         //Turn on OC2 while doing setup.
                 delayUs(1000);
                 break;
 
             case reverse:
-                //OC1CONbits.ON = OFF;     //Turn off OC1 while doing setup.
-                //OC3CONbits.ON = OFF;     //Turn off OC3 while doing setup
-                Pin_3 = 0b0000;            // map 'No connect' to RD3
-                Pin_1 = 0b1011;            // map OC2 to RD1
-                LATD_3 = LOW;              //set D3 to common
-                OC2CONbits.ON = 1;         //Turn on OC2 while doing setup.
+                //OC2RS = 0;
+                //OC4RS = 0;
+                setPWM2(0);
+                setPWM4(0);
+                OC2CONbits.ON = OFF;     //Turn off OC2 while doing setup.
+                OC4CONbits.ON = OFF;     //Turn off OC4
+                Pin_1 = 0b0000;            // map 'No connect' to RD1
+                LATD_1 = LOW;              //set D1 to common
+                Pin_3 = 0b10 11;            // map OC4 to RD3                
+                OC4CONbits.ON = 1;         //Turn on OC3 while doing setup.
                 delayUs(1000);
                 break;
         }
@@ -79,32 +99,45 @@ void setMotorSpeed(float ADCbuffer, int direction){
     switch (direction){
         case forward:
             if(ADCbuffer <= 510){//Left TURN
-                setPWM4(1023);
-                setPWM1(ADCbuffer*2);
+                setPWM1(0);
+                setPWM4(0);
+                if(ADCbuffer <=20) ADCbuffer = 0;
+                setPWM2(1023);
+                setPWM3((ADCbuffer*2));                
             }
             else if(ADCbuffer >= 513){//Right turn clyde https://www.youtube.com/watch?v=i98QrSSHxo4
-                setPWM1(1023);
-                //OC1RS = 1023;
-                setPWM4((1023 - ADCbuffer)*2);
+                setPWM1(0);
+                setPWM4(0);
+                setPWM3(1023);
+                setPWM2((1023 - ADCbuffer)*2);
             }
             else{//full speed ahead
-                setPWM1(1023);
-                setPWM4(1023);
+                setPWM1(0);
+                setPWM4(0);
+                setPWM3(1023);
+                setPWM2(1023);
             }                  
             break;
 
         case reverse:
             if(ADCbuffer <= 510){
-                setPWM2(1023);
-                setPWM3(ADCbuffer*2);
+                setPWM3(0);
+                setPWM2(0);
+                if(ADCbuffer <=20) ADCbuffer = 0;
+                setPWM1(1023);
+                setPWM4(ADCbuffer*2);
             }
             else if(ADCbuffer >= 513){
-                setPWM3(1023);
-                setPWM2((1023 - ADCbuffer)*2);
+                setPWM3(0);
+                setPWM2(0);
+                setPWM4(1023);
+                setPWM1((1023 - ADCbuffer)*2);
             }                  
             else{
-                setPWM3(1023);
-                setPWM2(1023);
+                setPWM3(0);
+                setPWM2(0);
+                setPWM1(1023);
+                setPWM4(1023);
             }
             break;    
     }
