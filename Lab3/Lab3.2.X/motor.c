@@ -87,7 +87,7 @@ void setMotorDirection(int motor, int direction){
                 OC4CONbits.ON = OFF;     //Turn off OC4
                 Pin_1 = 0b0000;            // map 'No connect' to RD1
                 LATD_1 = LOW;              //set D1 to common
-                Pin_3 = 0b10 11;            // map OC4 to RD3                
+                Pin_3 = 0b1011;            // map OC4 to RD3                
                 OC4CONbits.ON = 1;         //Turn on OC3 while doing setup.
                 delayUs(1000);
                 break;

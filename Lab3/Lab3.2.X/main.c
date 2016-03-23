@@ -37,15 +37,17 @@ int direction = 1;//forward
 volatile stateType state = forward;
 volatile stateType prevstate = forward;
 volatile int change = 0;
+volatile int remap = 0;
 float ADCbuffer = 0;
 //*************************************************************************8****************** //
 
 int main(void){
     SYSTEMConfigPerformance(10000000);
-  //enableInterrupts();
+    enableInterrupts();
     initTimer1();
     initTimer2();
     initTimer45();
+    initSW1();
     initLCD();
     initPWM();
     initADC();
@@ -65,17 +67,37 @@ int main(void){
                     printVoltage(ADCbuffer);
                     dispVolt = ADCbuffer;
                 }
-                //UpdateLCDVoltage(ADCbuffer);
+                if(remap == 1){
+                    setMotorDirection(M1,1);
+                    setMotorDirection(M2,1);
+                    delayUs(1000);
+                    remap = 0;
+                }
                 setMotorSpeed(ADCbuffer, direction);
                 break;
 
             case backward:
                 prevstate = backward;
                 ADCbuffer = getADCbuffer();
+                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
+                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
+                if(remap == 1){
+                    setMotorDirection(M1,0);
+                    setMotorDirection(M2,0);
+                    delayUs(1000);
+                    remap = 0;
+                }
                 setMotorSpeed(ADCbuffer, direction);
                 break;           
 
             case idle:
+                remap = 1;
                 unmapPins();
                 break;
         }     
@@ -94,8 +116,13 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
     }
     change ^= 1;
     IFS1bits.CNAIF = 0; //lower flag
+    T1CONbits.TON = ON;
 }
 
+void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncing
+    IFS0bits.T1IF = 0; //lower the flag
+    T1CONbits.TON = OFF;
+}
 //void __ISR(_ADC_VECTOR, IPL7SRS) _ADCInterrupt(void){
 //    int k = 0;
 //    IFS0bits.AD1IF = 0;
