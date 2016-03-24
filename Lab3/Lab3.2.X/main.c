@@ -28,17 +28,21 @@
 #define M1 1
 #define M2 2
 
+#define PRESS 0
+#define RELEASE 1
+
 typedef enum stateTypeEnum {
     forward, idle, backward,
 } stateType;
 
-float dispVolt = 0;
-int direction = 1;//forward
-volatile stateType state = forward;
-volatile stateType prevstate = forward;
-volatile int change = 0;
+volatile float dispVolt = 0;
+volatile int direction = 1;//forward
+volatile stateType state = idle;
+volatile stateType prevstate = backward;
+volatile int pressRelease = 0;
 volatile int remap = 0;
-float ADCbuffer = 0;
+volatile float ADCbuffer = 0;
+
 //*************************************************************************8****************** //
 
 int main(void){
@@ -51,7 +55,7 @@ int main(void){
     initLCD();
     initPWM();
     initADC();
-        
+    
     setMotorDirection(M1, 1); 
     setMotorDirection(M2, 1);
     while(1){      //Lab3 Part1
@@ -69,7 +73,7 @@ int main(void){
                 }
 //                dispVolt = UpdateLCDVoltage(dispVolt);
                 moveCursorLCD(1,0);
-                printStringLCD("forward");
+                printStringLCD("forward ");
                 if(remap == 1){
                     setMotorDirection(M1,1);
                     setMotorDirection(M2,1);
@@ -113,7 +117,7 @@ int main(void){
                     dispVolt = ADCbuffer;
                 }
                 moveCursorLCD(1,0);
-                printStringLCD("Idle");
+                printStringLCD("Idle    ");
                 delayUs(1000);
                 break;
         }     
@@ -126,19 +130,22 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     int dummy;
     dummy = PORTA; // Read the Port A
     T1CONbits.TON = ON;
-    if(change == 2){
-        if((state == forward) || (state == backward)) state = idle; 
-        else if((state == idle) && (prevstate == forward)){ state = backward; direction = 0; remap = 1;}
-        else if((state == idle) && (prevstate == backward)){ state = forward; direction = 1; remap = 1;}
-        change = 0;
-    }
-    IFS1bits.CNAIF = 0; //lower flag    
+    IFS1bits.CNAIF = 0; //lower flag
+    
 }
 
 void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncing
     IFS0bits.T1IF = 0; //lower the flag
     T1CONbits.TON = OFF;
-    change = change + 1;
+    if(pressRelease == RELEASE){
+        if((state == forward) || (state == backward)) state = idle; 
+        else if((state == idle) && (prevstate == forward)){ state = backward; direction = 0; remap = 1;}
+        else if((state == idle) && (prevstate == backward)){ state = forward; direction = 1; remap = 1;}
+        pressRelease = PRESS;
+    }
+    else{
+        pressRelease = RELEASE;
+    }
 }
 //void __ISR(_ADC_VECTOR, IPL7SRS) _ADCInterrupt(void){
 //    int k = 0;

@@ -12,8 +12,8 @@
 #include "timer.h"
 #include"pwm.h"
 
-#define forward     1
-#define reverse     0
+#define FORWARD     1
+#define REVERSE     0
 #define M1          1
 #define M2          2
 #define LATD_0      LATDbits.LATD0
@@ -33,7 +33,7 @@ void setMotorDirection(int motor, int direction){
     
     if(motor == M1){
         switch (direction) {
-            case forward:
+            case FORWARD:
                 //OC1RS = 0;
                 //OC3RS = 0;
                 setPWM1(0);
@@ -41,13 +41,13 @@ void setMotorDirection(int motor, int direction){
                 OC1CONbits.ON = OFF;     //Turn off OC1 while doing setup.
                 OC3CONbits.ON = OFF;     //Turn off OC3
                 Pin_0 = 0b0000;            // map 'No connect' to RD0
-                LATD_0 = LOW;              //set D2 to common
+                LATD_0 = LOW;              //set D0 to common
                 Pin_2 = 0b1011;            // map OC3 to RD2                
                 OC3CONbits.ON = 1;         //Turn on OC3 while doing setup.
                 delayUs(1000);
                 break;
 
-            case reverse:
+            case REVERSE:
                 //OC1RS = 0;
                 //OC3RS = 0;
                 setPWM1(0);
@@ -64,7 +64,7 @@ void setMotorDirection(int motor, int direction){
     }
     else if(motor == M2){
         switch (direction) {
-            case forward:
+            case FORWARD:
                 //OC2RS = 0;
                 //OC4RS = 0;
                 setPWM2(0);
@@ -78,7 +78,7 @@ void setMotorDirection(int motor, int direction){
                 delayUs(1000);
                 break;
 
-            case reverse:
+            case REVERSE:
                 //OC2RS = 0;
                 //OC4RS = 0;
                 setPWM2(0);
@@ -97,7 +97,7 @@ void setMotorDirection(int motor, int direction){
 
 void setMotorSpeed(float ADCbuffer, int direction){
     switch (direction){
-        case forward:
+        case FORWARD:
             if(ADCbuffer <= 508){//Left TURN
                 setPWM1(0);
                 setPWM4(0);
@@ -122,7 +122,7 @@ void setMotorSpeed(float ADCbuffer, int direction){
             }                  
             break;
 
-        case reverse:
+        case REVERSE:
             if(ADCbuffer <= 510){
                 setPWM3(0);
                 setPWM2(0);
@@ -164,28 +164,28 @@ void unmapPins(){
 
 void testM1forward(){
     int i = 0;
-    setMotorDirection(M1, forward);
+    setMotorDirection(M1, FORWARD);
     for (i=200; i<1023; i++){setPWM1(i); delayUs(10000);}//rev up        
     for (i=1023; i>300; i--){setPWM1(i); delayUs(10000);}//rev down
 }
 
 void testM1reverse(){
     int i = 0;
-    setMotorDirection(M1, reverse);
+    setMotorDirection(M1, REVERSE);
     for (i=200; i<1023; i++){setPWM3(i); delayUs(10000);}//rev up    
     for (i=1023; i>300; i--){setPWM3(i); delayUs(10000);}//rev down  
 }
 
 void testM2forward(){
     int i = 0;
-    setMotorDirection(M2, forward);
+    setMotorDirection(M2, FORWARD);
     for (i=200; i<1023; i++){setPWM4(i); delayUs(10000);}//rev down  
     for (i=1023; i>300; i--){setPWM4(i); delayUs(10000);}//rev down      
 }
 
 void testM2reverse(){
     int i = 0;
-    setMotorDirection(M2, reverse);
+    setMotorDirection(M2, REVERSE);
     for (i=200; i<1023; i++){setPWM2(i); delayUs(10000);}//rev down  
     for (i=1023; i>300; i--){setPWM2(i); delayUs(10000);}//rev down      
 }

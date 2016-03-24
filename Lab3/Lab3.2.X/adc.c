@@ -56,18 +56,16 @@ void printVoltage(float ADCbuffer){
     moveCursorLCD(0,8);
 }
 
-float UpdateLCDVoltage(float dispVolt){
-    float ADCbuffer = 0;
+float UpdateLCDVoltage(float dispVoltInput, float ADCbufferInput){
     float tempDispVolt = 0;
-    ADCbuffer = getADCbuffer();
     delayUs(1000);
-    if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
-        printVoltage(ADCbuffer);
-        tempDispVolt = ADCbuffer;
+    if((dispVoltInput < ADCbufferInput) && ((dispVoltInput + 1) <= ADCbufferInput)){//to reduce excessive LCD updates
+        printVoltage(ADCbufferInput);
+        tempDispVolt = ADCbufferInput;
     }
-    else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
-        printVoltage(ADCbuffer);
-        tempDispVolt = ADCbuffer;
+    else if((dispVoltInput > ADCbufferInput) && ((dispVoltInput - 1) >= ADCbufferInput)){
+        printVoltage(ADCbufferInput);
+        tempDispVolt = ADCbufferInput;
     }
     return tempDispVolt;
 }
