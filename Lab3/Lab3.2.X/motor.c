@@ -98,18 +98,21 @@ void setMotorDirection(int motor, int direction){
 void setMotorSpeed(float ADCbuffer, int direction){
     switch (direction){
         case forward:
-            if(ADCbuffer <= 510){//Left TURN
+            if(ADCbuffer <= 508){//Left TURN
                 setPWM1(0);
                 setPWM4(0);
-                if(ADCbuffer <=20) ADCbuffer = 0;
-                setPWM2(1023);
-                setPWM3((ADCbuffer*2));                
+                if(ADCbuffer <=40) ADCbuffer = 0;
+                else if(ADCbuffer <= 256) ADCbuffer = ADCbuffer + 20;                
+                OC2RS = 1023;
+                OC3RS = ADCbuffer*2;                
             }
-            else if(ADCbuffer >= 513){//Right turn clyde https://www.youtube.com/watch?v=i98QrSSHxo4
+            else if(ADCbuffer >= 516){//Right turn clyde https://www.youtube.com/watch?v=i98QrSSHxo4
                 setPWM1(0);
                 setPWM4(0);
-                setPWM3(1023);
-                setPWM2((1023 - ADCbuffer)*2);
+                if(ADCbuffer >= 1003) ADCbuffer = 1023;
+                else if(ADCbuffer >= 768) ADCbuffer = ADCbuffer+20; 
+                OC3RS = 1023;
+                OC2RS = ((1023 - ADCbuffer)*2);
             }
             else{//full speed ahead
                 setPWM1(0);
@@ -123,15 +126,15 @@ void setMotorSpeed(float ADCbuffer, int direction){
             if(ADCbuffer <= 510){
                 setPWM3(0);
                 setPWM2(0);
-                if(ADCbuffer <=20) ADCbuffer = 0;
+                if(ADCbuffer <=40) ADCbuffer = 0;
                 setPWM1(1023);
-                setPWM4(ADCbuffer*2);
+                OC4RS = (ADCbuffer*2);
             }
             else if(ADCbuffer >= 513){
                 setPWM3(0);
                 setPWM2(0);
                 setPWM4(1023);
-                setPWM1((1023 - ADCbuffer)*2);
+                OC1RS = ((1023 - ADCbuffer)*2);
             }                  
             else{
                 setPWM3(0);
@@ -153,6 +156,10 @@ void unmapPins(){
     Pin_1 = 0;
     Pin_2 = 0;
     Pin_3 = 0;
+    LATD_0 = 0;
+    LATD_1 = 0;
+    LATD_2 = 0;
+    LATD_3 = 0;
 }
 
 void testM1forward(){

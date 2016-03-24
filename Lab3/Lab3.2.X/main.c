@@ -67,6 +67,9 @@ int main(void){
                     printVoltage(ADCbuffer);
                     dispVolt = ADCbuffer;
                 }
+//                dispVolt = UpdateLCDVoltage(dispVolt);
+                moveCursorLCD(1,0);
+                printStringLCD("forward");
                 if(remap == 1){
                     setMotorDirection(M1,1);
                     setMotorDirection(M2,1);
@@ -87,6 +90,8 @@ int main(void){
                     printVoltage(ADCbuffer);
                     dispVolt = ADCbuffer;
                 }
+                moveCursorLCD(1,0);
+                printStringLCD("backward");
                 if(remap == 1){
                     setMotorDirection(M1,0);
                     setMotorDirection(M2,0);
@@ -97,8 +102,19 @@ int main(void){
                 break;           
 
             case idle:
-                remap = 1;
                 unmapPins();
+                ADCbuffer = getADCbuffer();
+                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
+                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
+                moveCursorLCD(1,0);
+                printStringLCD("Idle");
+                delayUs(1000);
                 break;
         }     
     }  
@@ -106,22 +122,23 @@ int main(void){
 }
 
 
-void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt() {
+void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     int dummy;
     dummy = PORTA; // Read the Port A
-    if(change){
-        if((state == forward) || (state == backward)) state = idle; 
-        else if((state == idle) && (prevstate == forward)){ state = backward; direction = 0;}
-        else if((state == idle) && (prevstate == backward)){ state = forward; direction = 1;}
-    }
-    change ^= 1;
-    IFS1bits.CNAIF = 0; //lower flag
     T1CONbits.TON = ON;
+    if(change == 2){
+        if((state == forward) || (state == backward)) state = idle; 
+        else if((state == idle) && (prevstate == forward)){ state = backward; direction = 0; remap = 1;}
+        else if((state == idle) && (prevstate == backward)){ state = forward; direction = 1; remap = 1;}
+        change = 0;
+    }
+    IFS1bits.CNAIF = 0; //lower flag    
 }
 
 void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncing
     IFS0bits.T1IF = 0; //lower the flag
     T1CONbits.TON = OFF;
+    change = change + 1;
 }
 //void __ISR(_ADC_VECTOR, IPL7SRS) _ADCInterrupt(void){
 //    int k = 0;
