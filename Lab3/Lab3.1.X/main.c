@@ -29,11 +29,12 @@
 
 
 typedef enum stateTypeEnum {
-    state1
+    Update
 } stateType;
 
 volatile float ADCbuffer = 0;
 volatile float dispVolt = 0;
+volatile stateType state = Update;
 
 //*************************************************************************8****************** //
 
@@ -48,44 +49,26 @@ int main(void){
     initADC();
     //float dispVolt =0;
     
-    while(1){       //testing to see if anything actually works
-//         OC1RS=750; //trying to just force a value to make motor move
-//         //OC1RS=(1000*ADCNum)/1023;//this little while loop will just run both motors together in the same direction for testing
-//         OC2RS=(1000*ADCNum)/1023;
-        while(1){      //Lab3 Part1
-            ADCbuffer = getADCbuffer();
-            if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
-                printVoltage(ADCbuffer);
-                dispVolt = ADCbuffer;
-            }
-            else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
-                printVoltage(ADCbuffer);
-                dispVolt = ADCbuffer;
+   
+        while(1){ 
+            switch(state){
+                case Update:
+                testForward();
+                testReverse();//Lab3 Part1
+                ADCbuffer = getADCbuffer();
+                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
+                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+                    printVoltage(ADCbuffer);
+                    dispVolt = ADCbuffer;
+                }
+                setPWM1(0);
+                setPWM2(0);
+                setPWM3(0);
+                setPWM4(0);
             }
         }
-        
-          testM1forward();
-          delayUs(100);
-          testM1reverse();
-          testM2forward();
-          delayUs(100);
-          testM2reverse();          
-    }
-    
-
-    
-    
     return 0;
 }
-
-//void __ISR(_ADC_VECTOR, IPL7SRS) _ADCInterrupt(void){
-//    int k = 0;
-//    IFS0bits.AD1IF = 0;
-//    //while(AD1CON1bits.SSRC == 0);
-//    k = AD1CON1bits.SAMP;
-//    //while(AD1CON1bits.SAMP == 0);
-//    while(AD1CON1bits.DONE == 0);
-//    k = AD1CON1bits.SAMP;
-//    ADCNum = ADC1BUF0;  //output the current ADC value to a volatile variable
-//    AD1CON1bits.ON = 0;
-//}

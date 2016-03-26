@@ -25,32 +25,36 @@
 #define OFF         0
 #define LOW         0
 
-void testM1forward(){
+void testForward(){
     int i = 0;
     setMotorDirection(M1, forward);
-    for (i=200; i<1023; i++){setPWM1(i); delayUs(10000);}//rev up        
-    for (i=1023; i>300; i--){setPWM1(i); delayUs(10000);}//rev down
+    setMotorDirection(M2, forward);
+    for (i=200; i<1023; i++){
+        setPWM1(i);         
+        setPWM4(i);
+        delayUs(10000);//rev up
+    }
+    for (i=1023; i>300; i--){
+        setPWM1(i);
+        setPWM4(i);
+        delayUs(10000);
+    }//rev down
 }
 
-void testM1reverse(){
+void testReverse(){
     int i = 0;
     setMotorDirection(M1, reverse);
-    for (i=200; i<1023; i++){setPWM3(i); delayUs(10000);}//rev up    
-    for (i=1023; i>300; i--){setPWM3(i); delayUs(10000);}//rev down  
-}
-
-void testM2forward(){
-    int i = 0;
-    setMotorDirection(M2, forward);
-    for (i=200; i<1023; i++){setPWM4(i); delayUs(10000);}//rev down  
-    for (i=1023; i>300; i--){setPWM4(i); delayUs(10000);}//rev down      
-}
-
-void testM2reverse(){
-    int i = 0;
     setMotorDirection(M2, reverse);
-    for (i=200; i<1023; i++){setPWM2(i); delayUs(10000);}//rev down  
-    for (i=1023; i>300; i--){setPWM2(i); delayUs(10000);}//rev down      
+    for (i=200; i<1023; i++){
+        setPWM3(i);
+        setPWM2(i);
+        delayUs(10000);
+    }//rev up    
+    for (i=1023; i>300; i--){
+        setPWM3(i);
+        setPWM2(i);
+        delayUs(10000);
+    }//rev down  
 }
 
 void setMotorDirection(int motor, int direction){

@@ -71,7 +71,6 @@ int main(void){
                     printVoltage(ADCbuffer);
                     dispVolt = ADCbuffer;
                 }
-//                dispVolt = UpdateLCDVoltage(dispVolt);
                 moveCursorLCD(1,0);
                 printStringLCD("forward ");
                 if(remap == 1){
@@ -147,14 +146,3 @@ void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncin
         pressRelease = RELEASE;
     }
 }
-//void __ISR(_ADC_VECTOR, IPL7SRS) _ADCInterrupt(void){
-//    int k = 0;
-//    IFS0bits.AD1IF = 0;
-//    //while(AD1CON1bits.SSRC == 0);
-//    k = AD1CON1bits.SAMP;
-//    //while(AD1CON1bits.SAMP == 0);
-//    while(AD1CON1bits.DONE == 0);
-//    k = AD1CON1bits.SAMP;
-//    ADCNum = ADC1BUF0;  //output the current ADC value to a volatile variable
-//    AD1CON1bits.ON = 0;
-//}
