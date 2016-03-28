@@ -1,11 +1,16 @@
-/*
- * File:   lcd.c
+// ******************************************************************************************* //
+//
+// File:        lcd.c
+// Date:        3/28/2016
 // Authors:     Alex Thompson
 //              Ben Schifman
 //              Justin Siekmann
 //              Kevin Curtis
- * Created on March 7, 2016
- */
+//
+// Created on March 28, 2016
+//
+// Description: Motor Go Vrrooom Vrooooom.
+// ******************************************************************************************* //
 
 /* define statements for each pin used in the LCD
  */

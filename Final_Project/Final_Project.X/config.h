@@ -6,7 +6,7 @@
 //              Kevin Curtis
  * Description: This file sets the configuration bits for the PIC32MX. This is 
  * important for debugging and using the clock correctly.
- * Created on March 7, 2016
+ * Created on March 28, 2016
  */
 
 #ifndef CONFIG_H

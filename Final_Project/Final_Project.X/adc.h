@@ -5,8 +5,9 @@
 //              Justin Siekmann
 //              Kevin Curtis
  *
- * Created on March 7, 2016
+ * Created on March 28, 2016
  */
+
 
 #ifndef ADC_H
 #define	ADC_H

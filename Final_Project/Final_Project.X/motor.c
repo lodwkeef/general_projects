@@ -1,12 +1,16 @@
-/* 
- * File:   motor.c
+// ******************************************************************************************* //
+//
+// File:        motor.c
+// Date:        3/28/2016
 // Authors:     Alex Thompson
 //              Ben Schifman
 //              Justin Siekmann
 //              Kevin Curtis
- *
- * Created on March 10, 2016
- */
+//
+// Created on March 28, 2016
+//
+// Description: Motor Go Vrrooom Vrooooom.
+// ******************************************************************************************* //
 #include <xc.h>
 #include "motor.h"
 #include "timer.h"

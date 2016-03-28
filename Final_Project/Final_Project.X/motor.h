@@ -5,7 +5,7 @@
 //              Justin Siekmann
 //              Kevin Curtis
  *
- * Created on March 10, 2016
+ * Created on March 28, 2016
  */
 
 #ifndef MOTOR_H

@@ -1,12 +1,16 @@
-/* 
- * File:   adc.c
+// ******************************************************************************************* //
+//
+// File:        adc.c
+// Date:        3/28/2016
 // Authors:     Alex Thompson
 //              Ben Schifman
 //              Justin Siekmann
 //              Kevin Curtis
- *
- * Created on March 7, 2016
- */
+//
+// Created on March 28, 2016
+//
+// Description: Motor Go Vrrooom Vrooooom.
+// ******************************************************************************************* //
 
 #include <xc.h>
 #include "adc.h"
