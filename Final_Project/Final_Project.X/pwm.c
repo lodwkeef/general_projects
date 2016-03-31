@@ -1,12 +1,16 @@
-/* 
- * File:   pwm.c
+// ******************************************************************************************* //
+//
+// File:        pwm.c
+// Date:        3/28/2016
 // Authors:     Alex Thompson
 //              Ben Schifman
 //              Justin Siekmann
 //              Kevin Curtis
- *
- * Created on March 7, 2016
- */
+//
+// Created on March 28, 2016
+//
+// Description: Motor Go Vrrooom Vrooooom.
+// ******************************************************************************************* //
 
 
 #include <xc.h>
@@ -42,7 +46,7 @@ void initPWM(){//We only use two output compare modules.
     LATD_3 = LOW; //this motor was running, set it off -BAS
     
             
-    Pin_0 = 0b1100; // map OC1 to RD0    
+    Pin_0 = 0; // map "no connect" to RD0    
     OC1CON = 0x0000; // Turn off OC1 while doing setup.  Also clears all states
     OC1R = 0x0000; // Initialize primary Compare Register
     OC1RS = 0x0000; // Initialize secondary Compare Register
@@ -51,7 +55,7 @@ void initPWM(){//We only use two output compare modules.
     OC1CONbits.ON = 1;      //enable the output compare module
     //OC1CONSET = 0x8000; // Enable OC1 //dont think this works -KDC
     
-    Pin_1 = 0b1011; // map OC2 to RD1
+    Pin_1 = 0; // map "no connect" to RD1
     OC2CON = 0x0000; // Turn off OC2 while doing setup.  Also clears all states
     OC2R = 0x0000; // Initialize primary Compare Register
     OC2RS = 0x0000; // Initialize secondary Compare Register
@@ -60,7 +64,7 @@ void initPWM(){//We only use two output compare modules.
     OC2CONbits.ON = 1;
     //OC2CONSET = 0x8000; // Enable OC2 //dont think this works -KDC
    
-    Pin_2 = 0b1011; // map OC3 to RD2
+    Pin_2 = 0; // map "no connect" to RD2
     OC3CON = 0x0000; // Turn off OC3 while doing setup.  Also clears all states
     OC3R = 0x0000; // Initialize primary Compare Register
     OC3RS = 0x0000; // Initialize secondary Compare Register
@@ -68,7 +72,7 @@ void initPWM(){//We only use two output compare modules.
     OC3CONbits.OCTSEL = 0;  //choose the timer, '0' is timer2, '1' is timer3
     OC3CONbits.ON = 1;
     
-    Pin_3 = 0b1011; // map OC4 to RD3
+    Pin_3 = 0; // map "no connect" to RD3
     OC4CON = 0x0000; // Turn off OC4 while doing setup.  Also clears all states
     OC4R = 0x0000; // Initialize primary Compare Register
     OC4RS = 0x0000; // Initialize secondary Compare Register
@@ -80,18 +84,23 @@ void initPWM(){//We only use two output compare modules.
 
 void setPWM1(int duty){
     OC1RS = duty;
+    delayUs(1000);
 }
 
 void setPWM2(int duty){
     OC2RS = duty;
+    delayUs(1000);
 }
 
 
 void setPWM3(int duty){
     OC3RS = duty;
+    delayUs(1000);
 }
 
 void setPWM4(int duty){
     OC4RS = duty;
+    delayUs(1000);
 }
+
 

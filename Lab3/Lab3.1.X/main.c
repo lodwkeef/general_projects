@@ -29,11 +29,12 @@
 
 
 typedef enum stateTypeEnum {
-    state1
+    Update
 } stateType;
 
 volatile float ADCbuffer = 0;
 volatile float dispVolt = 0;
+volatile stateType state = Update;
 
 //*************************************************************************8****************** //
 
@@ -67,15 +68,3 @@ int main(void){
     }
     return 0;
 }
-
-//void __ISR(_ADC_VECTOR, IPL7SRS) _ADCInterrupt(void){
-//    int k = 0;
-//    IFS0bits.AD1IF = 0;
-//    //while(AD1CON1bits.SSRC == 0);
-//    k = AD1CON1bits.SAMP;
-//    //while(AD1CON1bits.SAMP == 0);
-//    while(AD1CON1bits.DONE == 0);
-//    k = AD1CON1bits.SAMP;
-//    ADCNum = ADC1BUF0;  //output the current ADC value to a volatile variable
-//    AD1CON1bits.ON = 0;
-//}

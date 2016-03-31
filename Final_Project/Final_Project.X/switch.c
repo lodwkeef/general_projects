@@ -1,12 +1,16 @@
-/* 
- * File:   switch.c
+// ******************************************************************************************* //
+//
+// File:        switch.c
+// Date:        3/28/2016
 // Authors:     Alex Thompson
 //              Ben Schifman
 //              Justin Siekmann
 //              Kevin Curtis
- *
- * Created on March 18, 2016
- */
+//
+// Created on March 28, 2016
+//
+// Description: Motor Go Vrrooom Vrooooom.
+// ******************************************************************************************* //
 #include "switch.h"
 #include <xc.h>
 
