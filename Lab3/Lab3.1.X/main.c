@@ -48,33 +48,23 @@ int main(void){
     initADC();
     //float dispVolt =0;
     
-    while(1){       //testing to see if anything actually works
-//         OC1RS=750; //trying to just force a value to make motor move
-//         //OC1RS=(1000*ADCNum)/1023;//this little while loop will just run both motors together in the same direction for testing
-//         OC2RS=(1000*ADCNum)/1023;
-        while(1){      //Lab3 Part1
-            ADCbuffer = getADCbuffer();
-            if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
-                printVoltage(ADCbuffer);
-                dispVolt = ADCbuffer;
-            }
-            else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
-                printVoltage(ADCbuffer);
-                dispVolt = ADCbuffer;
-            }
+    while(1){      //Lab3 Part1
+        ADCbuffer = getADCbuffer();
+        if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+            printVoltage(ADCbuffer);
+            dispVolt = ADCbuffer;
         }
-        
-          testM1forward();
-          delayUs(100);
-          testM1reverse();
-          testM2forward();
-          delayUs(100);
-          testM2reverse();          
+        else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+            printVoltage(ADCbuffer);
+            dispVolt = ADCbuffer;
+        }
+      testM1forward();
+      delayUs(100);
+      testM1reverse();
+      testM2forward();
+      delayUs(100);
+      testM2reverse(); 
     }
-    
-
-    
-    
     return 0;
 }
 
