@@ -41,7 +41,6 @@ volatile stateType state = idle;
 volatile stateType prevstate = backward;
 volatile int pressRelease = 0;
 volatile int remap = 0;
-volatile float ADCbuffer = 0;
 
 //*************************************************************************8****************** //
 
@@ -56,21 +55,23 @@ int main(void){
     initPWM();
     initADC();
     
+    float ADCarrayAveraged[4];
+    
     setMotorDirection(M1, 1); 
     setMotorDirection(M2, 1);
     while(1){      //Lab3 Part1
        switch(state){
             case forward:
                 prevstate = forward; 
-                ADCbuffer = getADCbuffer();
-                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
-                    printVoltage(ADCbuffer);
-                    dispVolt = ADCbuffer;
-                }
-                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
-                    printVoltage(ADCbuffer);
-                    dispVolt = ADCbuffer;
-                }
+                getADCbuffer(&ADCarrayAveraged);
+//                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+//                    printVoltage(ADCbuffer);
+//                    dispVolt = ADCbuffer;
+//                }
+//                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+//                    printVoltage(ADCbuffer);
+//                    dispVolt = ADCbuffer;
+//                }
                 moveCursorLCD(1,0);
                 printStringLCD("forward ");
                 if(remap == 1){
@@ -79,20 +80,20 @@ int main(void){
                     delayUs(1000);
                     remap = 0;
                 }
-                setMotorSpeed(ADCbuffer, direction);
+                setMotorSpeed(ADCarrayAveraged[0], direction);
                 break;
 
             case backward:
                 prevstate = backward;
-                ADCbuffer = getADCbuffer();
-                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
-                    printVoltage(ADCbuffer);
-                    dispVolt = ADCbuffer;
-                }
-                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
-                    printVoltage(ADCbuffer);
-                    dispVolt = ADCbuffer;
-                }
+                getADCbuffer(&ADCarrayAveraged);
+//                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+//                    printVoltage(ADCbuffer);
+//                    dispVolt = ADCbuffer;
+//                }
+//                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+//                    printVoltage(ADCbuffer);
+//                    dispVolt = ADCbuffer;
+//                }
                 moveCursorLCD(1,0);
                 printStringLCD("backward");
                 if(remap == 1){
@@ -101,20 +102,20 @@ int main(void){
                     delayUs(1000);
                     remap = 0;
                 }
-                setMotorSpeed(ADCbuffer, direction);
+                setMotorSpeed(ADCarrayAveraged[0], direction);
                 break;           
 
             case idle:
                 unmapPins();
-                ADCbuffer = getADCbuffer();
-                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
-                    printVoltage(ADCbuffer);
-                    dispVolt = ADCbuffer;
-                }
-                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
-                    printVoltage(ADCbuffer);
-                    dispVolt = ADCbuffer;
-                }
+                getADCbuffer(&ADCarrayAveraged);
+//                if((dispVolt < ADCbuffer) && ((dispVolt + 1) <= ADCbuffer)){//to reduce excessive LCD updates
+//                    printVoltage(ADCbuffer);
+//                    dispVolt = ADCbuffer;
+//                }
+//                else if((dispVolt > ADCbuffer) && ((dispVolt - 1) >= ADCbuffer)){
+//                    printVoltage(ADCbuffer);
+//                    dispVolt = ADCbuffer;
+//                }
                 moveCursorLCD(1,0);
                 printStringLCD("Idle    ");
                 delayUs(1000);

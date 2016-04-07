@@ -45,15 +45,35 @@ void initADC(){ //updated for Final Project
     AD1CON1bits.ADON = 1; // turn on the ADC
 }
 
-float getADCbuffer(){
-    float ADCbuffer = 0;
+void getADCbuffer(float *ADCarrayAveraged){ //Updated to average ADC values then store pins
+    float ADCbufferArray[16];
     AD1CON1bits.ADON = 1;
     IFS0bits.AD1IF = 0;
     while(AD1CON1bits.DONE == 0);
     AD1CON1bits.ADON = 0;
     AD1CON1bits.SAMP = 0;    
-    ADCbuffer = (float) ADC1BUF0;
-    return ADCbuffer;
+    
+    ADCbufferArray[0] = (float) ADC1BUF0; //AN0
+    ADCbufferArray[1] = (float) ADC1BUF1; //AN1
+    ADCbufferArray[2] = (float) ADC1BUF2; //AN2
+    ADCbufferArray[3] = (float) ADC1BUF3; //AN3
+    ADCbufferArray[4] = (float) ADC1BUF4; //AN0
+    ADCbufferArray[5] = (float) ADC1BUF5; //AN1
+    ADCbufferArray[6] = (float) ADC1BUF6; //AN2
+    ADCbufferArray[7] = (float) ADC1BUF7; //AN3
+    ADCbufferArray[8] = (float) ADC1BUF8; //AN0
+    ADCbufferArray[9] = (float) ADC1BUF9; //AN1
+    ADCbufferArray[10] = (float) ADC1BUFA; //AN2
+    ADCbufferArray[11] = (float) ADC1BUFB; //AN3
+    ADCbufferArray[12] = (float) ADC1BUFC; //AN0
+    ADCbufferArray[13] = (float) ADC1BUFD; //AN1
+    ADCbufferArray[14] = (float) ADC1BUFE; //AN2
+    ADCbufferArray[15] = (float) ADC1BUFF; //AN3
+    
+    ADCarrayAveraged[0] = (ADCbufferArray[0] + ADCbufferArray[4] + ADCbufferArray[8] + ADCbufferArray[12])/4; //Averaged AN0
+    ADCarrayAveraged[1] = (ADCbufferArray[1] + ADCbufferArray[5] + ADCbufferArray[9] + ADCbufferArray[13])/4; //Averaged AN1
+    ADCarrayAveraged[2] = (ADCbufferArray[2] + ADCbufferArray[6] + ADCbufferArray[10] + ADCbufferArray[14])/4; //Averaged AN2
+    ADCarrayAveraged[3] = (ADCbufferArray[3] + ADCbufferArray[7] + ADCbufferArray[11] + ADCbufferArray[15])/4; //Averaged AN3
 }
 
 void printVoltage(float ADCbuffer){
