@@ -91,7 +91,7 @@ int main(void){
                     delayUs(1000); //why the delay?
                     remap = NOPE;
                 }
-                setMotorSpeed(rSpeed, lSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, direction);
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
@@ -100,7 +100,7 @@ int main(void){
                 direction = FORWARD;
                 moveCursorLCD(0,0);
                 printStringLCD("Left");
-                setMotorSpeed(rSpeed, lSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, direction);
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
@@ -109,7 +109,7 @@ int main(void){
                 direction = FORWARD;
                 moveCursorLCD(0,0);
                 printStringLCD("Hard Left");
-                setMotorSpeed(rSpeed, lSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, direction);
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
@@ -118,7 +118,7 @@ int main(void){
                 direction = FORWARD;
                 moveCursorLCD(0,0);
                 printStringLCD("Super Hard Left");
-                setMotorSpeed(rSpeed, lSpeed, direction);
+                setMotorSpeed(rSpeed, rSpeed, direction);
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
@@ -127,7 +127,7 @@ int main(void){
                 direction = FORWARD;
                 moveCursorLCD(0,0);
                 printStringLCD("Right");
-                setMotorSpeed(rSpeed, lSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, direction);
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
@@ -136,7 +136,7 @@ int main(void){
                 direction = FORWARD;
                 moveCursorLCD(0,0);
                 printStringLCD("Hard Right");
-                setMotorSpeed(rSpeed, lSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, direction);
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
@@ -145,7 +145,7 @@ int main(void){
                 direction = FORWARD;
                 moveCursorLCD(0,0);
                 printStringLCD("Super Hard Right");
-                setMotorSpeed(rSpeed, lSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, direction);
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
