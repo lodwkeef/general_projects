@@ -99,53 +99,53 @@ void setMotorDirection(int motor, int direction){
     }
 }
 
-void setMotorSpeed(float ADCbuffer, int direction){
+void setMotorSpeed(float Lspeed, float Rspeed, int direction){ //input left motor speed, right motor speed, direction (forward or back)
     switch (direction){
         case FORWARD:
-            if(ADCbuffer <= 508){//Left TURN
+//            if(ADCbuffer <= 508){//Left TURN
+//                setPWM1(0);
+//                setPWM4(0);
+//                if(ADCbuffer <=40) ADCbuffer = 0;
+//                else if(ADCbuffer <= 256) ADCbuffer = ADCbuffer + 20;                
+//                OC2RS = 1023; //right wheel full speed
+//                OC3RS = ADCbuffer*2; //left wheel speed               
+//            }
+//            else if(ADCbuffer >= 516){//Right turn clyde https://www.youtube.com/watch?v=i98QrSSHxo4
+//                setPWM1(0);
+//                setPWM4(0);
+//                if(ADCbuffer >= 1003) ADCbuffer = 1023;
+//                else if(ADCbuffer >= 768) ADCbuffer = ADCbuffer+20; 
+//                OC3RS = 1023;
+//                OC2RS = ((1023 - ADCbuffer)*2);
+//            }
+//            else{//full speed ahead
                 setPWM1(0);
                 setPWM4(0);
-                if(ADCbuffer <=40) ADCbuffer = 0;
-                else if(ADCbuffer <= 256) ADCbuffer = ADCbuffer + 20;                
-                OC2RS = 1023;
-                OC3RS = ADCbuffer*2;                
-            }
-            else if(ADCbuffer >= 516){//Right turn clyde https://www.youtube.com/watch?v=i98QrSSHxo4
-                setPWM1(0);
-                setPWM4(0);
-                if(ADCbuffer >= 1003) ADCbuffer = 1023;
-                else if(ADCbuffer >= 768) ADCbuffer = ADCbuffer+20; 
-                OC3RS = 1023;
-                OC2RS = ((1023 - ADCbuffer)*2);
-            }
-            else{//full speed ahead
-                setPWM1(0);
-                setPWM4(0);
-                setPWM3(1023);
-                setPWM2(1023);
-            }                  
+                setPWM3(Lspeed); //left motor
+                setPWM2(Rspeed); //right motor
+//            }                  
             break;
 
         case REVERSE:
-            if(ADCbuffer <= 510){
+//            if(ADCbuffer <= 510){
+//                setPWM3(0);
+//                setPWM2(0);
+//                if(ADCbuffer <=40) ADCbuffer = 0;
+//                setPWM1(1023); //left wheel full speed? confirm please
+//                OC4RS = (ADCbuffer*2); //right wheel speed? confirm please
+//            }
+//            else if(ADCbuffer >= 513){
+//                setPWM3(0);
+//                setPWM2(0);
+//                setPWM4(1023);
+//                OC1RS = ((1023 - ADCbuffer)*2);
+//            }                  
+//            else{
                 setPWM3(0);
                 setPWM2(0);
-                if(ADCbuffer <=40) ADCbuffer = 0;
-                setPWM1(1023);
-                OC4RS = (ADCbuffer*2);
-            }
-            else if(ADCbuffer >= 513){
-                setPWM3(0);
-                setPWM2(0);
-                setPWM4(1023);
-                OC1RS = ((1023 - ADCbuffer)*2);
-            }                  
-            else{
-                setPWM3(0);
-                setPWM2(0);
-                setPWM1(1023);
-                setPWM4(1023);
-            }
+                setPWM1(Lspeed); //verify correct behavior
+                setPWM4(Rspeed); //verify
+//            }
             break;    
     }
 }

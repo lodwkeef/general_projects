@@ -38,7 +38,7 @@ void initADC(){ //updated for Final Project
     AD1CON3bits.ADCS = 0xFF; // 512 times the PBCLK
     AD1CHSbits.CH0NA = 0; // Use Vref- as negative reference
     AD1CHSbits.CH0NA = 0; //UPDATED: Scan is enabled, these are ignored
-    AD1CSSLbits.CSSL0 = 0x0000000F; //UPDATED: Scanning AN0-AN3
+    AD1CSSL = 0x0000000F; //UPDATED: Scanning AN0-AN3
     IFS0bits.AD1IF = 0;
     IEC0bits.AD1IE = 1;
     IPC5bits.AD1IP = 7;
@@ -76,27 +76,27 @@ void getADCbuffer(float *ADCarrayAveraged){ //Updated to average ADC values then
     ADCarrayAveraged[3] = (ADCbufferArray[3] + ADCbufferArray[7] + ADCbufferArray[11] + ADCbufferArray[15])/4; //Averaged AN3
 }
 
-void printVoltage(float ADCbuffer){
-    //clearLCD();
-    moveCursorLCD(0,0);
-    float dispVolt;
-    char s[9] = {};
-    dispVolt = (3.3*ADCbuffer)/1023;
-    sprintf(s,"Voltage: %.2fV", dispVolt);
-    printStringLCD(s);
-    moveCursorLCD(0,8);
-}
-
-float UpdateLCDVoltage(float dispVoltInput, float ADCbufferInput){
-    float tempDispVolt = 0;
-    delayUs(1000);
-    if((dispVoltInput < ADCbufferInput) && ((dispVoltInput + 1) <= ADCbufferInput)){//to reduce excessive LCD updates
-        printVoltage(ADCbufferInput);
-        tempDispVolt = ADCbufferInput;
-    }
-    else if((dispVoltInput > ADCbufferInput) && ((dispVoltInput - 1) >= ADCbufferInput)){
-        printVoltage(ADCbufferInput);
-        tempDispVolt = ADCbufferInput;
-    }
-    return tempDispVolt;
-}
+//void printVoltage(float ADCbuffer){
+//    //clearLCD();
+//    moveCursorLCD(0,0);
+//    float dispVolt;
+//    char s[9] = {};
+//    dispVolt = (3.3*ADCbuffer)/1023;
+//    sprintf(s,"Voltage: %.2fV", dispVolt);
+//    printStringLCD(s);
+//    moveCursorLCD(0,8);
+//}
+//
+//float UpdateLCDVoltage(float dispVoltInput, float ADCbufferInput){
+//    float tempDispVolt = 0;
+//    delayUs(1000);
+//    if((dispVoltInput < ADCbufferInput) && ((dispVoltInput + 1) <= ADCbufferInput)){//to reduce excessive LCD updates
+//        printVoltage(ADCbufferInput);
+//        tempDispVolt = ADCbufferInput;
+//    }
+//    else if((dispVoltInput > ADCbufferInput) && ((dispVoltInput - 1) >= ADCbufferInput)){
+//        printVoltage(ADCbufferInput);
+//        tempDispVolt = ADCbufferInput;
+//    }
+//    return tempDispVolt;
+//}
