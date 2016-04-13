@@ -48,7 +48,7 @@
 #define NOPE 0
 
 typedef enum stateTypeEnum {
-    idle, forward, left, hardLeft, superHardLeft, right, hardRight, superHardRight,
+    idle, forward, left, hardLeft, superHardLeft, right, hardRight, superHardRight, end,
 } stateType;
 
 volatile stateType state = idle;
@@ -77,7 +77,6 @@ int main(void){
     
     setMotorDirection(M1, direction); 
     setMotorDirection(M2, direction);
-    //why no delay
     while(1){
        switch(state){
             case forward:
@@ -88,7 +87,6 @@ int main(void){
                 if(remap == YES){
                     setMotorDirection(M1,direction);
                     setMotorDirection(M2,direction);
-                    delayUs(1000); //why the delay?
                     remap = NOPE;
                 }
                 setMotorSpeed(lSpeed, rSpeed, direction);
@@ -149,11 +147,25 @@ int main(void){
                 getADCbuffer(&ADCarrayAveraged);
                 nextState = calcNextState(ADCarrayAveraged);
                 break;
+            case end:
+                //execute spin
+                lSpeed = LSTOP; rSpeed = RSTOP;
+                direction = FORWARD;
+                setMotorSpeed(lSpeed, rSpeed, direction);
+                lSpeed = LFULL; rSpeed = RSTOP;
+                direction = FORWARD;
+                setMotorSpeed(lSpeed, rSpeed, direction);
+                delayUs(1000000);
+                lSpeed = LSTOP; rSpeed = RSTOP;
+                direction = FORWARD;
+                setMotorSpeed(lSpeed, rSpeed, direction);
+                getADCbuffer(&ADCarrayAveraged);
+                nextState = calcNextState(ADCarrayAveraged);                
+            break;
             case idle:
                 unmapPins();
                 clearLCD();
                 printStringLCD("Idle Mode");
-                delayUs(1000); //why the delay?
                 break;
         }     
     }  
