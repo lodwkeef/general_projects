@@ -18,7 +18,7 @@
 int onLine(float adcVal){
     float volt = 0;
     volt = 3.3*(adcVal)/1023;
-    if(volt <= 2.5){
+    if(volt <= .9){
         return OFFLINE; //off line
     }
     else{
@@ -39,22 +39,22 @@ stateType calcNextState(float ADCArray[]){
         nextState = forward;
     }
     else if(detectorArray[0] == OFFLINE && detectorArray[1] == OFFLINE && detectorArray[2] == ONLINE && detectorArray[3] == OFFLINE){ //left
-        nextState = left;
-    }
-    else if(detectorArray[0] == OFFLINE && detectorArray[1] == OFFLINE && detectorArray[2] == ONLINE && detectorArray[3] == ONLINE){ //hardleft
-        nextState = hardLeft;
-    }
-    else if(detectorArray[0] == OFFLINE && detectorArray[1] == OFFLINE && detectorArray[2] == OFFLINE && detectorArray[3] == ONLINE){ //superhardleft
-        nextState = superHardLeft;
-    }
-    else if(detectorArray[0] == OFFLINE && detectorArray[1] == ONLINE && detectorArray[2] == OFFLINE && detectorArray[3] == OFFLINE){ //right
         nextState = right;
     }
-    else if(detectorArray[0] == ONLINE && detectorArray[1] == ONLINE && detectorArray[2] == OFFLINE && detectorArray[3] == OFFLINE){ //hardright
+    else if(detectorArray[0] == OFFLINE && detectorArray[1] == OFFLINE && detectorArray[2] == ONLINE && detectorArray[3] == ONLINE){ //hardleft
         nextState = hardRight;
     }
-    else if(detectorArray[0] == ONLINE && detectorArray[1] == OFFLINE && detectorArray[2] == OFFLINE && detectorArray[3] == OFFLINE){ //superhardright
+    else if(detectorArray[0] == OFFLINE && detectorArray[1] == OFFLINE && detectorArray[2] == OFFLINE && detectorArray[3] == ONLINE){ //superhardleft
         nextState = superHardRight;
+    }
+    else if(detectorArray[0] == OFFLINE && detectorArray[1] == ONLINE && detectorArray[2] == OFFLINE && detectorArray[3] == OFFLINE){ //right
+        nextState = left;
+    }
+    else if(detectorArray[0] == ONLINE && detectorArray[1] == ONLINE && detectorArray[2] == OFFLINE && detectorArray[3] == OFFLINE){ //hardright
+        nextState = hardLeft;
+    }
+    else if(detectorArray[0] == ONLINE && detectorArray[1] == OFFLINE && detectorArray[2] == OFFLINE && detectorArray[3] == OFFLINE){ //superhardright
+        nextState = superHardLeft;
     }
     else if(detectorArray[0] == OFFLINE && detectorArray[1] == ONLINE && detectorArray[2] == ONLINE && detectorArray[3] == ONLINE){ //ignore inner loop...for now
         nextState = forward;

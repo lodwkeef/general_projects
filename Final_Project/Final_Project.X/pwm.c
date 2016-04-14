@@ -92,7 +92,6 @@ void setPWM2(int duty){
     delayUs(1000);
 }
 
-
 void setPWM3(int duty){
     OC3RS = duty;
     delayUs(1000);

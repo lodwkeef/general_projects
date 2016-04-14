@@ -152,10 +152,10 @@ void setMotorSpeed(float Lspeed, float Rspeed, int direction){ //input left moto
 
 
 void unmapPins(){
-    setPWM1(0);
-    setPWM2(0);
-    setPWM3(0);
-    setPWM4(0);
+//    setPWM1(0);
+//    setPWM2(0);
+//    setPWM3(0);
+//    setPWM4(0);
     Pin_0 = 0;
     Pin_1 = 0;
     Pin_2 = 0;

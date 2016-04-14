@@ -42,12 +42,12 @@ void initTimer45(){//timer for delayUs
     IFS0bits.T5IF = 0; 
     T4CONbits.TON = 0; 
        
-    TRISGbits.TRISG15 = 0; //for testing
+    TRISAbits.TRISA6 = 0; //for testing
 }
 
 void delayUs(unsigned int delay){//using timers 4 and 5
-    //TODO: Create a delay for "delay" micro seconds using timer 2
-    int prVal = (8*delay - 1); //delay was 120-125% longer per clock than it should have been
+    //TODO: Create a delay for "delay" micro seconds using timer 4/5
+    int prVal = (10*delay - 1); 
     PR4 = prVal; //least sig bits
     PR5 = (prVal >> 16); //most sig bits
     T4CONbits.TON = 1;
@@ -57,8 +57,8 @@ void delayUs(unsigned int delay){//using timers 4 and 5
 }
 
 void testTimerDelay(){
-    LATGSET = 0x8000;
-    delayUs(300);
-    LATGINV = 0x8000;
-    delayUs(300);
+    LATAbits.LATA6 = 1;
+    delayUs(1000);
+    LATAbits.LATA6 = 0;
+    delayUs(1000);
 }

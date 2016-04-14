@@ -22,6 +22,7 @@
 #include "timer.h"
 #include "motor.h"
 #include "line.h"
+#include "switch.h"
 
 //Define statements
 #define OFF 0
@@ -47,9 +48,10 @@
 #define YES 1
 #define NOPE 0
 
-typedef enum stateTypeEnum {
-    idle, forward, left, hardLeft, superHardLeft, right, hardRight, superHardRight, end,
-} stateType;
+//for reference: this is defined in line.h in order to use in multiple files
+//typedef enum stateTypeEnum {
+//    idle, forward, left, hardLeft, superHardLeft, right, hardRight, superHardRight, end, test
+//} stateType;
 
 volatile stateType state = idle;
 volatile int pressRelease = PRESS;
@@ -73,82 +75,105 @@ int main(void){
     int lSpeed = 0;
     int direction = FORWARD; //forward
     
-    stateType nextState = idle;
+    stateType prevState = forward;
     
     setMotorDirection(M1, direction); 
     setMotorDirection(M2, direction);
     while(1){
        switch(state){
             case forward:
-                lSpeed = LFULL; rSpeed = RFULL;
-                direction = FORWARD;
-                moveCursorLCD(0,0);
-                printStringLCD("Forward");
-                if(remap == YES){
-                    setMotorDirection(M1,direction);
-                    setMotorDirection(M2,direction);
-                    remap = NOPE;
+                if(state != prevState){
+                    lSpeed = LFULL; rSpeed = RFULL;
+                    direction = FORWARD;
+                    clearLCD();
+                    printStringLCD("Forward");
+                    if(remap == YES){
+                        setMotorDirection(M1,direction);
+                        setMotorDirection(M2,direction);
+                        remap = NOPE;
+                    }
+                    setMotorSpeed(lSpeed, rSpeed, direction);
                 }
-                setMotorSpeed(lSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = forward;
                 break;
             case left:
-                lSpeed = LFULL; rSpeed = R90;
-                direction = FORWARD;
-                moveCursorLCD(0,0);
-                printStringLCD("Left");
-                setMotorSpeed(lSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);
+                if(state != prevState){
+                    lSpeed = L90; rSpeed = RFULL;
+                    direction = FORWARD;
+                    clearLCD();
+                    printStringLCD("Left");
+                    setMotorSpeed(lSpeed, rSpeed, direction);
+                }
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = left;
                 break;
             case hardLeft:
-                lSpeed = LFULL; rSpeed = R60;
-                direction = FORWARD;
-                moveCursorLCD(0,0);
-                printStringLCD("Hard Left");
-                setMotorSpeed(lSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);
+                if(state != prevState){
+                    lSpeed = L60; rSpeed = RFULL;
+                    direction = FORWARD;
+                    clearLCD();
+                    printStringLCD("Hard Left");
+                    setMotorSpeed(lSpeed, rSpeed, direction);
+                }
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = hardLeft;
                 break;
             case superHardLeft:
-                lSpeed = LFULL; rSpeed = RSTOP;
-                direction = FORWARD;
-                moveCursorLCD(0,0);
-                printStringLCD("Super Hard Left");
-                setMotorSpeed(rSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);
+                if(state != prevState){
+                    lSpeed = LSTOP; rSpeed = RFULL;
+                    direction = FORWARD;
+                    clearLCD();
+                    printStringLCD("Super Hard Left");
+                    setMotorSpeed(lSpeed, rSpeed, direction);
+                }
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = superHardLeft;
                 break;
             case right:
-                lSpeed = L90; rSpeed = RFULL;
-                direction = FORWARD;
-                moveCursorLCD(0,0);
-                printStringLCD("Right");
-                setMotorSpeed(lSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);
+                if(state != prevState){
+                    lSpeed = LFULL; rSpeed = R90;
+                    direction = FORWARD;
+                    clearLCD();
+                    printStringLCD("Right");
+                    setMotorSpeed(lSpeed, rSpeed, direction);
+                }
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = right;
                 break;
             case hardRight:
-                lSpeed = L60; rSpeed = RFULL;
-                direction = FORWARD;
-                moveCursorLCD(0,0);
-                printStringLCD("Hard Right");
-                setMotorSpeed(lSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);
+                if(state != prevState){
+                    lSpeed = LFULL; rSpeed = R60;
+                    direction = FORWARD;
+                    clearLCD();
+                    printStringLCD("Hard Right");
+                    setMotorSpeed(lSpeed, rSpeed, direction);
+                }
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = hardRight;
                 break;
             case superHardRight:
-                lSpeed = LSTOP; rSpeed = RFULL;
-                direction = FORWARD;
-                moveCursorLCD(0,0);
-                printStringLCD("Super Hard Right");
-                setMotorSpeed(lSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);
+                if(state != prevState){
+                    lSpeed = LFULL; rSpeed = RSTOP;
+                    direction = FORWARD;
+                    clearLCD();
+                    printStringLCD("Super Hard Right");
+                    setMotorSpeed(lSpeed, rSpeed, direction);
+                }
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = superHardRight;
                 break;
             case end:
                 //execute spin
+                clearLCD();
+                printStringLCD("SPINNNNNNNAH");
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 direction = FORWARD;
                 setMotorSpeed(lSpeed, rSpeed, direction);
@@ -159,15 +184,23 @@ int main(void){
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 direction = FORWARD;
                 setMotorSpeed(lSpeed, rSpeed, direction);
-                getADCbuffer(&ADCarrayAveraged);
-                nextState = calcNextState(ADCarrayAveraged);                
+                getADCbuffer(ADCarrayAveraged);
+                state = calcNextState(ADCarrayAveraged);
+                prevState = end;
             break;
             case idle:
-                unmapPins();
-                clearLCD();
-                printStringLCD("Idle Mode");
-                break;
-        }     
+                if(state != prevState){
+                    unmapPins();
+                    clearLCD();
+                    printStringLCD("Idle Mode");
+                }
+                prevState = idle;
+                
+            break;
+            case test:
+                testTimerDelay();
+            break;
+        }
     }  
     return 0;
 }
