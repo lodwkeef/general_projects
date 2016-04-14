@@ -15,26 +15,60 @@
 #define OFFLINE 1
 #define ONLINE 0
 
-int onLine(float adcVal){
+int onLine(float adcVal, int diode){
     float volt = 0;
     volt = 3.3*(adcVal)/1023;
-    if(volt <= .9){
-        return OFFLINE; //off line
-    }
-    else{
-        return ONLINE;
+    switch(diode){
+        case 0:
+            if(volt <= .9){
+                return OFFLINE; //off line
+            }
+            else{
+                return ONLINE;
+            }
+            break;
+        case 1:
+            if(volt <= .9){
+                return OFFLINE; //off line
+            }
+            else{
+                return ONLINE;
+            }
+            break;
+        case 2:
+            if(volt <= .6){
+                return OFFLINE; //off line
+            }
+            else{
+                return ONLINE;
+            }
+            break;
+        case 3:
+            if(volt <= .9){
+                return OFFLINE; //off line
+            }
+            else{
+                return ONLINE;
+            }
+            break;
     }
 }
 
-stateType calcNextState(float ADCArray[]){
+stateType calcNextState(float ADCArray[], float volt[]){
     stateType nextState; 
     int detectorArray[4]; int i;
     int arrayState= 0b0000;
     
-    for(i=0; i<4; i++){
-        detectorArray[i] = onLine(ADCArray[i]);
-        arrayState |= onLine(ADCArray[i])<<(3-i);
-    }
+    volt[0] = 3.3*(ADCArray[0])/1023;
+    volt[1] = 3.3*(ADCArray[1])/1023;
+    volt[2] = 3.3*(ADCArray[2])/1023;
+    volt[3] = 3.3*(ADCArray[3])/1023;
+    
+    arrayState |= onLine(ADCArray[0], 0)<<(3);
+    arrayState |= onLine(ADCArray[1], 1)<<(2);
+    arrayState |= onLine(ADCArray[2], 2)<<(1);
+    arrayState |= onLine(ADCArray[3], 3)<<(0);
+    
     
     switch(arrayState){
         case 0b0000: nextState = end;           break;//0: //end line detected OR T joint of loop

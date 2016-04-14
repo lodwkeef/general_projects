@@ -16,8 +16,8 @@ typedef enum stateTypeEnum {
     idle, forward, left, hardLeft, superHardLeft, right, hardRight, superHardRight, end, test
 } stateType;
 
-int onLine(float adcVal);
-stateType calcNextState(float detectorArray[]);
+int onLine(float adcVal, int diode);
+stateType calcNextState(float detectorArray[], float volt[]);
 
 
 #endif	/* LINE_H */

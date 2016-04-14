@@ -70,7 +70,9 @@ int main(void){
     initPWM();
     initADC();
     
-    float ADCarrayAveraged[4];
+    float ADCarrayAveraged[4] = {0,0,0,0};
+    float volt[4] = {0,0,0,0};
+    char s[32];
     int rSpeed = 0;
     int lSpeed = 0;
     int leftDirection = FORWARD; //forward
@@ -98,8 +100,11 @@ int main(void){
                 }
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = forward;
                 break;
             case left:
@@ -113,8 +118,11 @@ int main(void){
                 }
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = left;
                 break;
             case hardLeft:
@@ -128,8 +136,11 @@ int main(void){
                 }
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = hardLeft;
                 break;
             case superHardLeft:
@@ -143,8 +154,11 @@ int main(void){
                 }
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = superHardLeft;
                 break;
             case right:
@@ -158,8 +172,11 @@ int main(void){
                 }
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = right;
                 break;
             case hardRight:
@@ -173,8 +190,11 @@ int main(void){
                 }
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = hardRight;
                 break;
             case superHardRight:
@@ -188,27 +208,34 @@ int main(void){
                 }
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = superHardRight;
                 break;
             case end:
                 //execute spin
-                clearLCD();
+                //clearLCD();
+                moveCursorLCD(0,0);
                 printStringLCD("SPINNNNNNNAH");
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 leftDirection = FORWARD;
-                rightDirection = FORWARD;
+                rightDirection = BACKWARD;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
-                lSpeed = LFULL; rSpeed = RSTOP;
+                lSpeed = 800; rSpeed = 800;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 delayUs(1000000);
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 getADCbuffer(ADCarrayAveraged);
                 if(state != idle){
-                    state = calcNextState(ADCarrayAveraged);
+                    state = calcNextState(ADCarrayAveraged, volt);
                 }
+                moveCursorLCD(1,0);
+                sprintf(s, "%.1f %.1f %.1f %.1f", volt[3], volt[2], volt[1], volt[0]);
+                printStringLCD(s);
                 prevState = end;
             break;
             case idle:
