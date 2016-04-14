@@ -16,7 +16,7 @@ void testM1reverse();
 void testM2forward();
 void testM2reverse();
 void setMotorDirection(int motor, int direction);
-void setMotorSpeed(float Lspeed, float Rspeed, int direction);
+void setMotorSpeed(float Lspeed, float Rspeed, int leftDirection, int rightDirection);
 void unmapPins();
 
 #endif	/* MOTOR_H */

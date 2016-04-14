@@ -73,26 +73,28 @@ int main(void){
     float ADCarrayAveraged[4];
     int rSpeed = 0;
     int lSpeed = 0;
-    int direction = FORWARD; //forward
+    int leftDirection = FORWARD; //forward
+    int rightDirection = FORWARD; //forward
     
     stateType prevState = forward;
     
-    setMotorDirection(M1, direction); 
-    setMotorDirection(M2, direction);
+    setMotorDirection(M1, leftDirection); 
+    setMotorDirection(M2, rightDirection);
     while(1){
        switch(state){
             case forward:
                 if(state != prevState){
                     lSpeed = LFULL; rSpeed = RFULL;
-                    direction = FORWARD;
+                    leftDirection = FORWARD;
+                    rightDirection = FORWARD;
                     clearLCD();
                     printStringLCD("Forward");
                     if(remap == YES){
-                        setMotorDirection(M1,direction);
-                        setMotorDirection(M2,direction);
+                        setMotorDirection(M1,leftDirection);
+                        setMotorDirection(M2,rightDirection);
                         remap = NOPE;
                     }
-                    setMotorSpeed(lSpeed, rSpeed, direction);
+                    setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
@@ -101,10 +103,11 @@ int main(void){
             case left:
                 if(state != prevState){
                     lSpeed = L90; rSpeed = RFULL;
-                    direction = FORWARD;
+                    leftDirection = FORWARD;
+                    rightDirection = FORWARD;
                     clearLCD();
                     printStringLCD("Left");
-                    setMotorSpeed(lSpeed, rSpeed, direction);
+                    setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
@@ -113,10 +116,11 @@ int main(void){
             case hardLeft:
                 if(state != prevState){
                     lSpeed = L60; rSpeed = RFULL;
-                    direction = FORWARD;
+                    leftDirection = FORWARD;
+                    rightDirection = FORWARD;
                     clearLCD();
                     printStringLCD("Hard Left");
-                    setMotorSpeed(lSpeed, rSpeed, direction);
+                    setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
@@ -125,10 +129,11 @@ int main(void){
             case superHardLeft:
                 if(state != prevState){
                     lSpeed = LSTOP; rSpeed = RFULL;
-                    direction = FORWARD;
+                    leftDirection = FORWARD;
+                    rightDirection = FORWARD;
                     clearLCD();
                     printStringLCD("Super Hard Left");
-                    setMotorSpeed(lSpeed, rSpeed, direction);
+                    setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
@@ -137,10 +142,11 @@ int main(void){
             case right:
                 if(state != prevState){
                     lSpeed = LFULL; rSpeed = R90;
-                    direction = FORWARD;
+                    leftDirection = FORWARD;
+                    rightDirection = FORWARD;
                     clearLCD();
                     printStringLCD("Right");
-                    setMotorSpeed(lSpeed, rSpeed, direction);
+                    setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
@@ -149,10 +155,11 @@ int main(void){
             case hardRight:
                 if(state != prevState){
                     lSpeed = LFULL; rSpeed = R60;
-                    direction = FORWARD;
+                    leftDirection = FORWARD;
+                    rightDirection = FORWARD;
                     clearLCD();
                     printStringLCD("Hard Right");
-                    setMotorSpeed(lSpeed, rSpeed, direction);
+                    setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
@@ -161,10 +168,11 @@ int main(void){
             case superHardRight:
                 if(state != prevState){
                     lSpeed = LFULL; rSpeed = RSTOP;
-                    direction = FORWARD;
+                    leftDirection = FORWARD;
+                    rightDirection = FORWARD;
                     clearLCD();
                     printStringLCD("Super Hard Right");
-                    setMotorSpeed(lSpeed, rSpeed, direction);
+                    setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
@@ -175,15 +183,14 @@ int main(void){
                 clearLCD();
                 printStringLCD("SPINNNNNNNAH");
                 lSpeed = LSTOP; rSpeed = RSTOP;
-                direction = FORWARD;
-                setMotorSpeed(lSpeed, rSpeed, direction);
+                leftDirection = FORWARD;
+                rightDirection = FORWARD;
+                setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 lSpeed = LFULL; rSpeed = RSTOP;
-                direction = FORWARD;
-                setMotorSpeed(lSpeed, rSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 delayUs(1000000);
                 lSpeed = LSTOP; rSpeed = RSTOP;
-                direction = FORWARD;
-                setMotorSpeed(lSpeed, rSpeed, direction);
+                setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 getADCbuffer(ADCarrayAveraged);
                 state = calcNextState(ADCarrayAveraged);
                 prevState = end;
