@@ -30,14 +30,14 @@
 #define M1 1
 #define M2 2
 
-#define RFULL 1023
-#define R90 921
-#define R60 614
+#define RFULL 450
+#define R90 350
+#define R60 200
 #define RSTOP 0
 
-#define LFULL 1023
-#define L90 921
-#define L60 614
+#define LFULL 450
+#define L90 350
+#define L60 200
 #define LSTOP 0
 
 #define FORWARD 1
@@ -97,7 +97,9 @@ int main(void){
                     setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = forward;
                 break;
             case left:
@@ -110,7 +112,9 @@ int main(void){
                     setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = left;
                 break;
             case hardLeft:
@@ -123,7 +127,9 @@ int main(void){
                     setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = hardLeft;
                 break;
             case superHardLeft:
@@ -136,7 +142,9 @@ int main(void){
                     setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = superHardLeft;
                 break;
             case right:
@@ -149,7 +157,9 @@ int main(void){
                     setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = right;
                 break;
             case hardRight:
@@ -162,7 +172,9 @@ int main(void){
                     setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = hardRight;
                 break;
             case superHardRight:
@@ -175,7 +187,9 @@ int main(void){
                     setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 }
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = superHardRight;
                 break;
             case end:
@@ -192,7 +206,9 @@ int main(void){
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 getADCbuffer(ADCarrayAveraged);
-                state = calcNextState(ADCarrayAveraged);
+                if(state != idle){
+                    state = calcNextState(ADCarrayAveraged);
+                }
                 prevState = end;
             break;
             case idle:
@@ -202,7 +218,6 @@ int main(void){
                     printStringLCD("Idle Mode");
                 }
                 prevState = idle;
-                
             break;
             case test:
                 testTimerDelay();
