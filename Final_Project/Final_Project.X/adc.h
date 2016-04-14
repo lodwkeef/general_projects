@@ -13,7 +13,7 @@
 #define	ADC_H
 
 void initADC();
-void getADCbuffer(float *ADCarrayAveraged);
+void getADCbuffer(float ADCarrayAveraged[]);
 void printVoltage(float ADCbuffer);
 float UpdateLCDVoltage(float dispVolt);
 

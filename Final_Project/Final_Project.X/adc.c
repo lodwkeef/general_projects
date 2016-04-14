@@ -45,7 +45,7 @@ void initADC(){ //updated for Final Project
     AD1CON1bits.ADON = 0; // turn on the ADC
 }
 
-void getADCbuffer(float *ADCarrayAveraged){ //Updated to average ADC values then store pins
+void getADCbuffer(float ADCarrayAveraged[]){ //Updated to average ADC values then store pins
     float ADCbufferArray[16];
     AD1CON1bits.ADON = 1;
     IFS0bits.AD1IF = 0;

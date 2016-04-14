@@ -8,6 +8,10 @@
  * Created on April 12, 2016, 4:32 PM
  */
 
+
+#ifndef LINE_H
+#define	LINE_H
+
 typedef enum stateTypeEnum {
     idle, forward, left, hardLeft, superHardLeft, right, hardRight, superHardRight, end, test
 } stateType;
@@ -15,3 +19,5 @@ typedef enum stateTypeEnum {
 int onLine(float adcVal);
 stateType calcNextState(float detectorArray[]);
 
+
+#endif	/* LINE_H */
