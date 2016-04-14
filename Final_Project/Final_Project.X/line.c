@@ -33,7 +33,7 @@ stateType calcNextState(float ADCArray[]){
     
     for(i=0; i<4; i++){
         detectorArray[i] = onLine(ADCArray[i]);
-        arrayState |= onLine(ADCArray[i]<<(3-i));
+        arrayState |= onLine(ADCArray[i])<<(3-i);
     }
     
     switch(arrayState){
