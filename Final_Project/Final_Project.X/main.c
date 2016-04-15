@@ -217,7 +217,6 @@ int main(void){
                 break;
             case end:
                 //execute spin
-                //clearLCD();
                 moveCursorLCD(0,0);
                 printStringLCD("SPINNNNNNNAH");
                 lSpeed = LSTOP; rSpeed = RSTOP;
@@ -225,6 +224,7 @@ int main(void){
                 rightDirection = BACKWARD;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 lSpeed = 800; rSpeed = 800;
+                setMotorDirection(M2, rightDirection);
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 delayUs(1000000);
                 lSpeed = LSTOP; rSpeed = RSTOP;
