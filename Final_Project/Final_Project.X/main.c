@@ -30,18 +30,20 @@
 #define M1 1
 #define M2 2
 
-#define RFULL 425
-#define R90 325
-#define R60 200
+#define RFULL 500
+#define R90 250
+#define R60 175
 #define RSTOP 0
 
-#define LFULL 425
-#define L90 325
-#define L60 200
+#define LFULL 500
+#define L90 250
+#define L60 175
 #define LSTOP 0
 
-#define delayspin90  10000
-#define delayspin180 250000
+#define delayspin90  200000
+#define delayspin180 650000
+
+#define SPIN 700
 
 #define FORWARD 1
 #define BACKWARD 0
@@ -226,14 +228,14 @@ int main(void){
                 printStringLCD("TUUUUUUUUUURN 90");
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 leftDirection = FORWARD;
-                rightDirection = BACKWARD;
+                rightDirection = FORWARD;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
-                lSpeed = 800; rSpeed = 800;
-                setMotorDirection(M2, rightDirection);
+                lSpeed = SPIN; rSpeed = SPIN;
+                //setMotorDirection(M2, rightDirection);
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 delayUs(delayspin90);
-                rightDirection = FORWARD;
-                setMotorDirection(M2, rightDirection);
+                //rightDirection = FORWARD;
+                //setMotorDirection(M2, rightDirection);
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 getADCbuffer(ADCarrayAveraged);
@@ -260,7 +262,7 @@ int main(void){
                 leftDirection = FORWARD;
                 rightDirection = BACKWARD;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
-                lSpeed = 800; rSpeed = 800;
+                lSpeed = SPIN; rSpeed = SPIN;
                 setMotorDirection(M2, rightDirection);
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 delayUs(delayspin180);
@@ -294,15 +296,15 @@ int main(void){
                 moveCursorLCD(0,0);
                 printStringLCD("TUUUUUUUUURN L90");
                 lSpeed = LSTOP; rSpeed = RSTOP;
-                leftDirection = BACKWARD;
+                leftDirection = FORWARD;
                 rightDirection = FORWARD;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
-                lSpeed = 800; rSpeed = 800;
-                setMotorDirection(M1, leftDirection);
+                lSpeed = SPIN; rSpeed = SPIN;
+                //setMotorDirection(M1, leftDirection);
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 delayUs(delayspin90);
-                leftDirection = FORWARD;
-                setMotorDirection(M1, leftDirection);
+                //leftDirection = FORWARD;
+                //setMotorDirection(M1, leftDirection);
                 lSpeed = LSTOP; rSpeed = RSTOP;
                 setMotorSpeed(lSpeed, rSpeed, leftDirection, rightDirection);
                 getADCbuffer(ADCarrayAveraged);

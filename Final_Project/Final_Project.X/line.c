@@ -20,7 +20,7 @@ int onLine(float adcVal, int diode){
     volt = 3.3*(adcVal)/1023;
     switch(diode){
         case 0:
-            if(volt <= 1.1){
+            if(volt <= 1.0){
                 return OFFLINE; //off line
             }
             else{
@@ -28,7 +28,7 @@ int onLine(float adcVal, int diode){
             }
             break;
         case 1:
-            if(volt <= 1.1){
+            if(volt <= 1.0){
                 return OFFLINE; //off line
             }
             else{
@@ -36,7 +36,7 @@ int onLine(float adcVal, int diode){
             }
             break;
         case 2:
-            if(volt <= .9){
+            if(volt <= 1.0){
                 return OFFLINE; //off line
             }
             else{
@@ -44,7 +44,7 @@ int onLine(float adcVal, int diode){
             }
             break;
         case 3:
-            if(volt <= 1.1){
+            if(volt <= 1.0){
                 return OFFLINE; //off line
             }
             else{
@@ -71,30 +71,15 @@ stateType calcNextState(float ADCArray[], float volt[], int innerLoop, int spun)
     
     
     switch(arrayState){
-        case 0b0000:
-            if(innerLoop == 0){
-                nextState = spin180; 
-            }
-            else{
-                nextState = spin90;
-            }
-        break;//0: //end line detected OR T joint of loop
-        case 0b0001: 
-            if(spun == 1){
-                nextState = forward;
-            }
-            else{
-                nextState = spin90Left;
-            }
-            
-        break;//1: // left line detected, 
+        case 0b0000: nextState = spin180;       break;//0: //end line detected OR T joint of loop
+        case 0b0001: nextState = forward;       break;//1: // left line detected, 
         case 0b0010: nextState = forward;       break;//2: //anomally detection, ignore and go forward
         case 0b0011: nextState = hardLeft;      break;//3: //drifting hard right turn hard left
         case 0b0100: nextState = forward;       break;//4: //anomally detection, ignore and go forward
         case 0b0101: nextState = forward;       break;//5: //anomally detection, ignore and go forward
         case 0b0110: nextState = forward;       break;//6: //anomally detection, ignore and go forward
         case 0b0111: nextState = superHardLeft; break;//7: //drifting superhard right, turn super hard left
-        case 0b1000: nextState = spin90;        break;//8: // right line detected, ignore for now
+        case 0b1000: nextState = forward;        break;//8: // right line detected, ignore for now
         case 0b1001: nextState = forward;       break;//9:  //centered forward
         case 0b1010: nextState = forward;       break;//10: //anomally detection, ignore and go forward
         case 0b1011: nextState = left;          break;//11: //drifting right, turn left
