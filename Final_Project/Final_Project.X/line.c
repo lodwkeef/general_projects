@@ -80,14 +80,14 @@ stateType calcNextState(float ADCArray[], float volt[], int innerLoop, int spun)
             }
         break;//0: //end line detected OR T joint of loop
         case 0b0001: 
-            if(spun = 1){
+            if(spun == 1){
                 nextState = forward;
             }
             else{
                 nextState = spin90Left;
             }
             
-        break;//1: // left line detected, ignore and go forward
+        break;//1: // left line detected, 
         case 0b0010: nextState = forward;       break;//2: //anomally detection, ignore and go forward
         case 0b0011: nextState = hardLeft;      break;//3: //drifting hard right turn hard left
         case 0b0100: nextState = forward;       break;//4: //anomally detection, ignore and go forward
