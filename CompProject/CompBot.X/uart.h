@@ -11,8 +11,10 @@
 #ifdef	__cplusplus
 extern "C" {
 #endif
-
+    
 void initUART();
+void sendChar(char c);
+void sendCommand(const char* sendString);
 
 
 #ifdef	__cplusplus

@@ -11,19 +11,36 @@
 //
 // Description: Motor Go Vrrooom Vrooooom.
 // ******************************************************************************************* //
+#include <xc.h>
 #include "uart.h"
 
 void initUART(){
     //WARNING COPY PASTED CODE FROM VANHOY'S GITHUB
     //will go over later
-    RPD3Rbits.RPD3R = 1;    //Maps U2TX to pin 18
-//    U2RXRbits.U2RXR = 0;    //Mapping U2RX to pin 17, J11
-    U2BRG = 10;             //Set the baud rate
-    U2MODEbits.PDSEL = 2;   //Parity select (depends on device) (8-N-1)
-    U2MODEbits.STSEL = 0;   //One stop bit
-    U2MODEbits.UEN = 0;
-    U2MODEbits.BRGH = 0;
-//    U2STAbits.URXEN = 1;    //Enable the receive pin (TRIS not needed)
-    U2STAbits.UTXEN = 1;    //Enable the transmit pin (TRIS not needed)
-    U2MODEbits.ON = 1;      //Enable the UART
+    //changed pins
+    RPD11Rbits.RPD11R = 0b0011;    //Maps U1TX to pin 15,J10
+    U1RXRbits.U1RXR =   0b0111;    //Mapping U1RX to pin 13, J10
+    
+    U1BRG = 16;             //Set the baud rate (MAY NEED TO BE UPDATED)
+    
+    U1MODEbits.UEN = 0; //based on Vanhoy's
+    U1MODEbits.BRGH = 0; //standard speed mode 16x baud clock enabled
+    U1MODEbits.PDSEL = 0;   //Parity select (depends on device) (8-N-1)
+    U1MODEbits.STSEL = 0;   //One stop bit
+    
+    U1STAbits.URXEN = 1;    //Enable the receive pin (TRIS not needed)
+    U1STAbits.UTXEN = 1;    //Enable the transmit pin (TRIS not needed)
+    U1MODEbits.ON = 1;      //Enable the UART
+}
+
+void sendChar(char c){
+    U1TXREG = c;
+    delayUs(300);
+}
+
+void sendCommand(const char* sendString){
+    const char* tempChar = NULL;
+    for (tempChar = sendString; *tempChar; tempChar++) {
+        sendChar(*tempChar);
+    }
 }
