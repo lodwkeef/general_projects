@@ -42,6 +42,7 @@ int main() {
         sendCommand("az"); //0b01100001 0b01111010
         delayUs(1000);
         //testTimerDelay();
+        
     }
     return 1;
 }
