@@ -22,7 +22,7 @@ void initUART(){
     U1RXRbits.U1RXR =   0b0111;    //Mapping U1RX to pin 17, J10
     
     U1BRG = 64;             //Set the baud rate (MAY NEED TO BE UPDATED)
-    
+  
     U1MODEbits.UEN = 0; //based on Vanhoy's
     U1MODEbits.BRGH = 0; //standard speed mode 16x baud clock enabled
     U1MODEbits.PDSEL = 0;   //Parity select (depends on device) (8-N-1)

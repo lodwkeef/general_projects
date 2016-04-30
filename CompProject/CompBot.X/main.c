@@ -66,7 +66,6 @@ int main() {
         U1TXREG = 0x0A;
         delayUs(1000000);
         //testTimerDelay();
-        
     //}
     return 1;
 }
