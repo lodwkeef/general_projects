@@ -36,13 +36,38 @@ int main() {
     initLCD();
     initUART();
     
-    unsigned char receivedChar = '$';
+    //unsigned char receivedChar = '$';
     
-    while(1){
-        sendCommand("az"); //0b01100001 0b01111010
-        delayUs(1000);
+    //while(1){
+        //sendCommand("ZSL 100000"); //0b01100001 0b01111010
+        U1TXREG = 0x0A;
+        sendCommand("ZMA 15000");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
+        sendCommand("ZMA 30000");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
+        sendCommand("ZMA 45000");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
+        sendCommand("ZMA 60000");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
+        sendCommand("ZMA 45000");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
+        sendCommand("ZMA 30000");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
+        sendCommand("ZMA 15000");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
+        sendCommand("ZMA 0");
+        U1TXREG = 0x0A;
+        delayUs(1000000);
         //testTimerDelay();
-    }
+        
+    //}
     return 1;
 }
 

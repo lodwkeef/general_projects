@@ -17,6 +17,7 @@ void sendChar(char c);
 void sendCommand(const char* sendString);
 
 
+
 #ifdef	__cplusplus
 }
 #endif

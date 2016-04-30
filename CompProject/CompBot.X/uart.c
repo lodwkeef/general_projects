@@ -18,10 +18,10 @@ void initUART(){
     //WARNING COPY PASTED CODE FROM VANHOY'S GITHUB
     //will go over later
     //changed pins
-    RPD11Rbits.RPD11R = 0b0011;    //Maps U1TX to pin 15,J10
-    U1RXRbits.U1RXR =   0b0111;    //Mapping U1RX to pin 13, J10
+    RPD11Rbits.RPD11R = 0b0011;    //Maps U1TX to pin 15  ,J10
+    U1RXRbits.U1RXR =   0b0111;    //Mapping U1RX to pin 17, J10
     
-    U1BRG = 16;             //Set the baud rate (MAY NEED TO BE UPDATED)
+    U1BRG = 64;             //Set the baud rate (MAY NEED TO BE UPDATED)
     
     U1MODEbits.UEN = 0; //based on Vanhoy's
     U1MODEbits.BRGH = 0; //standard speed mode 16x baud clock enabled
@@ -35,7 +35,7 @@ void initUART(){
 
 void sendChar(char c){
     U1TXREG = c;
-    delayUs(300);
+    delayUs(1000);
 }
 
 void sendCommand(const char* sendString){
