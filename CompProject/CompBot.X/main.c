@@ -18,6 +18,11 @@
 #define ON 1
 #define PRESS 0
 #define RELEASE 1
+#define CN_E 0x00010000
+#define RX57  PORTEbits.RE0
+#define RX40  PORTEbits.RE2
+#define RX30  PORTEbits.RE4
+
 
 
 typedef enum stateTypeEnum {
@@ -26,6 +31,7 @@ typedef enum stateTypeEnum {
 
 volatile stateType state = idle;
 volatile int pressRelease = PRESS;
+volatile int receiver = 0;
 
 int main() {
     SYSTEMConfigPerformance(10000000);
@@ -38,43 +44,40 @@ int main() {
     
     //unsigned char receivedChar = '$';
     
-    //while(1){
+    while(1){
         //sendCommand("ZSL 100000"); //0b01100001 0b01111010
         U1TXREG = 0x0A;
-        sendCommand("ZMA 15000");
+        sendCommand("ZSL 100000");
         U1TXREG = 0x0A;
-        delayUs(1000000);
-        sendCommand("ZMA 30000");
-        U1TXREG = 0x0A;
-        delayUs(1000000);
-        sendCommand("ZMA 45000");
-        U1TXREG = 0x0A;
-        delayUs(1000000);
-        sendCommand("ZMA 60000");
-        U1TXREG = 0x0A;
-        delayUs(1000000);
-        sendCommand("ZMA 45000");
-        U1TXREG = 0x0A;
-        delayUs(1000000);
-        sendCommand("ZMA 30000");
-        U1TXREG = 0x0A;
-        delayUs(1000000);
-        sendCommand("ZMA 15000");
-        U1TXREG = 0x0A;
-        delayUs(1000000);
-        sendCommand("ZMA 0");
-        U1TXREG = 0x0A;
-        delayUs(1000000);
-        //testTimerDelay();
-    //}
-    return 1;
+        switch(receiver){
+            case 57:
+                clearLCD();
+                printStringLCD("57kHZ");
+                break;
+            case 40:
+                clearLCD();
+                printStringLCD("40kHZ");
+                break;
+            case 30:
+                clearLCD();
+                printStringLCD("30kHZ");
+                break;
+            default:
+                clearLCD();
+                printStringLCD("NONE");
+                break;                
+        }
+        
+    }
 }
 
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     int dummy;
     dummy = PORTA; // Read the Port A
-    T1CONbits.TON = ON;
-    IFS1bits.CNAIF = 0; //lower flag
+    dummy = PORTE; //Read the Port E
+    if (CN_E) T2CONbits.TON = ON; //if the receiver modules are triggered then use the 100Us delay
+    else T1CONbits.TON = ON;
+    IFS1bits.CNAIF = 0; IFS1bits.CNEIF = 0; //lower flags
 }
 
 void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncing
@@ -87,5 +90,22 @@ void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncin
     }
     else{
         pressRelease = RELEASE;
+    }
+}
+
+void __ISR(_TIMER_2_VECTOR, IPL7SRS) _T2Interrupt() { //Timer 2 is for debouncing
+    IFS0bits.T2IF = 0; //lower the flag
+    T2CONbits.TON = OFF;
+    if(RX57 == 1)
+    {
+        receiver = 57;
+    }
+    else if(RX40 == 1)
+    {
+        receiver = 40;
+    }
+    else if(RX30 == 1)
+    {
+        receiver = 30;
     }
 }

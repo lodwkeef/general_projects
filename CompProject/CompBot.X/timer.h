@@ -9,7 +9,7 @@
 #define	INITTIMER_H
 
 void initTimer1();
-//void initTimer2();
+void initTimer2();
 void initTimer45();
 void delayUs(unsigned int delay);
 void testTimerDelay();

@@ -25,13 +25,16 @@ void initTimer1(){//debounce timer
     T1CONbits.TON = 0;//Timer is disabled
 }
 
-//void initTimer2(){//timer for PWM
-//    TMR2 = 0;
-//    PR2 = 1023;
-//    T2CONbits.TCKPS = 0;
-//    T2CONbits.TON = 0;
-//    T2CONbits.TON = 1;
-//}
+void initTimer2(){//debounce timer 2 100Us delay
+    TMR2 = 0;
+    PR2 = 999;
+    T2CONbits.TCKPS = 0;//prescaler 1
+    T2CONbits.TCS = 0;//internal PClck
+    IEC0bits.T2IE = 1;//enable interrupts
+    IFS0bits.T2IF = 0;//initialize flag to 0
+    IPC2bits.T2IP = 7;//default priority level
+    T2CONbits.TON = 0;//Timer is disabled
+}
 
 void initTimer45(){//timer for delayUs
     TMR4 = 0; 

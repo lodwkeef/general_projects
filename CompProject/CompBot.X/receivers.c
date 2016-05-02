@@ -14,13 +14,20 @@
 #include "receivers.h"
 #include <xc.h>
 
-#define 
 
 void initReceivers(){ 
     
-    TRISEbits.TRISE4 = 1; //set tristate as input for 30kHz 
+    TRISEbits.TRISE0 = 1; //57.6kHz
+    TRISEbits.TRISE2 = 1; //40kHz
+    TRISEbits.TRISE4 = 1; //30kHz
+    
+    ANSELEbits.ANSE2 = 0; //set to digital
+    ANSELEbits.ANSE4 = 0;
+
     CNCONEbits.ON = 1; //enable change notifications for Port E
-    CNENEbits.CNIEE4 = 1; //Enables CN for RA7
+    CNENEbits.CNIEE0 = 1; //Enables CN for RE0
+    CNENEbits.CNIEE2 = 1; //Enables CN for RE2
+    CNENEbits.CNIEE4 = 1; //Enables CN for RE4
     IEC1bits.CNAIE = 1; //Enable Interrupts
     IFS1bits.CNAIF = 0; //Set flag to lowered
     IPC8bits.CNIP = 7; //set default priority level
