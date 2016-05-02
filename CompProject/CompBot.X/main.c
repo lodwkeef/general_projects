@@ -59,6 +59,8 @@ int main() {
     int tempScalar = 0;
     int tempTowerStepPos = 0;
     int towerDetected = 0;
+    int towerDetectDiff = 0;
+    int towerDiffNum = 0;
     int currentWaypoint = 0;
     float newXPos = 0;
     float newYPos = 0;
@@ -89,8 +91,22 @@ int main() {
         
     while(1){
         
-        if(towerDetected==1){
+        if(towerDetected==1){//find the closest old tower to this new tower position and mark it as such
             //find the closest old tower to this new tower position and mark it as such
+            querryPos(posArray);
+            tempTowerStepPos= atoi(posArray);
+            if(abs(tempTowerStepPos-tower1Steps)<180){towerDetectDiff=abs(tempTowerStepPos-tower1Steps); towerDiffNum = 1;} //sorry this is completely unreadable, this finds the closest old tower value to recent tower detect
+            else if(abs(360+tempTowerStepPos-tower1Steps)<180){towerDetectDiff=abs(360+tempTowerStepPos-tower1Steps); towerDiffNum = 1;}
+            if((abs(tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(tempTowerStepPos-tower1Steps); towerDiffNum = 2;}
+            else if((abs(360+tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(360+tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(360+tempTowerStepPos-tower1Steps); towerDiffNum = 2;}
+            if((abs(tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(tempTowerStepPos-tower1Steps); towerDiffNum = 3;}
+            else if((abs(360+tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(360+tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(360+tempTowerStepPos-tower1Steps); towerDiffNum = 3;}
+            
+            if(towerDiffNum == 1){tower1Steps=tempTowerStepPos;}//if tower 1 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 2){tower2Steps=tempTowerStepPos;}//if tower 1 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 3){tower3Steps=tempTowerStepPos;}//if tower 1 is the closest tower to detected tower, give it the detected tower position
+                
+            towerDiffNum = 0;
         }
         
         
@@ -186,6 +202,10 @@ int main() {
                 sendCommand("LSL 0");
             }
             
+            //print out XY position
+            moveCursorLCD(0,9);
+            sprintf(s,"X%.1f , Y%.1f", currXPos, currYPos);
+            printStringLCD(s);
             updatePos=0;
             
         }
