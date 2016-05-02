@@ -20,9 +20,11 @@ void initReceivers(){
     TRISEbits.TRISE0 = 1; //57.6kHz
     TRISEbits.TRISE2 = 1; //40kHz
     TRISEbits.TRISE4 = 1; //30kHz
+    TRISBbits.TRISB11 = 1; //Limit Switch
     
     ANSELEbits.ANSE2 = 0; //set to digital
     ANSELEbits.ANSE4 = 0;
+    ANSELBbits.ANSB11 = 0;
 
     CNENEbits.CNIEE0 = 1; //Enables CN for RE0
     CNENEbits.CNIEE2 = 1; //Enables CN for RE2
@@ -31,5 +33,11 @@ void initReceivers(){
     IFS1bits.CNEIF = 0;
     IPC8bits.CNIP = 7; //set default priority level
     CNCONEbits.ON = 1; //enable change notifications for Port E
+    
+    CNENBbits.CNIEB0 = 1; //Enables CN for RB11
+    IEC1bits.CNBIE = 1; //Enable Interrupts
+    IFS1bits.CNBIF = 0; //lower Flag
+    IPC8bits.CNIP = 7; //set default priority level
+    CNCONBbits.ON = 1; //enable change notifications for Port B
 }
 

@@ -37,6 +37,7 @@ volatile int receiver = 0;
 volatile int fiftySevenK = 0;
 volatile int fourtyK = 0;
 volatile int thirtyK = 0;
+volatile int updatePos = 0;
 
 int main() {
     SYSTEMConfigPerformance(10000000);
@@ -119,7 +120,8 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     int dummy;
     dummy = PORTA; // Read the Port A
     dummy = PORTE; //Read the Port E
-    if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delay
+    if (IFS1bits.CNBIF == 1){updatePos = 1;} 
+    else if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delay
     else {T1CONbits.TON = ON;}
     IFS1bits.CNAIF = 0; IFS1bits.CNEIF = 0; //lower flags
 }
