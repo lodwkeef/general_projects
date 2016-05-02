@@ -24,12 +24,12 @@ void initReceivers(){
     ANSELEbits.ANSE2 = 0; //set to digital
     ANSELEbits.ANSE4 = 0;
 
-    CNCONEbits.ON = 1; //enable change notifications for Port E
     CNENEbits.CNIEE0 = 1; //Enables CN for RE0
     CNENEbits.CNIEE2 = 1; //Enables CN for RE2
     CNENEbits.CNIEE4 = 1; //Enables CN for RE4
-    IEC1bits.CNAIE = 1; //Enable Interrupts
-    IFS1bits.CNAIF = 0; //Set flag to lowered
+    IEC1bits.CNEIE = 1; //Enable Interrupts
+    IFS1bits.CNEIF = 0;
     IPC8bits.CNIP = 7; //set default priority level
+    CNCONEbits.ON = 1; //enable change notifications for Port E
 }
 

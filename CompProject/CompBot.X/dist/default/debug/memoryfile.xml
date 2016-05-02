@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <project>                                  
-  <executable name="dist/default/production/CompBot.X.production.elf">                 
+  <executable name="dist/default/debug/CompBot.X.debug.elf">                 
     <memory name="program">                 
       <units>bytes</units>                 
       <length>531968</length>                 
-      <used>6876</used>                     
-      <free>525092</free>                     
+      <used>6892</used>                     
+      <free>525076</free>                     
     </memory>                              
     <memory name="data">              
       <units>bytes</units>                 
-      <length>131072</length>                 
-      <used>12</used>                     
-      <free>131060</free>                     
+      <length>131584</length>                 
+      <used>1036</used>                     
+      <free>130548</free>                     
     </memory>                              
   </executable>                            
 </project>                                 

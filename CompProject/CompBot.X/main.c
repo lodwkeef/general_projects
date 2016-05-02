@@ -13,6 +13,7 @@
 #include "timer.h"
 #include "switch.h"
 #include "uart.h"
+#include "receivers.h"
 
 #define OFF 0
 #define ON 1
@@ -37,17 +38,19 @@ int main() {
     SYSTEMConfigPerformance(10000000);
     enableInterrupts();
     initTimer1();
+    initTimer2();
     initTimer45();
     initSW1();
     initLCD();
     initUART();
+    initReceivers();
     
     //unsigned char receivedChar = '$';
     
     while(1){
         //sendCommand("ZSL 100000"); //0b01100001 0b01111010
         U1TXREG = 0x0A;
-        sendCommand("ZSL 100000");
+        sendCommand("ZSL 50000");
         U1TXREG = 0x0A;
         switch(receiver){
             case 57:
@@ -75,8 +78,8 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     int dummy;
     dummy = PORTA; // Read the Port A
     dummy = PORTE; //Read the Port E
-    if (CN_E) T2CONbits.TON = ON; //if the receiver modules are triggered then use the 100Us delay
-    else T1CONbits.TON = ON;
+    if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delay
+    else {T1CONbits.TON = ON;}
     IFS1bits.CNAIF = 0; IFS1bits.CNEIF = 0; //lower flags
 }
 
