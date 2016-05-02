@@ -14,7 +14,8 @@
 #include "switch.h"
 #include "uart.h"
 #include "receivers.h"
-//#include "smotors.h"
+#include "smotors.h"
+#include <math.h>
 
 #define OFF 0
 #define ON 1
@@ -24,6 +25,8 @@
 #define RX57  PORTEbits.RE0
 #define RX40  PORTEbits.RE2
 #define RX30  PORTEbits.RE4
+#define MAXSPEED 150000
+#define MAXSPEEDDISTANCE 6
 
 
 
@@ -49,15 +52,137 @@ int main() {
     initLCD();
     initUART();
     initReceivers();
+    float tower1Steps = 12000;
+    float tower2Steps = 25600;
+    float tower3Steps = 46080;
+    int tempVar = 0;
+    int tempScalar = 0;
+    int tempTowerStepPos = 0;
+    int currentWaypoint = 0;
+    float newXPos = 0;
+    float newYPos = 0;
+    float newHeading = 270;
+    float currXPos = 24;
+    float currYPos = 90;
+    float currHeading = 270;
     unsigned char posArray[64];
+    char s[64] = {};
     strcpy(posArray, "");
+    float wayPoints[2][2] = {
+    {24,80},
+    {24,60}
+    };
+    float relaWayX = 0;
+    float relaWayY = 0;
+    float relaWayAng = 0;
+    float newWayDis = 0;
+    float currWayDis = 0;
+    float disMultiplier = 1;
+    
             
-        U1TXREG = 0x0A;
-        sendCommand("ZSL 00");
-        U1TXREG = 0x0A;
+        sendChar(0x0A);
+        sendChar(0x0A);
+        sendChar(0x0A);
+        sendChar(0x0A);
+        sendCommand("ZSL 0");
         
     while(1){
-
+        
+        if(updatePos==1){
+            moveCursorLCD(0,0);
+            printStringLCD("FUCKING FUCK STICKS");
+            newXPos = posXreturn(tower1Steps, tower2Steps, tower3Steps);
+            newYPos = posYreturn(tower1Steps, tower2Steps, tower3Steps);
+            newHeading = heading(tower1Steps, tower2Steps, tower3Steps);
+            
+            newWayDis = (sqrt((newXPos-currXPos)*(newXPos-currXPos)+(newYPos-currYPos)*(newYPos-currYPos)));
+            
+            if((newWayDis<20)&&(newHeading>0)){ //if new distance is less than 20 inches from old distance, use new
+                currXPos = newXPos; 
+                currYPos = newYPos; 
+                currHeading = newHeading;
+                newWayDis = (sqrt(((wayPoints[currentWaypoint][0])-currXPos)*((wayPoints[currentWaypoint][0])-currXPos)+((wayPoints[currentWaypoint][1])-currYPos)*((wayPoints[currentWaypoint][1])-currYPos)));
+                if((newWayDis<3)&&(currentWaypoint!=1)){    //if distance from waypoint is less than 3 inches and not the last waypoint
+                    currentWaypoint++;
+                    newWayDis = (sqrt(((wayPoints[currentWaypoint][0])-currXPos)*((wayPoints[currentWaypoint][0])-currXPos)+((wayPoints[currentWaypoint][1])-currYPos)*((wayPoints[currentWaypoint][1])-currYPos)));
+                }
+                currWayDis = newWayDis;
+                
+                relaWayX = (wayPoints[currentWaypoint][0])-currXPos;
+                relaWayY = (wayPoints[currentWaypoint][1])-currYPos;                
+                relaWayX = relaWayX/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the X direction to the waypoint to the unit circle               
+                relaWayY = relaWayY/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the Y direction to the waypoint to the unit circle 
+                relaWayAng = getWaypointHeading(relaWayX,relaWayY);
+                
+                if((fabsf(currHeading-relaWayAng)<180)&&((currHeading-relaWayAng)>=0)){//if the current heading is to the left of waypoint heading
+                    tempScalar = ((((currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
+                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
+                    tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
+                    sprintf(s,"RSL %d", (int)(tempVar));
+                    sendCommand(s);
+                    
+                    tempScalar = tempScalar + .5;
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    tempVar = tempScalar*disMultiplier*MAXSPEED;       //set left motor speed based on max speed and distance multiplier
+                    sprintf(s,"LSL %d", (int)(tempVar));
+                    sendCommand(s);
+                }
+                else if((fabsf(currHeading-relaWayAng)>180)&&((currHeading-relaWayAng)<0)){ //if the current heading is to the left of waypoint heading
+                    tempScalar = ((((360+currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
+                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
+                    tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
+                    sprintf(s,"RSL %d", (int)(tempVar));
+                    sendCommand(s);
+                    
+                    tempScalar = tempScalar + .5;
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    tempVar = tempScalar*disMultiplier*MAXSPEED;       //set left motor speed based on max speed and distance multiplier
+                    sprintf(s,"LSL %d", (int)(tempVar));
+                    sendCommand(s);
+                }
+                else if ((currHeading-relaWayAng)<0){  //if the current heading is to the right of the waypoint direction
+                    tempScalar = ((((relaWayAng-currHeading)/360)-.15)*1.2);       //set right motor speed based off angle
+                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
+                    tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
+                    sprintf(s,"LSL %d", (int)(tempVar));
+                    sendCommand(s);
+                    
+                    tempScalar = tempScalar + .5;
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    tempVar = tempScalar*disMultiplier*MAXSPEED;       //set right motor speed based on max speed and distance multiplier
+                    sprintf(s,"RSL %d", (int)(tempVar));
+                    sendCommand(s);
+                } 
+                else if((currHeading-relaWayAng)>=0){    //if the current heading is to the right of the waypoint direction
+                    tempScalar = ((((360+relaWayAng-currHeading)/360)-.15)*1.2);       //set right motor speed based off angle
+                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
+                    tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
+                    sprintf(s,"LSL %d", (int)(tempVar));
+                    sendCommand(s);
+                    
+                    tempScalar = tempScalar + .5;
+                    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+                    tempVar = tempScalar*disMultiplier*MAXSPEED;       //set right motor speed based on max speed and distance multiplier
+                    sprintf(s,"RSL %d", (int)(tempVar));
+                    sendCommand(s);
+                }
+            }
+            else{
+                sendCommand("RSL 0");
+                sendCommand("LSL 0");
+            }
+            
+            updatePos=0;
+            
+        }
         //delayUs(2000);
 
         if(RX30==0){
@@ -121,7 +246,7 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     dummy = PORTA; // Read the Port A
     dummy = PORTE; //Read the Port E
     if (IFS1bits.CNBIF == 1){updatePos = 1;} 
-    else if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delay
+    if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delay
     else {T1CONbits.TON = ON;}
     IFS1bits.CNAIF = 0; IFS1bits.CNEIF = 0; //lower flags
 }

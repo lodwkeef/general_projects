@@ -27,5 +27,9 @@ void initSW1(){ //external switch RA7
     IEC1bits.CNAIE = 1; //Enable Interrupts
     IFS1bits.CNAIF = 0; //Set flag to lowered
     IPC8bits.CNIP = 7; //set default priority level
+    
+    
+    
+    
 }
 
