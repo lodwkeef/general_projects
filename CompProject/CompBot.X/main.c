@@ -51,18 +51,18 @@ int main() {
         //sendCommand("ZSL 100000"); //0b01100001 0b01111010
         U1TXREG = 0x0A;
         sendCommand("ZSL 50000");
-        U1TXREG = 0x0A;
+        //U1TXREG = 0x0A;
         switch(receiver){
             case 57:
-                clearLCD();
+                moveCursorLCD(1,9);
                 printStringLCD("57kHZ");
                 break;
             case 40:
-                clearLCD();
+                moveCursorLCD(1,0);
                 printStringLCD("40kHZ");
                 break;
             case 30:
-                clearLCD();
+                moveCursorLCD(0,9);
                 printStringLCD("30kHZ");
                 break;
             default:
