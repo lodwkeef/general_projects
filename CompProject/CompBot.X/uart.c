@@ -36,7 +36,7 @@ void initUART(){
 
 void sendChar(char c){
     U1TXREG = c;
-    delayUs(100);
+    delayUs(600);
 }
 
 void sendCommand(const char* sendString){
@@ -44,5 +44,5 @@ void sendCommand(const char* sendString){
     for (tempChar = sendString; *tempChar; tempChar++) {
         sendChar(*tempChar);
     }
-    U1TXREG = 0x0A;
+    sendChar(0x0A);
 }

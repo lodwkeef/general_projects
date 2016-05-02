@@ -27,7 +27,7 @@ void initTimer1(){//debounce timer
 
 void initTimer2(){//debounce timer 2 100Us delay
     TMR2 = 0;
-    PR2 = 999;
+    PR2 = 49999;
     T2CONbits.TCKPS = 0;//prescaler 1
     T2CONbits.TCS = 0;//internal PClck
     IEC0bits.T2IE = 1;//enable interrupts

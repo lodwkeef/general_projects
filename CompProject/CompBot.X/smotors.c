@@ -19,12 +19,12 @@
 #define FALSE 0
 
 
-void querryPos(int positionArray[]){
+void querryPos(char positionArray[]){
     sendCommand("ZPR P");
     delayUs(2000);
     int complete = FALSE;
-    int receivedChar;
-    int i=0;
+    char receivedChar;
+    strcpy(positionArray, "");
     
     while((complete == FALSE)){
         while(U1STAbits.URXDA ==1 ){
@@ -34,8 +34,9 @@ void querryPos(int positionArray[]){
             if((receivedChar==0x0A)||(receivedChar==0x0D)){
                 complete = TRUE;
             }
-            positionArray[i] = receivedChar;
-            i++;
+            else if((receivedChar!='\\')||(receivedChar!='r')){
+                strcat(positionArray, &receivedChar);
+            }
         }
     }
 }

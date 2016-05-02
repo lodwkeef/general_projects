@@ -12,7 +12,7 @@
 #define	SMOTORS_H
 
 
-void querryPos(int positionArray[]);
+void querryPos(char positionArray[]);
 
 
 #endif	/* RECEIVERS_H */
