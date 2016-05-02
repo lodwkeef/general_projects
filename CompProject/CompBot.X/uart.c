@@ -30,6 +30,7 @@ void initUART(){
     
     U1STAbits.URXEN = 1;    //Enable the receive pin (TRIS not needed)
     U1STAbits.UTXEN = 1;    //Enable the transmit pin (TRIS not needed)
+    U1STAbits.URXISEL = 0; //Enable interrupts for RX data buffer
     U1MODEbits.ON = 1;      //Enable the UART
 }
 
