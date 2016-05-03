@@ -56,11 +56,11 @@ int main() {
     initLCD();
     initUART();
     initReceivers();
-    float tower1Steps = 12000;
-    float tower2Steps = 25600;
-    float tower3Steps = 46080;
+    float tower1Steps = 48578;
+    float tower2Steps = 20808;
+    float tower3Steps = 35778;
     int tempVar = 0;
-    int tempScalar = 0;
+    float tempScalar = 0;
     int tempTowerStepPos = 0;
     int towerDetectDiff = 0;
     int towerDiffNum = 0;
@@ -71,6 +71,7 @@ int main() {
     float currXPos = 36;
     float currYPos = 108;
     float currHeading = 270;
+    float newPosArray[3]={0,0,270};
     unsigned char posArray[64];
     char s[64] = {};
     strcpy(posArray, "");
@@ -99,6 +100,7 @@ int main() {
     float relaWayX = 0;
     float relaWayY = 0;
     float relaWayAng = 0;
+    float *relaWayAngPoint=&relaWayAng;
     float newWayDis = 0;
     float currWayDis = 0;
     float disMultiplier = 1;
@@ -127,6 +129,7 @@ int main() {
             if(towerDiffNum == 2){tower2Steps=tempTowerStepPos;}//if tower 2 is the closest tower to detected tower, give it the detected tower position
             if(towerDiffNum == 3){tower3Steps=tempTowerStepPos;}//if tower 3 is the closest tower to detected tower, give it the detected tower position
                 
+            strcpy(posArray, "");
             towerDiffNum = 0;
             towerDetected = 1;
         }
@@ -135,10 +138,14 @@ int main() {
         if(updatePos==1){
             //moveCursorLCD(0,0);       //this was just test code to see if it got here
             //printStringLCD("FUCKING FUCK STICKS");
-            newXPos = posXreturn(tower1Steps, tower2Steps, tower3Steps);
-            newYPos = posYreturn(tower1Steps, tower2Steps, tower3Steps);
-            newHeading = heading(tower1Steps, tower2Steps, tower3Steps)+DETECTOROFFSETSTEPS;
-            if(newHeading>STEPSPERREV){ newHeading-STEPSPERREV; }
+            //newXPos = posXreturn(tower1Steps, tower2Steps, tower3Steps);
+            //newYPos = posYreturn(tower1Steps, tower2Steps, tower3Steps);
+            //newHeading = heading(tower1Steps, tower2Steps, tower3Steps)+DETECTOROFFSETSTEPS;
+            getLocAndHeading(tower1Steps, tower2Steps, tower3Steps, newPosArray);
+            newXPos = newPosArray[0];
+            newYPos = newPosArray[1];
+            newHeading =newPosArray[2];
+            //if(newHeading>STEPSPERREV){ newHeading-STEPSPERREV; }
             
             newWayDis = (sqrt((newXPos-currXPos)*(newXPos-currXPos)+(newYPos-currYPos)*(newYPos-currYPos)));
             
@@ -157,7 +164,7 @@ int main() {
                 relaWayY = (wayPoints[currentWaypoint][1])-currYPos;                
                 relaWayX = relaWayX/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the X direction to the waypoint to the unit circle               
                 relaWayY = relaWayY/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the Y direction to the waypoint to the unit circle 
-                relaWayAng = getWaypointHeading(relaWayX,relaWayY);
+                getWaypointHeading(relaWayX,relaWayY,relaWayAngPoint);
                 
                 if((fabsf(currHeading-relaWayAng)<180)&&((currHeading-relaWayAng)>=0)){//if the current heading is to the left of waypoint heading
                     tempScalar = ((((currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
@@ -165,27 +172,31 @@ int main() {
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
+                    strcpy(s, "");
                     sprintf(s,"RSL %d", (int)(tempVar));
                     sendCommand(s);
                     
                     tempScalar = tempScalar + .5;
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     tempVar = tempScalar*disMultiplier*MAXSPEED*(-1);       //set left motor speed based on max speed and distance multiplier
+                    strcpy(s, "");
                     sprintf(s,"LSL %d", (int)(tempVar));
                     sendCommand(s);
                 }
-                else if((fabsf(currHeading-relaWayAng)>180)&&((currHeading-relaWayAng)<0)){ //if the current heading is to the left of waypoint heading
+                else if((fabsf(currHeading-relaWayAng)>180)&&((currHeading-relaWayAng)<=0)){ //if the current heading is to the left of waypoint heading
                     tempScalar = ((((360+currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
                     tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
+                    strcpy(s, "");
                     sprintf(s,"RSL %d", (int)(tempVar));
                     sendCommand(s);
                     
                     tempScalar = tempScalar + .5;
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     tempVar = tempScalar*disMultiplier*MAXSPEED*(-1);       //set left motor speed based on max speed and distance multiplier
+                    strcpy(s, "");
                     sprintf(s,"LSL %d", (int)(tempVar));
                     sendCommand(s);
                 }
@@ -195,12 +206,14 @@ int main() {
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier*(-1);     //set LEFT motor speed based off angle, distance and maxspeed
+                    strcpy(s, "");
                     sprintf(s,"LSL %d", (int)(tempVar));
                     sendCommand(s);
                     
                     tempScalar = tempScalar + .5;
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     tempVar = tempScalar*disMultiplier*MAXSPEED;       //set right motor speed based on max speed and distance multiplier
+                    strcpy(s, "");
                     sprintf(s,"RSL %d", (int)(tempVar));
                     sendCommand(s);
                 } 
@@ -210,12 +223,14 @@ int main() {
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier*(-1);     //set LEFT motor speed based off angle, distance and maxspeed
+                    strcpy(s, "");
                     sprintf(s,"LSL %d", (int)(tempVar));
                     sendCommand(s);
                     
                     tempScalar = tempScalar + .5;
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     tempVar = tempScalar*disMultiplier*MAXSPEED;       //set right motor speed based on max speed and distance multiplier
+                    strcpy(s, "");
                     sprintf(s,"RSL %d", (int)(tempVar));
                     sendCommand(s);
                 }
@@ -294,7 +309,7 @@ void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     dummy = PORTA; // Read the Port A
     dummy = PORTE; //Read the Port E
     if (IFS1bits.CNBIF == 0){updatePos = 1;} 
-    if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delay
+    if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delayZ
     else {T1CONbits.TON = ON;}
     IFS1bits.CNAIF = 0; IFS1bits.CNEIF = 0; //lower flags
 }
@@ -325,12 +340,14 @@ void __ISR(_TIMER_2_VECTOR, IPL7SRS) _T2Interrupt() { //Timer 2 is for debouncin
     {
         receiver = 40;
         fourtyK = 1;
+        towerDetected=1;
     }
     else{fourtyK=0;}
     if(RX30 == 0)
     {
         receiver = 30;
         thirtyK = 1;
+        towerDetected=1;
     }
     else{thirtyK=0;}
 }

@@ -15,7 +15,8 @@
 float posXreturn(float steps1, float steps2, float steps3);
 float posYreturn(float steps1, float steps2, float steps3);
 float heading(float steps1, float steps2, float steps3);
-float getWaypointHeading(float normalizedX, float normalizedY);
+void getWaypointHeading(float normalizedX, float normalizedY, float *relNormAngle);
+void getLocAndHeading(float steps1, float steps2, float steps3, float dataArray[]);
 
 
 #endif	/* TRIANGULATION_H */
