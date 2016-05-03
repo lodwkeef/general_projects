@@ -17,15 +17,14 @@
 #include "switch.h"
 #include <xc.h>
 
-void initSW1(){ //external switch RB12 to +5V microcontroller
+void initSW1(){ //external switch RG14 to +5V microcontroller
    
-    TRISBbits.TRISB12 = 1; //set as input
-    ANSELBbits.ANSB12 = 0; //set to digital
+    TRISGbits.TRISG14 = 1; //set as input
     
-    CNCONBbits.ON = 1; //enable change notifications for Port B
-    CNENBbits.CNIEB12 = 1; //Enables CN for RB12
-    IEC1bits.CNBIE = 1; //Enable Interrupts
-    IFS1bits.CNBIF = 0; //Set flag to lowered
+    CNCONGbits.ON = 1; //enable change notifications for Port B
+    CNENGbits.CNIEG14 = 1; //Enables CN for RB12
+    IEC1bits.CNGIE = 1; //Enable Interrupts
+    IFS1bits.CNGIF = 0; //Set flag to lowered
     IPC8bits.CNIP = 7; //set default priority level 
     
 }
