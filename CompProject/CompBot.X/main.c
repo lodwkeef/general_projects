@@ -17,6 +17,8 @@
 #include "smotors.h"
 #include <math.h>
 
+#define GO 1
+#define IDLE 0
 #define OFF 0
 #define ON 1
 #define PRESS 0
@@ -45,6 +47,8 @@ volatile int fourtyK = 0;
 volatile int thirtyK = 0;
 volatile int updatePos = 0;
 volatile int towerDetected = 0;
+volatile int toggle = 0;
+volatile int STATUS = IDLE;
 
 int main() {
     SYSTEMConfigPerformance(10000000);
@@ -307,16 +311,24 @@ int main() {
 void __ISR(_CHANGE_NOTICE_VECTOR, IPL7SRS) _CNInterrupt(){
     int dummy;
     dummy = PORTA; // Read the Port A
+    dummy = PORTB; //Read the Port B
     dummy = PORTE; //Read the Port E
+    dummy = PORTG; //Read the Port G
+    if (IFS1bits.CNGIF == 1) {T1CONbits.TON = ON; toggle = 1;}
     if (IFS1bits.CNBIF == 0){updatePos = 1;} 
     if (IFS1bits.CNEIF == 1){ T2CONbits.TON = ON;} //if the receiver modules are triggered then use the 100Us delayZ
     else {T1CONbits.TON = ON;}
-    IFS1bits.CNAIF = 0; IFS1bits.CNEIF = 0; //lower flags
+    IFS1bits.CNAIF = 0; IFS1bits.CNBIF = 0; IFS1bits.CNEIF =0; IFS1bits.CNGIF = 0; //lower flags
 }
 
 void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncing
     IFS0bits.T1IF = 0; //lower the flag
     T1CONbits.TON = OFF;
+    if(toggle == 1)
+    {
+        STATUS = STATUS ^= 1; //alternate the STATUS pin
+        toggle = 0;
+    }
     if(pressRelease == RELEASE){
         if(state != idle) state = idle; 
         else if(state == idle) state = go;
