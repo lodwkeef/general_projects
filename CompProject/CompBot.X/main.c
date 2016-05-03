@@ -27,6 +27,9 @@
 #define RX30  PORTEbits.RE4
 #define MAXSPEED 150000
 #define MAXSPEEDDISTANCE 6
+#define TOTALWAYPOINTS 20
+#define DETECTOROFFSETSTEPS 13200
+#define STEPSPERREV 51200
 
 
 
@@ -41,6 +44,7 @@ volatile int fiftySevenK = 0;
 volatile int fourtyK = 0;
 volatile int thirtyK = 0;
 volatile int updatePos = 0;
+volatile int towerDetected = 0;
 
 int main() {
     SYSTEMConfigPerformance(10000000);
@@ -58,22 +62,39 @@ int main() {
     int tempVar = 0;
     int tempScalar = 0;
     int tempTowerStepPos = 0;
-    int towerDetected = 0;
     int towerDetectDiff = 0;
     int towerDiffNum = 0;
     int currentWaypoint = 0;
     float newXPos = 0;
     float newYPos = 0;
     float newHeading = 270;
-    float currXPos = 24;
-    float currYPos = 90;
+    float currXPos = 36;
+    float currYPos = 108;
     float currHeading = 270;
     unsigned char posArray[64];
     char s[64] = {};
     strcpy(posArray, "");
-    float wayPoints[2][2] = {
-    {24,80},
-    {24,60}
+    float wayPoints[TOTALWAYPOINTS][2] = {
+    {36,72},    //1st waypoint
+    {72,72},    //2
+    {72,36},    //3
+    {84,36},    //4
+    {90,42},    //5
+    {96,36},    //6
+    {102,42},    //7
+    {108,36},    //8
+    {114,42},    //9
+    {120,36},    //10
+    {126,42},    //11
+    {132,36},    //12
+    {140,40},    //13
+    {144,48},    //14
+    {140,56},    //15
+    {132,60},    //16
+    {124,64},    //17
+    {120,72},    //18
+    {124,80},    //19
+    {36,108}    //20
     };
     float relaWayX = 0;
     float relaWayY = 0;
@@ -87,7 +108,7 @@ int main() {
         sendChar(0x0A);
         sendChar(0x0A);
         sendChar(0x0A);
-        sendCommand("ZSL 0");
+        sendCommand("ZSL 200000");
         
     while(1){
         
@@ -103,19 +124,21 @@ int main() {
             else if((abs(360+tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(360+tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(360+tempTowerStepPos-tower1Steps); towerDiffNum = 3;}
             
             if(towerDiffNum == 1){tower1Steps=tempTowerStepPos;}//if tower 1 is the closest tower to detected tower, give it the detected tower position
-            if(towerDiffNum == 2){tower2Steps=tempTowerStepPos;}//if tower 1 is the closest tower to detected tower, give it the detected tower position
-            if(towerDiffNum == 3){tower3Steps=tempTowerStepPos;}//if tower 1 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 2){tower2Steps=tempTowerStepPos;}//if tower 2 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 3){tower3Steps=tempTowerStepPos;}//if tower 3 is the closest tower to detected tower, give it the detected tower position
                 
             towerDiffNum = 0;
+            towerDetected = 1;
         }
         
         
         if(updatePos==1){
-            moveCursorLCD(0,0);
-            printStringLCD("FUCKING FUCK STICKS");
+            //moveCursorLCD(0,0);       //this was just test code to see if it got here
+            //printStringLCD("FUCKING FUCK STICKS");
             newXPos = posXreturn(tower1Steps, tower2Steps, tower3Steps);
             newYPos = posYreturn(tower1Steps, tower2Steps, tower3Steps);
-            newHeading = heading(tower1Steps, tower2Steps, tower3Steps);
+            newHeading = heading(tower1Steps, tower2Steps, tower3Steps)+DETECTOROFFSETSTEPS;
+            if(newHeading>STEPSPERREV){ newHeading-STEPSPERREV; }
             
             newWayDis = (sqrt((newXPos-currXPos)*(newXPos-currXPos)+(newYPos-currYPos)*(newYPos-currYPos)));
             
@@ -124,7 +147,7 @@ int main() {
                 currYPos = newYPos; 
                 currHeading = newHeading;
                 newWayDis = (sqrt(((wayPoints[currentWaypoint][0])-currXPos)*((wayPoints[currentWaypoint][0])-currXPos)+((wayPoints[currentWaypoint][1])-currYPos)*((wayPoints[currentWaypoint][1])-currYPos)));
-                if((newWayDis<3)&&(currentWaypoint!=1)){    //if distance from waypoint is less than 3 inches and not the last waypoint
+                if((newWayDis<3)&&(currentWaypoint!=TOTALWAYPOINTS-1)){    //if distance from waypoint is less than 3 inches and not the last waypoint
                     currentWaypoint++;
                     newWayDis = (sqrt(((wayPoints[currentWaypoint][0])-currXPos)*((wayPoints[currentWaypoint][0])-currXPos)+((wayPoints[currentWaypoint][1])-currYPos)*((wayPoints[currentWaypoint][1])-currYPos)));
                 }
@@ -203,40 +226,45 @@ int main() {
             }
             
             //print out XY position
-            moveCursorLCD(0,9);
+            clearLCD();
+            moveCursorLCD(0,0);
             sprintf(s,"X%.1f , Y%.1f", currXPos, currYPos);
             printStringLCD(s);
+            moveCursorLCD(1,0);
+            sprintf(s,"Angle: %.1f", currHeading/STEPSPERREV);
+            printStringLCD(s);
+            
             updatePos=0;
             
         }
         //delayUs(2000);
 
-        if(RX30==0){
-            moveCursorLCD(0,9);
-            printStringLCD("30kHZ");
-        }
-        else{
-            moveCursorLCD(0,9);
-            printStringLCD("     ");
-        }
-        
-        if(RX40==0){
-            moveCursorLCD(1,0);
-            printStringLCD("40kHZ");
-        }
-        else{
-            moveCursorLCD(1,0);
-            printStringLCD("     ");
-        }
-        
-        if(RX57==0){
-            moveCursorLCD(1,9);
-            printStringLCD("57kHZ");
-        }
-        else{
-            moveCursorLCD(1,9);
-            printStringLCD("     ");
-        }
+//        if(RX30==0){
+//            moveCursorLCD(0,9);
+//            printStringLCD("30kHZ");
+//        }
+//        else{
+//            moveCursorLCD(0,9);
+//            printStringLCD("     ");
+//        }
+//        
+//        if(RX40==0){
+//            moveCursorLCD(1,0);
+//            printStringLCD("40kHZ");
+//        }
+//        else{
+//            moveCursorLCD(1,0);
+//            printStringLCD("     ");
+//        }
+//        
+//        if(RX57==0){
+//            moveCursorLCD(1,9);
+//            printStringLCD("57kHZ");
+//        }
+//        else{
+//            moveCursorLCD(1,9);
+//            printStringLCD("     ");
+//        }
         
 //        switch(receiver){
 //            case 57:
@@ -257,13 +285,7 @@ int main() {
 //                break;                
 //        }
         
-        if((receiver == 30)||(receiver == 40)||(receiver == 57)||(receiver == 0)){
-            delayUs(20000);
-            querryPos(posArray);
-            moveCursorLCD(0,0);
-            printStringLCD(posArray);
-            receiver=1;
-        }
+
     }
 }
 
@@ -297,6 +319,7 @@ void __ISR(_TIMER_2_VECTOR, IPL7SRS) _T2Interrupt() { //Timer 2 is for debouncin
     {
         receiver = 57;
         fiftySevenK=1;
+        towerDetected=1;
     }
     if(RX40 == 0)
     {
