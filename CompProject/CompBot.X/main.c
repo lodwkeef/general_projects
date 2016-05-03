@@ -168,7 +168,7 @@ int main() {
                 
                 if((fabsf(currHeading-relaWayAng)<180)&&((currHeading-relaWayAng)>=0)){//if the current heading is to the left of waypoint heading
                     tempScalar = ((((currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
-                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
@@ -185,7 +185,7 @@ int main() {
                 }
                 else if((fabsf(currHeading-relaWayAng)>180)&&((currHeading-relaWayAng)<=0)){ //if the current heading is to the left of waypoint heading
                     tempScalar = ((((360+currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
-                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
@@ -202,7 +202,7 @@ int main() {
                 }
                 else if ((currHeading-relaWayAng)<0){  //if the current heading is to the right of the waypoint direction
                     tempScalar = ((((relaWayAng-currHeading)/360)-.15)*1.2);       //set right motor speed based off angle
-                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier*(-1);     //set LEFT motor speed based off angle, distance and maxspeed
@@ -219,7 +219,7 @@ int main() {
                 } 
                 else if((currHeading-relaWayAng)>=0){    //if the current heading is to the right of the waypoint direction
                     tempScalar = ((((360+relaWayAng-currHeading)/360)-.15)*1.2);       //set right motor speed based off angle
-                    tempScalar = tempVar*tempVar*tempVar*tempVar*tempVar*tempVar;  //scale angle exponentially
+                    tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
                     tempVar = tempScalar*MAXSPEED*disMultiplier*(-1);     //set LEFT motor speed based off angle, distance and maxspeed
