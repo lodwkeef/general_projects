@@ -30,19 +30,24 @@ void initUART(){
     
     U1STAbits.URXEN = 1;    //Enable the receive pin (TRIS not needed)
     U1STAbits.UTXEN = 1;    //Enable the transmit pin (TRIS not needed)
-    U1STAbits.URXISEL = 0; //Enable interrupts for RX data buffer
+    //U1STAbits.URXISEL = 0; //Enable interrupts for RX data buffer
     U1MODEbits.ON = 1;      //Enable the UART
 }
 
 void sendChar(char c){
-    U1TXREG = c;
-    delayUs(600);
+    if(c!=NULL){
+        U1TXREG = c;
+        delayUs(1000);
+    }
 }
 
 void sendCommand(const char* sendString){
     const char* tempChar = NULL;
+    sendChar(0x0A);
     for (tempChar = sendString; *tempChar; tempChar++) {
         sendChar(*tempChar);
     }
+    sendChar(0x0A);
+    sendChar(0x0D);
     sendChar(0x0A);
 }

@@ -34,7 +34,7 @@ void initReceivers(){
     IPC8bits.CNIP = 7; //set default priority level
     CNCONEbits.ON = 1; //enable change notifications for Port E
     
-    CNENBbits.CNIEB0 = 1; //Enables CN for RB11
+    CNENBbits.CNIEB11 = 1; //Enables CN for RB11
     IEC1bits.CNBIE = 1; //Enable Interrupts
     IFS1bits.CNBIF = 0; //lower Flag
     IPC8bits.CNIP = 7; //set default priority level
