@@ -117,67 +117,13 @@ int main() {
         sendCommand("ZSL 200000");
         sendCommand("LVM 155000");
         
-//        delayUs(10000);
-//        sendCommand("RA 100000");
-//        delayUs(100000);
-//        sendCommand("LA 100000");
-//        delayUs(10000);
-//        sendCommand("RS");
-//        delayUs(100000);
-//        sendCommand("LS");
-        
-        delayUs(100000);
-        //sendCommand("RMR -76800");
-        //sendCommand("LMR 76800");
-        delayUs(100000);
-        forward3ft();
-        left90();
-        forward3ft();
-        right90();
-        forward3ft();
-        left90();
-        forward1ft();
-        left45();
-        forward707();
-        right90();
-        forward707();
-        left90();
-        forward707();
-        right90();
-        forward707();
-        left90();
-        forward707();
-        right90();
-        forward707();
-        left90();
-        forward707();
-        right90();
-        forward707();
-        left45();
-        leftcircle();
-        rightcircle();
-        leftcircle();
-        forward4ft();
-        forward4ft();
-        
         
     while(1){
         
         
-//        delayUs(10000);
-//        sendCommand("RVM 150000");
-//        delayUs(100000);
-//        sendCommand("LVM 150000");
-//        delayUs(10000);
-//        sendCommand("RS");
-//        delayUs(100000);
-//        sendCommand("LS");
         
         
         
-        
-        
-        /*
         if(towerDetected==1){//find the closest old tower to this new tower position and mark it as such
             //find the closest old tower to this new tower position and mark it as such
             querryPos(posArray);
@@ -197,83 +143,9 @@ int main() {
             towerDiffNum = 0;
             towerDetected = 0;
         }
-                        
-        if(updatePos==1){
-            //moveCursorLCD(0,0);       //this was just test code to see if it got here
-            //newXPos = posXreturn(tower1Steps, tower2Steps, tower3Steps);
-            //newYPos = posYreturn(tower1Steps, tower2Steps, tower3Steps);
-            //newHeading = heading(tower1Steps, tower2Steps, tower3Steps)+DETECTOROFFSETSTEPS;
-            getLocAndHeading(tower1Steps, tower2Steps, tower3Steps, newPosArray);
-            newXPos = newPosArray[0];
-            newYPos = newPosArray[1];
-            newHeading =newPosArray[2];
-            //if(newHeading>STEPSPERREV){ newHeading-STEPSPERREV; }
-            
-            newWayDis = (sqrt((newXPos-currXPos)*(newXPos-currXPos)+(newYPos-currYPos)*(newYPos-currYPos)));
-            
-            if((newWayDis<20)&&(newHeading>0)){ //if new distance is less than 20 inches from old distance, use new
-                currXPos = newXPos; 
-                currYPos = newYPos; 
-                currHeading = newHeading;
-                newWayDis = (sqrt(((wayPoints[currentWaypoint][0])-currXPos)*((wayPoints[currentWaypoint][0])-currXPos)+((wayPoints[currentWaypoint][1])-currYPos)*((wayPoints[currentWaypoint][1])-currYPos)));
-                if((newWayDis<3)&&(currentWaypoint!=TOTALWAYPOINTS-1)){    //if distance from waypoint is less than 3 inches and not the last waypoint
-                    currentWaypoint++;
-                    newWayDis = (sqrt(((wayPoints[currentWaypoint][0])-currXPos)*((wayPoints[currentWaypoint][0])-currXPos)+((wayPoints[currentWaypoint][1])-currYPos)*((wayPoints[currentWaypoint][1])-currYPos)));
-                }
-                currWayDis = newWayDis;
-                
-                relaWayX = (wayPoints[currentWaypoint][0])-currXPos;
-                relaWayY = (wayPoints[currentWaypoint][1])-currYPos;                
-                relaWayX = relaWayX/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the X direction to the waypoint to the unit circle               
-                relaWayY = relaWayY/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the Y direction to the waypoint to the unit circle 
-                getWaypointHeading(relaWayX,relaWayY,relaWayAngPoint);
-                
-                if((fabsf(currHeading-relaWayAng)<180)&&((currHeading-relaWayAng)>=0)){//if the current heading is to the left of waypoint heading
-                    
-                    sendCommand("RSL 10000");
-                    delayUs(10000);
-                    sendCommand("LSL -10000");
-                   
-                }
-                else if((fabsf(currHeading-relaWayAng)>180)&&((currHeading-relaWayAng)<=0)){ //if the current heading is to the left of waypoint heading
-                    sendCommand("RSL 10000");
-                    delayUs(10000);
-                    sendCommand("LSL -10000");
-                }
-                else if ((currHeading-relaWayAng)<0){  //if the current heading is to the right of the waypoint direction
-                    sendCommand("RSL 10000");
-                    delayUs(10000);
-                    sendCommand("LSL -10000");
-                } 
-                else if((currHeading-relaWayAng)>=0){    //if the current heading is to the right of the waypoint direction
-                    sendCommand("RSL 10000");
-                    delayUs(10000);
-                    sendCommand("LSL -10000");
-                }
-            }
-            else{
-                sendCommand("RSL 0");
-                sendCommand("LSL 0");
-            }
-            
-            //print out XY position
-            clearLCD();
-            moveCursorLCD(0,0);
-            sprintf(s,"X%.1f , Y%.1f", currXPos, currYPos);
-            printStringLCD(s);
-            moveCursorLCD(1,0);
-            sprintf(s,"Angle: %.1f", currHeading);
-            printStringLCD(s);
-            
-            updatePos=0;
-            
-        }
-           
-         */
-                
           
           
-                /*
+                
         if(updatePos==1){
             //moveCursorLCD(0,0);       //this was just test code to see if it got here
             //newXPos = posXreturn(tower1Steps, tower2Steps, tower3Steps);
@@ -398,7 +270,7 @@ int main() {
             updatePos=0;
             
         }
-                 */
+                 
       
         
 
@@ -426,38 +298,10 @@ void __ISR(_TIMER_1_VECTOR, IPL7SRS) _T1Interrupt() { //Timer 1 is for debouncin
         MISSION = MISSION ^= 1; //alternate the STATUS pin
         toggle = 0;
     }
-//    if(pressRelease == RELEASE){
-//        if(state != idle) state = idle; 
-//        else if(state == idle) state = go;
-//        pressRelease = PRESS;
-//    }
-//    else{
-//        pressRelease = RELEASE;
-//    }
 }
 
 void __ISR(_TIMER_2_VECTOR, IPL7SRS) _T2Interrupt() { //Timer 2 is for debouncing
     IFS0bits.T2IF = 0; //lower the flag
     T2CONbits.TON = OFF;
     towerDetected = 1;
-//    if(RX57 == 0)
-//    {
-//        receiver = 57;
-//        fiftySevenK=1;
-//        towerDetected=1;
-//    }
-//    if(RX40 == 0)
-//    {
-//        receiver = 40;
-//        fourtyK = 1;
-//        towerDetected=1;
-//    }
-//    else{fourtyK=0;}
-//    if(RX30 == 0)
-//    {
-//        receiver = 30;
-//        thirtyK = 1;
-//        towerDetected=1;
-//    }
-//    else{thirtyK=0;}
 }
