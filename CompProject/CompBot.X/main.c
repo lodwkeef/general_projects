@@ -142,6 +142,10 @@ int main() {
                 towerDetectDiff=abs(360+tempPosRelTo1); 
                 towerDiffNum = 1;
             }
+            else if (tempPosRelTo1>180){
+                towerDetectDiff=abs(tempPosRelTo1-180); 
+                towerDiffNum = 1;
+            }
             if((abs(tempPosRelTo2)<180)&&(towerDetectDiff>abs(tempPosRelTo2))){
                 towerDetectDiff=abs(tempPosRelTo2); 
                 towerDiffNum = 2;
@@ -150,12 +154,20 @@ int main() {
                 towerDetectDiff=abs(360+tempPosRelTo2); 
                 towerDiffNum = 2;
             }
+            else if ((tempPosRelTo2>180)&&(towerDetectDiff>abs(tempPosRelTo2-180))){
+                towerDetectDiff=abs(tempPosRelTo2-180); 
+                towerDiffNum = 2;
+            }
             if((abs(tempPosRelTo3)<180)&&(towerDetectDiff>abs(tempPosRelTo3))){
                 towerDetectDiff=abs(tempPosRelTo3); 
                 towerDiffNum = 3;
             }
             else if((abs(360+tempPosRelTo3)<180)&&(towerDetectDiff>abs(360+tempPosRelTo3))){
                 towerDetectDiff=abs(360+tempPosRelTo3); 
+                towerDiffNum = 3;
+            }
+            else if ((tempPosRelTo3>180)&&(towerDetectDiff>abs(tempPosRelTo3-180))){
+                towerDetectDiff=abs(tempPosRelTo3-180); 
                 towerDiffNum = 3;
             }
             
