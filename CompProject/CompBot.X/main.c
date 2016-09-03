@@ -63,6 +63,9 @@ int main() {
     float tower1Steps = 48578;
     float tower2Steps = 20808;
     float tower3Steps = 35778;
+    int tempPosRelTo1 = 0;
+    int tempPosRelTo2 = 0;
+    int tempPosRelTo3 = 0;
     int tempVar = 0;
     float tempScalar = 0;
     int tempTowerStepPos = 0;
@@ -128,16 +131,43 @@ int main() {
             //find the closest old tower to this new tower position and mark it as such
             querryPos(posArray);
             tempTowerStepPos= atoi(posArray);
-            if(abs(tempTowerStepPos-tower1Steps)<180){towerDetectDiff=abs(tempTowerStepPos-tower1Steps); towerDiffNum = 1;} //sorry this is completely unreadable, this finds the closest old tower value to recent tower detect
-            else if(abs(360+tempTowerStepPos-tower1Steps)<180){towerDetectDiff=abs(360+tempTowerStepPos-tower1Steps); towerDiffNum = 1;}
-            if((abs(tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(tempTowerStepPos-tower1Steps); towerDiffNum = 2;}
-            else if((abs(360+tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(360+tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(360+tempTowerStepPos-tower1Steps); towerDiffNum = 2;}
-            if((abs(tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(tempTowerStepPos-tower1Steps); towerDiffNum = 3;}
-            else if((abs(360+tempTowerStepPos-tower1Steps)<180)&&(towerDetectDiff>abs(360+tempTowerStepPos-tower1Steps))){towerDetectDiff=abs(360+tempTowerStepPos-tower1Steps); towerDiffNum = 3;}
+            tempPosRelTo1 = (tempTowerStepPos-tower1Steps)*(360/51200);
+            tempPosRelTo2 = (tempTowerStepPos-tower2Steps)*(360/51200);
+            tempPosRelTo3 = (tempTowerStepPos-tower3Steps)*(360/51200);
+            if(abs(tempPosRelTo1)<180){
+                towerDetectDiff=abs(tempPosRelTo1); 
+                towerDiffNum = 1;
+            } //sorry this is completely unreadable, this finds the closest old tower value to recent tower detect
+            else if(abs(360+tempPosRelTo1)<180){
+                towerDetectDiff=abs(360+tempPosRelTo1); 
+                towerDiffNum = 1;
+            }
+            if((abs(tempPosRelTo2)<180)&&(towerDetectDiff>abs(tempPosRelTo2))){
+                towerDetectDiff=abs(tempPosRelTo2); 
+                towerDiffNum = 2;
+            }
+            else if((abs(360+tempPosRelTo2)<180)&&(towerDetectDiff>abs(360+tempPosRelTo2))){
+                towerDetectDiff=abs(360+tempPosRelTo2); 
+                towerDiffNum = 2;
+            }
+            if((abs(tempPosRelTo3)<180)&&(towerDetectDiff>abs(tempPosRelTo3))){
+                towerDetectDiff=abs(tempPosRelTo3); 
+                towerDiffNum = 3;
+            }
+            else if((abs(360+tempPosRelTo3)<180)&&(towerDetectDiff>abs(360+tempPosRelTo3))){
+                towerDetectDiff=abs(360+tempPosRelTo3); 
+                towerDiffNum = 3;
+            }
             
-            if(towerDiffNum == 1){tower1Steps=tempTowerStepPos;}//if tower 1 is the closest tower to detected tower, give it the detected tower position
-            if(towerDiffNum == 2){tower2Steps=tempTowerStepPos;}//if tower 2 is the closest tower to detected tower, give it the detected tower position
-            if(towerDiffNum == 3){tower3Steps=tempTowerStepPos;}//if tower 3 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 1){
+                tower1Steps=tempTowerStepPos;
+            }//if tower 1 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 2){
+                tower2Steps=tempTowerStepPos;
+            }//if tower 2 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 3){
+                tower3Steps=tempTowerStepPos;
+            }//if tower 3 is the closest tower to detected tower, give it the detected tower position
                 
             strcpy(posArray, "");
             towerDiffNum = 0;

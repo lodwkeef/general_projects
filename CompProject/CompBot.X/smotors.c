@@ -31,10 +31,10 @@ void querryPos(char positionArray[]){
             // U1RXREG stores the last character received by the UART. Read this
             // value into a local variable before processing.
             receivedChar = U1RXREG;
-            if((receivedChar==0x0A)||(receivedChar==0x0D)){
+            if(((receivedChar==0x0A)||(receivedChar==0x0D))||(U1STAbits.URXDA ==0)){
                 complete = TRUE;
             }
-            else if((receivedChar!='\\')||(receivedChar!='r')){
+            else if((receivedChar!='\\')&&(receivedChar!='r')){
                 strcat(positionArray, &receivedChar);
             }
         }
