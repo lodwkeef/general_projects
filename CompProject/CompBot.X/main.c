@@ -1,6 +1,6 @@
 /* 
  * File:   main.c
- * Author: jsiek
+ * Author: jsiek <---the jew
  *
  * Created on April 19, 2016, 11:53 PM
  */
