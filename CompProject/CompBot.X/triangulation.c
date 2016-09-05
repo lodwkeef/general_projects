@@ -444,9 +444,9 @@ void getLocAndHeading(float steps1, float steps2, float steps3, float dataArray[
 }
 
 int towerIdentification (float tower1, float tower2, float tower3, float unknownTower){
-    float tower1Diff = fabsf(angleToTarget(unknownTower-tower1));
-    float tower2Diff = fabsf(angleToTarget(unknownTower-tower2));
-    float tower3Diff = fabsf(angleToTarget(unknownTower-tower3));
+    float tower1Diff = fabsf(angleToTarget(unknownTower, tower1));
+    float tower2Diff = fabsf(angleToTarget(unknownTower, tower2));
+    float tower3Diff = fabsf(angleToTarget(unknownTower, tower3));
     int identifiedTower = 1;
     
     if((tower1Diff<tower2Diff)&&(tower1Diff<tower3Diff)){identifiedTower = 1;}
@@ -457,5 +457,5 @@ int towerIdentification (float tower1, float tower2, float tower3, float unknown
 }
 
 float angleToTarget (float target, float source){
-    return (target-source+540.0)%360-180;
+    return fmod((target-source+540.0), 360)-180;
 }
