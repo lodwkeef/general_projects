@@ -63,9 +63,9 @@ int main() {
     float tower1Steps = 48578;
     float tower2Steps = 20808;
     float tower3Steps = 35778;
-    int tempPosRelTo1 = 0;
-    int tempPosRelTo2 = 0;
-    int tempPosRelTo3 = 0;
+    int tempPos1 = 0;
+    int tempPos2 = 0;
+    int tempPos3 = 0;
     int tempVar = 0;
     float tempScalar = 0;
     int tempTowerStepPos = 0;
@@ -111,6 +111,7 @@ int main() {
     float newWayDis = 0;
     float currWayDis = 0;
     float disMultiplier = 1;
+    float headingFromWaypoint = 0;
     
             
         sendChar(0x0A);
@@ -131,55 +132,12 @@ int main() {
             //find the closest old tower to this new tower position and mark it as such
             querryPos(posArray);
             tempTowerStepPos= atoi(posArray);
-            tempPosRelTo1 = (tempTowerStepPos-tower1Steps)*(360/51200);
-            tempPosRelTo2 = (tempTowerStepPos-tower2Steps)*(360/51200);
-            tempPosRelTo3 = (tempTowerStepPos-tower3Steps)*(360/51200);
-            if(abs(tempPosRelTo1)<180){
-                towerDetectDiff=abs(tempPosRelTo1); 
-                towerDiffNum = 1;
-            } //sorry this is completely unreadable, this finds the closest old tower value to recent tower detect
-            else if(abs(360+tempPosRelTo1)<180){
-                towerDetectDiff=abs(360+tempPosRelTo1); 
-                towerDiffNum = 1;
-            }
-            else if (tempPosRelTo1>180){
-                towerDetectDiff=abs(tempPosRelTo1-180); 
-                towerDiffNum = 1;
-            }
-            if((abs(tempPosRelTo2)<180)&&(towerDetectDiff>abs(tempPosRelTo2))){
-                towerDetectDiff=abs(tempPosRelTo2); 
-                towerDiffNum = 2;
-            }
-            else if((abs(360+tempPosRelTo2)<180)&&(towerDetectDiff>abs(360+tempPosRelTo2))){
-                towerDetectDiff=abs(360+tempPosRelTo2); 
-                towerDiffNum = 2;
-            }
-            else if ((tempPosRelTo2>180)&&(towerDetectDiff>abs(tempPosRelTo2-180))){
-                towerDetectDiff=abs(tempPosRelTo2-180); 
-                towerDiffNum = 2;
-            }
-            if((abs(tempPosRelTo3)<180)&&(towerDetectDiff>abs(tempPosRelTo3))){
-                towerDetectDiff=abs(tempPosRelTo3); 
-                towerDiffNum = 3;
-            }
-            else if((abs(360+tempPosRelTo3)<180)&&(towerDetectDiff>abs(360+tempPosRelTo3))){
-                towerDetectDiff=abs(360+tempPosRelTo3); 
-                towerDiffNum = 3;
-            }
-            else if ((tempPosRelTo3>180)&&(towerDetectDiff>abs(tempPosRelTo3-180))){
-                towerDetectDiff=abs(tempPosRelTo3-180); 
-                towerDiffNum = 3;
-            }
             
-            if(towerDiffNum == 1){
-                tower1Steps=tempTowerStepPos;
-            }//if tower 1 is the closest tower to detected tower, give it the detected tower position
-            if(towerDiffNum == 2){
-                tower2Steps=tempTowerStepPos;
-            }//if tower 2 is the closest tower to detected tower, give it the detected tower position
-            if(towerDiffNum == 3){
-                tower3Steps=tempTowerStepPos;
-            }//if tower 3 is the closest tower to detected tower, give it the detected tower position
+            towerDiffNum = towerIdentification((tempPos1*360/51200), (tempPos2*360/51200), (tempPos3*360/51200), tempTowerStepPos);
+                        
+            if(towerDiffNum == 1){ tower1Steps=tempTowerStepPos; }//if tower 1 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 2){ tower2Steps=tempTowerStepPos; }//if tower 2 is the closest tower to detected tower, give it the detected tower position
+            if(towerDiffNum == 3){ tower3Steps=tempTowerStepPos; }//if tower 3 is the closest tower to detected tower, give it the detected tower position
                 
             strcpy(posArray, "");
             towerDiffNum = 0;
@@ -217,9 +175,12 @@ int main() {
                 relaWayX = relaWayX/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the X direction to the waypoint to the unit circle               
                 relaWayY = relaWayY/(sqrt(relaWayX*relaWayX+relaWayY*relaWayY)); //normalize the Y direction to the waypoint to the unit circle 
                 getWaypointHeading(relaWayX,relaWayY,relaWayAngPoint);
+                headingFromWaypoint = angleToTarget(relaWayAng, currHeading);   //find the angle to the target
                 
-                if((fabsf(currHeading-relaWayAng)<180)&&((currHeading-relaWayAng)>=0)){//if the current heading is to the left of waypoint heading
-                    tempScalar = ((((currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
+                if(headingFromWaypoint>=0){//if the current heading is to the left of waypoint heading
+                    tempScalar = (((fabsf(headingFromWaypoint)/360)-.15)*1.2);       //set right motor speed based off angle
+                    turnRightScaled( tempScalar,  newWayDis,  currWayDis,  disMultiplier );  //set the speed of the motors in a rightward turn
+                    /*
                     tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
@@ -236,9 +197,12 @@ int main() {
                     sprintf(s,"LSL %d", (int)(tempVar));
                     sendCommand(s);
                     delayUs(10000);
+                      */
                 }
-                else if((fabsf(currHeading-relaWayAng)>180)&&((currHeading-relaWayAng)<=0)){ //if the current heading is to the left of waypoint heading
-                    tempScalar = ((((360+currHeading-relaWayAng)/360)-.15)*1.2);       //set right motor speed based off angle
+                else if(headingFromWaypoint<0){ //if the current heading is to the right of waypoint heading
+                    tempScalar = (((fabsf(headingFromWaypoint)/360)-.15)*1.2);       //set right motor speed based off angle
+                    turnLeftScaled( tempScalar,  newWayDis,  currWayDis,  disMultiplier ); //set the speed of the motors in a leftward turn
+                    /*
                     tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
                     if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
                     if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
@@ -255,7 +219,9 @@ int main() {
                     sprintf(s,"LSL %d", (int)(tempVar));
                     sendCommand(s);
                     delayUs(10000);
+                    */
                 }
+                /*
                 else if ((currHeading-relaWayAng)<0){  //if the current heading is to the right of the waypoint direction
                     tempScalar = ((((relaWayAng-currHeading)/360)-.15)*1.2);       //set right motor speed based off angle
                     tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
@@ -294,6 +260,7 @@ int main() {
                     sendCommand(s);
                     delayUs(10000);
                 }
+                */
             }
             else{
                 sendCommand("RSL 0");

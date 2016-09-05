@@ -17,6 +17,11 @@
 
 #define TRUE 1
 #define FALSE 0
+#define MAXSPEED 150000
+#define MAXSPEEDDISTANCE 6
+#define TOTALWAYPOINTS 20
+#define DETECTOROFFSETSTEPS 13200
+#define STEPSPERREV 51200
 
 
 void querryPos(char positionArray[]){
@@ -39,6 +44,50 @@ void querryPos(char positionArray[]){
             }
         }
     }
+}
+
+void turnRightScaled(float tempScalar, float newWayDis, float currWayDis, float disMultiplier ){
+    char s[64] = {};
+    int tempVar = 0;
+    tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
+    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+    if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
+    tempVar = tempScalar*MAXSPEED*disMultiplier;     //set right motor speed based off angle, distance and maxspeed
+    strcpy(s, "");
+    sprintf(s,"RSL %d", (int)(tempVar));
+    sendCommand(s);
+    delayUs(10000);
+
+    tempScalar = tempScalar + .5;
+    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+    tempVar = tempScalar*disMultiplier*MAXSPEED*(-1);       //set left motor speed based on max speed and distance multiplier
+    strcpy(s, "");
+    sprintf(s,"LSL %d", (int)(tempVar));
+    sendCommand(s);
+    delayUs(10000);
+    return;
+}
+
+void turnLeftScaled(float tempScalar, float newWayDis, float currWayDis, float disMultiplier ){
+    char s[64] = {};
+    int tempVar = 0;
+    tempScalar = tempScalar*tempScalar*tempScalar*tempScalar*tempScalar*tempScalar;  //scale angle exponentially
+    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+    if(newWayDis<MAXSPEEDDISTANCE){disMultiplier = newWayDis/MAXSPEEDDISTANCE; }  //set distance multiplier
+    tempVar = tempScalar*MAXSPEED*disMultiplier*(-1);     //set LEFT motor speed based off angle, distance and maxspeed
+    strcpy(s, "");
+    sprintf(s,"LSL %d", (int)(tempVar));
+    sendCommand(s);
+    delayUs(10000);
+
+    tempScalar = tempScalar + .5;
+    if(tempScalar>=1){tempScalar = 1;}        //if angle is small enough just set angle multiplier to 1
+    tempVar = tempScalar*disMultiplier*MAXSPEED;       //set right motor speed based on max speed and distance multiplier
+    strcpy(s, "");
+    sprintf(s,"RSL %d", (int)(tempVar));
+    sendCommand(s);
+    delayUs(10000);
+    return;
 }
 
 void right90(){

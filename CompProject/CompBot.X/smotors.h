@@ -13,6 +13,8 @@
 
 
 void querryPos(char positionArray[]);
+void turnRightScaled(float tempScalar, float newWayDis, float currWayDis, float disMultiplier );
+void turnLeftScaled(float tempScalar, float newWayDis, float currWayDis, float disMultiplier );
 void right90();
 void left90();
 void right45();
